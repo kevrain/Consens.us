@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 def PARSE_SERVER_URL = '"' + ParseServerUrl + '"' ?: '"Define Parse server url"';
 def PARSE_APPLICATION_ID = '"' + ParseApplicationID + '"' ?: '"Define Parse application ID"';
 def PARSE_CLIENT_KEY = '"' + ParseClientKey + '"' ?: '"Define Parse client key"';
+def FACEBOOK_APPLICATION_ID = '"' + FacebookApplicationID + '"' ?: '"Define Facebook application ID"';
 
 android {
     compileSdkVersion 24
@@ -25,6 +26,7 @@ android {
             it.buildConfigField 'String', 'PARSE_SERVER_URL', PARSE_SERVER_URL
             it.buildConfigField 'String', 'PARSE_APPLICATION_ID', PARSE_APPLICATION_ID
             it.buildConfigField 'String', 'PARSE_CLIENT_KEY', PARSE_CLIENT_KEY
+            it.buildConfigField 'String', 'FACEBOOK_APPLICATION_ID', FACEBOOK_APPLICATION_ID
         }
     }
 }
@@ -36,4 +38,6 @@ dependencies {
     compile 'com.parse:parse-android:1.13.1'
     compile 'com.parse:parseinterceptors:0.0.2' // for logging API calls to LogCat
     compile 'com.parse.bolts:bolts-android:1.+'
+    compile 'com.facebook.android:facebook-android-sdk:4.+'
+    compile 'com.parse:parsefacebookutils-v4-android:1.10.4@aar'
 }
