@@ -40,4 +40,6 @@ dependencies {
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.facebook.android:facebook-android-sdk:4.+'
     compile 'com.parse:parsefacebookutils-v4-android:1.10.4@aar'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.android.support:support-v4:19.1.0'
 }
