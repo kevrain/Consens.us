@@ -36,6 +36,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activities.CreateNewEventActivity"
+            android:label="@string/title_activity_create_new_event"
+            android:theme="@style/AppTheme"></activity>
+
+        <activity
+            android:name=".activities.EventDetailsActivity"
+            android:label="@string/title_activity_event_details"
+            android:theme="@style/AppTheme"></activity>
+
+        <activity
+            android:name=".activities.EventsActivity"
+            android:label="@string/title_activity_events"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
