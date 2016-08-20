@@ -50,7 +50,12 @@
         <activity
             android:name=".activities.EventsActivity"
             android:label="@string/title_activity_events"
-            android:theme="@style/AppTheme"></activity>
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
