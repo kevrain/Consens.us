@@ -14,10 +14,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
+import com.facebook.Profile;
 import com.kevrain.consensus.R;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -34,7 +34,6 @@ import java.util.Collection;
 
 public class MainActivity extends AppCompatActivity {
 
-    CallbackManager callbackManager;
     Collection mPermissions = new ArrayList<>();
     ParseUser parseUser;
     String email;
@@ -46,32 +45,35 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        callbackManager = CallbackManager.Factory.create();
-        Button loginButton = (Button) findViewById(R.id.login_button);
+        if (Profile.getCurrentProfile() != null) {
+            getUserDetailsFromParse();
+        } else {
+            Button loginButton = (Button) findViewById(R.id.login_button);
 
-        mPermissions.add("public_profile");
-        mPermissions.add("email");
-        mPermissions.add("user_friends");
+            mPermissions.add("public_profile");
+            mPermissions.add("email");
+            mPermissions.add("user_friends");
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ParseFacebookUtils.logInWithReadPermissionsInBackground(MainActivity.this, mPermissions, new LogInCallback() {
-                    @Override
-                    public void done(ParseUser user, ParseException e) {
-                        if (user == null) {
-                            Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
-                        } else if (user.isNew()) {
-                            Log.d("MyApp", "User signed up and logged in through Facebook!");
-                            getUserDetailsFromFB();
-                        } else {
-                            Log.d("MyApp", "User logged in through Facebook!");
-                            getUserDetailsFromParse();
-                    }
-                    }
-                });
-            }
-        });
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ParseFacebookUtils.logInWithReadPermissionsInBackground(MainActivity.this, mPermissions, new LogInCallback() {
+                        @Override
+                        public void done(ParseUser user, ParseException e) {
+                            if (user == null) {
+                                Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
+                            } else if (user.isNew()) {
+                                Log.d("MyApp", "User signed up and logged in through Facebook!");
+                                getUserDetailsFromFB();
+                            } else {
+                                Log.d("MyApp", "User logged in through Facebook!");
+                                getUserDetailsFromParse();
+                            }
+                        }
+                    });
+                }
+            });
+        }
     }
 
     @Override
@@ -129,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void done(ParseException e) {
                                 Toast.makeText(MainActivity.this, "New user:" + name + " Signed up", Toast.LENGTH_SHORT).show();
+                                goToEvents();
                             }
                         });
                     }
@@ -147,6 +150,13 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        goToEvents();
+    }
+
+    private void goToEvents() {
+        Intent i = new Intent(this, EventsActivity.class);
+        startActivity(i);
     }
 }
 
