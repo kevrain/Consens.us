@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 public class EventsActivity extends AppCompatActivity {
 
     @BindView(R.id.lvEvents) ListView lvEvents;
-    @BindView(R.id.btnCreateEvent) ImageButton btnCreateEvent;
+    @BindView(R.id.fabCreateEvent) ImageButton btnCreateEvent;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
