@@ -27,13 +27,6 @@ public class EventsArrayAdapter extends ArrayAdapter<Events> {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        //Get the view
-        //INflate the view
-        //Find the subviews
-        //populate data into subviews
-        // Return the views
-
         ViewHolder viewHolder;
         Events event = getItem(position);
 
