@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Consens.us</string>
     <string name="fb_login_protocol_scheme">fb1827136727519821</string>
+    <string name="action_settings">Settings</string>
+    <string name="event_name">EVENT NAME</string>
+    <string name="tv_location">Location</string>
+    <string name="date">date</string>
+    <string name="title_activity_create_new_event">CreateNewEventActivity</string>
+    <string name="title_activity_event_details">EventDetails</string>
+    <string name="description">Description</string>
 </resources>

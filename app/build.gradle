@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
 
 def PARSE_SERVER_URL = '"' + ParseServerUrl + '"' ?: '"Define Parse server url"';
 def PARSE_APPLICATION_ID = '"' + ParseApplicationID + '"' ?: '"Define Parse application ID"';
@@ -41,5 +42,8 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.+'
     compile 'com.parse:parsefacebookutils-v4-android:1.10.4@aar'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.android.support:support-v4:19.1.0'
+    compile 'com.android.support:support-v4:24.1.0'
+
+    compile 'com.jakewharton:butterknife:8.2.1'
+    apt 'com.jakewharton:butterknife-compiler:8.2.1'
 }

@@ -12,6 +12,16 @@ buildscript {
     }
 }
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    }
+
+}
+
 allprojects {
     repositories {
         jcenter()
@@ -21,3 +31,4 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
