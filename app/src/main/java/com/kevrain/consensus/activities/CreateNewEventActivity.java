@@ -1,6 +1,7 @@
 package com.kevrain.consensus.activities;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.Toast;
 
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.fragments.DatePickerFragment;
@@ -20,9 +22,9 @@ import butterknife.ButterKnife;
 
 public class CreateNewEventActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.btnAddDate)Button btnAddDate;
+    @BindView(R.id.btnSubmit)Button btnSubmit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,19 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent data = new Intent();
+                data.putExtra("Code",200);
+
+                Toast.makeText(getApplicationContext(),"STORE EVENT HERE toD",Toast.LENGTH_SHORT).show();
+                //Add peristence calls here to store event details
+
+                finish();
+            }
+        });
     }
 
     // attach to an onclick handler to show the date picker

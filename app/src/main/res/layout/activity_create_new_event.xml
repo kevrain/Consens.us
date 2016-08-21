@@ -1,19 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context="com.kevrain.consensus.activities.CreateNewEventActivity">
 
-        <android.support.v7.widget.Toolbar
+    <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            />
+            android:background="?attr/colorPrimary" />
 
-    <include layout="@layout/content_create_new_event" />
+    <TextView
+        android:layout_width="119dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Event Name"
+        android:id="@+id/tvEventName"
+        android:layout_below="@+id/toolbar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingTop="40dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        />
 
-</android.support.design.widget.CoordinatorLayout>
+    <EditText
+        android:layout_width="128dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/etEventName"
+        android:layout_toRightOf="@id/tvEventName"
+        android:layout_gravity="right"
+        android:layout_alignBottom="@+id/tvEventName"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="58dp"
+        android:layout_marginEnd="58dp"
+        android:paddingTop="40dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
+
+    <TextView
+        android:paddingTop="40dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_width="119dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Location"
+        android:id="@+id/tvLocation"
+        android:layout_above="@+id/btnAddDate"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="41dp" />
+
+    <EditText
+        android:layout_width="128dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/etLocation"
+        android:layout_toRightOf="@id/tvLocation"
+        android:layout_gravity="right"
+        android:layout_alignBottom="@+id/tvLocation"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingTop="40dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginRight="58dp"
+        android:layout_marginEnd="58dp"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:hint="Add a date"
+        android:id="@+id/btnAddDate"
+        android:onClick="showDatePickerDialog"
+        android:layout_alignLeft="@+id/etLocation"
+        android:layout_alignStart="@+id/etLocation"
+        android:layout_alignBottom="@+id/tvAddDate"
+        android:layout_alignRight="@+id/etLocation"
+        android:layout_alignEnd="@+id/etLocation"
+        android:paddingTop="40dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Add Date "
+        android:id="@+id/tvAddDate"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingTop="40dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginRight="58dp"
+        android:layout_marginEnd="58dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:id="@+id/btnSubmit"
+        android:layout_below="@+id/btnAddDate"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="55dp" />"
+
+</RelativeLayout>

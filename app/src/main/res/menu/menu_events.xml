@@ -3,14 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.kevrain.consensus.activities.EventsActivity">
-    <item
+    <!--item
         android:id="@+id/action_settings"
         android:orderInCategory="1"
         android:title="@string/action_settings"
-        app:showAsAction="ifRoom|withText" />
+        app:showAsAction="ifRoom|withText" /-->
     <item
         android:id="@+id/action_logout"
-        android:orderInCategory="2"
+        android:orderInCategory="1"
         android:title="@string/action_logout"
+        android:clickable="true"
         app:showAsAction="ifRoom|withText" />
 </menu>

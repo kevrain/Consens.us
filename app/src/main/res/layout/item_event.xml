@@ -55,4 +55,16 @@
         android:text="MoreInfo"
         android:layout_alignLeft="@id/tvEventName"
         android:onClick="showEventDetailActivity"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Interested?"
+        android:id="@+id/btnStatus"
+        android:layout_alignTop="@+id/btnMoreInfo"
+        android:layout_alignRight="@+id/ivEventImage"
+        android:layout_alignEnd="@+id/ivEventImage"
+        android:onClick="changeStatus"/>
+
+
 </RelativeLayout>

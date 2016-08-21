@@ -8,6 +8,8 @@ import com.kevrain.consensus.R;
 
 public class EventDetailsActivity extends AppCompatActivity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -16,6 +18,8 @@ public class EventDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //TODO (Add the event details here)
+
+
     }
 
 }
