@@ -9,6 +9,8 @@ import com.parse.ParseRelation;
  */
 @ParseClassName("Poll")
 public class Poll extends ParseObject {
+    public Poll() {}
+
     public ParseRelation<Vote> getVotesRelation () {
         return getRelation("vote");
     }

@@ -9,15 +9,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.facebook.login.LoginManager;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.EventsArrayAdapter;
 import com.kevrain.consensus.models.Events;
+import com.kevrain.consensus.models.Group;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,11 +35,11 @@ public class EventsActivity extends AppCompatActivity {
     FloatingActionButton fabCreateEvent;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.btnStatus)
-    Button btnStatus;
+    //@BindView(R.id.btnStatus) Button btnStatus;
 
     EventsArrayAdapter adapter;
     ArrayList<Events> events;
+    Group group;
     private final int REQUEST_CODE = 20;
 
     //###### Network call to the Event Client to get Data
@@ -51,10 +56,26 @@ public class EventsActivity extends AppCompatActivity {
         adapter = new EventsArrayAdapter(this, events);
         lvEvents.setAdapter(adapter);
 
-        btnStatus.setTag(0);
-        btnStatus.setText("Interested");
+        //btnStatus.setTag(0);
+        //btnStatus.setText("Interested");
 
         //###### Populate data into events list view here
+
+        // HACK until groups are set up
+        ParseQuery<Group> query = ParseQuery.getQuery(Group.class);
+        query.whereEqualTo("owner", ParseUser.getCurrentUser());
+        query.findInBackground(new FindCallback<Group>() {
+            public void done(List<Group> groupList, ParseException e) {
+                if (groupList.size() > 0) {
+                   group = groupList.get(0);
+                } else {
+                    group = new Group();
+                    group.setTitle("New Group 1");
+                    group.setOwner(ParseUser.getCurrentUser());
+                    group.saveInBackground();
+                }
+            }
+        });
 
         //Add New event
         fabCreateEvent.setOnClickListener(new View.OnClickListener() {
@@ -110,15 +131,15 @@ public class EventsActivity extends AppCompatActivity {
     }
 
     private void statusChange() {
-        int status = (Integer) btnStatus.getTag();
+        //int status = (Integer) btnStatus.getTag();
 
-        if (status == 0) {
-            btnStatus.setText("Going");
-            btnStatus.setTag(1);
-        } else if (status == 1) {
-            btnStatus.setText("Interested");
-            btnStatus.setTag(0);
-        }
+        //if (status == 0) {
+           //btnStatus.setText("Going");
+           //btnStatus.setTag(1);
+        //} else if (status == 1) {
+           //btnStatus.setText("Interested");
+           //btnStatus.setTag(0);
+        //}
     }
 
 }

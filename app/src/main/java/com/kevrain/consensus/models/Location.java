@@ -9,6 +9,13 @@ import com.parse.ParseRelation;
  */
 @ParseClassName("Location")
 public class Location extends ParseObject {
+    public Location() {}
+
+    public Location(String name, String date) {
+        setName(name);
+        setDate(date);
+    }
+
     public ParseRelation<Vote> getVotesRelation () {
         return getRelation("vote");
     }
@@ -31,10 +38,19 @@ public class Location extends ParseObject {
         return (Poll) getParseObject("poll");
     }
 
-    public void setTitle(String title) {
-        put("title", title);
+    public void setName(String name) {
+        put("name", name);
     }
-    public String getTitle() {
-        return (String) get("title");
+
+    public String getName() {
+        return (String) get("name");
+    }
+
+    public void setDate(String date) {
+        put("date", date);
+    }
+
+    public String getDate() {
+        return (String) get("date");
     }
 }

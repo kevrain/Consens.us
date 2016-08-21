@@ -10,6 +10,8 @@ import com.parse.ParseUser;
  */
 @ParseClassName("Group")
 public class Group extends ParseObject {
+    public Group() {}
+
     public void setOwner(ParseUser owner) {
         put("owner", owner);
     }

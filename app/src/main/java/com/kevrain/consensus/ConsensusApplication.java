@@ -4,8 +4,13 @@ import android.app.Application;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.kevrain.consensus.models.Group;
+import com.kevrain.consensus.models.Location;
+import com.kevrain.consensus.models.Poll;
+import com.kevrain.consensus.models.Vote;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseObject;
 import com.parse.interceptors.ParseLogInterceptor;
 
 /**
@@ -20,6 +25,11 @@ public class ConsensusApplication extends Application {
         FacebookSdk.sdkInitialize(getApplicationContext());
         FacebookSdk.setApplicationId(BuildConfig.FACEBOOK_APPLICATION_ID);
         AppEventsLogger.activateApp(this);
+
+        ParseObject.registerSubclass(Group.class);
+        ParseObject.registerSubclass(Location.class);
+        ParseObject.registerSubclass(Poll.class);
+        ParseObject.registerSubclass(Vote.class);
 
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId(BuildConfig.PARSE_APPLICATION_ID) // should correspond to APP_ID env variable

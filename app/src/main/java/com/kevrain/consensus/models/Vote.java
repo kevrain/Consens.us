@@ -9,6 +9,8 @@ import com.parse.ParseUser;
  */
 @ParseClassName("Vote")
 public class Vote extends ParseObject {
+    public Vote() {}
+
     public void setUser(ParseUser user) {
         put("user", user);
     }

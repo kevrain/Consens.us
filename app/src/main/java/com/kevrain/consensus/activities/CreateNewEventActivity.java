@@ -3,18 +3,25 @@ package com.kevrain.consensus.activities;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.Toast;
+import android.widget.EditText;
 
 import com.kevrain.consensus.R;
+import com.kevrain.consensus.adapter.EventLocationsArrayAdapter;
 import com.kevrain.consensus.fragments.DatePickerFragment;
+import com.kevrain.consensus.models.Location;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import butterknife.BindView;
@@ -24,7 +31,12 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.btnAddDate)Button btnAddDate;
-    @BindView(R.id.btnSubmit)Button btnSubmit;
+    @BindView(R.id.btnAdd)Button btnAdd;
+    @BindView(R.id.rvLocations) RecyclerView rvLocations;
+    @BindView(R.id.etLocation) EditText etLocation;
+
+    ArrayList<Location> locations;
+    EventLocationsArrayAdapter locationsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,16 +46,28 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
 
         setSupportActionBar(toolbar);
 
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+
+        // Custom toolbar for displaying rounded profile image
+        getSupportActionBar().setCustomView(R.layout.toolbar_new_event);
+
+        locations = new ArrayList<>();
+
+        locationsAdapter = new EventLocationsArrayAdapter(locations);
+        rvLocations.setAdapter(locationsAdapter);
+
+        rvLocations.setLayoutManager(new LinearLayoutManager(this));
+
+        btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent data = new Intent();
-                data.putExtra("Code",200);
+                if (!TextUtils.isEmpty(etLocation.getText().toString()) && !TextUtils.isEmpty(btnAddDate.getText().toString())) {
+                   locations.add(0, new Location(etLocation.getText().toString(), btnAddDate.getText().toString()));
+                   locationsAdapter.notifyItemChanged(0);
 
-                Toast.makeText(getApplicationContext(),"STORE EVENT HERE toD",Toast.LENGTH_SHORT).show();
-                //Add peristence calls here to store event details
-
-                finish();
+                    etLocation.setText("");
+                    btnAddDate.setText("");
+                }
             }
         });
     }
@@ -69,4 +93,13 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
         Log.d("Test",btnAddDate.getText().toString());
     }
 
+    public void closeActivity(View view) {
+        if (view.getId() == R.id.ibSubmit) {
+
+        }
+
+        Intent data = new Intent();
+        data.putExtra("Code", 200);
+        finish();
+    }
 }
