@@ -45,7 +45,6 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 
         // Custom toolbar for displaying rounded profile image
@@ -62,8 +61,22 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
             @Override
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(etLocation.getText().toString()) && !TextUtils.isEmpty(btnAddDate.getText().toString())) {
-                   locations.add(0, new Location(etLocation.getText().toString(), btnAddDate.getText().toString()));
-                   locationsAdapter.notifyItemChanged(0);
+
+                    //Check if the location/date is already part of the list
+                    boolean isDuplicate = false;
+                    for (int i=0;i<locations.size();i++)
+                    {
+                        if(locations.get(i).getDate().toString().equalsIgnoreCase(btnAddDate.getText().toString()) &&
+                                locations.get(i).getName().toString().equalsIgnoreCase(etLocation.getText().toString())) {
+                            isDuplicate= true;
+                        }
+                    }
+
+                    if(isDuplicate==false)
+                    {
+                        locations.add(0, new Location(etLocation.getText().toString(), btnAddDate.getText().toString()));
+                        locationsAdapter.notifyItemChanged(0);
+                    }
 
                     etLocation.setText("");
                     btnAddDate.setText("");

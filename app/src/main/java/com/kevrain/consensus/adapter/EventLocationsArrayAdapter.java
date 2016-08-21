@@ -64,16 +64,21 @@ public class EventLocationsArrayAdapter extends RecyclerView.Adapter<EventLocati
 
     @Override
     public void onBindViewHolder(EventLocationsArrayAdapter.ViewHolder holder, int position) {
+
         Location location = mLocations.get(position);
 
         holder.tvLocationListName.setText(location.getName());
-
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         holder.tvLocationListDate.setText(location.getDate());
+
+        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");h
     }
 
     @Override
     public int getItemCount() {
         return mLocations.size();
     }
+
+
+
+
 }
