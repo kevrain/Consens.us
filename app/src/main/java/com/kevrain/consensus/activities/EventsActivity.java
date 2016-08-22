@@ -14,12 +14,12 @@ import android.widget.ListView;
 import com.facebook.login.LoginManager;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.EventsArrayAdapter;
-import com.kevrain.consensus.models.Events;
 import com.kevrain.consensus.models.Group;
+import com.kevrain.consensus.models.Poll;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class EventsActivity extends AppCompatActivity {
     //@BindView(R.id.btnStatus) Button btnStatus;
 
     EventsArrayAdapter adapter;
-    ArrayList<Events> events;
+    ArrayList<Poll> polls;
     Group group;
     private final int REQUEST_CODE = 20;
 
@@ -52,8 +52,8 @@ public class EventsActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        events = new ArrayList<>();
-        adapter = new EventsArrayAdapter(this, events);
+        polls = new ArrayList<>();
+        adapter = new EventsArrayAdapter(this, polls);
         lvEvents.setAdapter(adapter);
 
         //btnStatus.setTag(0);
@@ -61,18 +61,26 @@ public class EventsActivity extends AppCompatActivity {
 
         //###### Populate data into events list view here
 
-        // HACK until groups are set up
+        String groupID = getIntent().getStringExtra("groupID");
+
         ParseQuery<Group> query = ParseQuery.getQuery(Group.class);
-        query.whereEqualTo("owner", ParseUser.getCurrentUser());
-        query.findInBackground(new FindCallback<Group>() {
-            public void done(List<Group> groupList, ParseException e) {
-                if (groupList!=null && groupList.size() > 0) {
-                   group = groupList.get(0);
-                } else {
-                    group = new Group();
-                    group.setTitle("New Group 1");
-                    group.setOwner(ParseUser.getCurrentUser());
-                    group.saveInBackground();
+
+        query.include("polls");
+
+        query.getInBackground(groupID, new GetCallback<Group>() {
+            public void done(Group groupItem, ParseException e) {
+                if (e == null) {
+                    group = groupItem;
+
+                    group.getPollsRelation().getQuery().findInBackground(new FindCallback<Poll>() {
+                        @Override
+                        public void done(List<Poll> objects, ParseException e) {
+                            if (objects != null && objects.size() > 0) {
+                                polls.addAll(objects);
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -83,6 +91,7 @@ public class EventsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d("Button click", "Buttton");
                 Intent i = new Intent(EventsActivity.this, CreateNewEventActivity.class);
+                i.putExtra("groupID", group.getObjectId());
                 startActivityForResult(i, REQUEST_CODE);
             }
         });

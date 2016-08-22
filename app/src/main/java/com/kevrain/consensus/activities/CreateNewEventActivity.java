@@ -21,15 +21,13 @@ import com.kevrain.consensus.fragments.DatePickerFragment;
 import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.models.Location;
 import com.kevrain.consensus.models.Poll;
-import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -146,38 +144,29 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
     }
 
     //Group_name (get it from the view => Invite group)
-    public void saveNewEvent(final String group_name)
-    {
+    public void saveNewEvent(final String group_name) {
         Log.d("Group NAME SAVING DATA", group_name);
         //Till we get Group info
+        String groupID = getIntent().getStringExtra("groupID");
+
         ParseQuery<Group> query = ParseQuery.getQuery(Group.class);
-        query.whereEqualTo("owner", ParseUser.getCurrentUser());
-        query.findInBackground(new FindCallback<Group>() {
-                                   public void done(List<Group> groupList, ParseException e) {
-                                       if (groupList != null && groupList.size() > 0) {
-                                           for(int i=0;i<groupList.size();i++)
-                                           {
-                                               if(group_name == groupList.get(i).getTitle())
-                                                   group = groupList.get(i);
-                                               else
-                                                   Log.d("USER DOESNT BELONG","To group, Provide a valid title");
-                                           }
-                                       }
-                                   }
 
-                               });
+        query.include("polls");
 
+        query.getInBackground(groupID, new GetCallback<Group>() {
+            public void done(Group groupItem, ParseException e) {
+                if (e == null) {
+                    group = groupItem;
 
-            //Integrate HERE Iris' getGroup
-        //group = getgroup....();
+                    Poll newPoll = new Poll();
+                    newPoll.setPollName(etEventName.getText().toString());
+                    group.addPoll(newPoll);
 
-
-        Poll newPoll = new Poll();
-        group.addPoll(newPoll);
-        newPoll.setPollName(etEventName.getText().toString());
-
-        for(int i=0;i<locations.size();i++)
-            newPoll.addLocation(locations.get(i));
+                    for (int i = 0; i < locations.size(); i++)
+                        newPoll.addLocation(locations.get(i));
+                }
+            }
+        });
     }
 }
 

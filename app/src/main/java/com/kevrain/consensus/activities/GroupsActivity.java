@@ -12,6 +12,7 @@ import android.view.View;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.GroupsArrayAdapter;
 import com.kevrain.consensus.models.Group;
+import com.kevrain.consensus.support.ItemClickSupport;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -64,6 +65,15 @@ public class GroupsActivity extends AppCompatActivity {
 
         ParseQuery<Group> membersQuery = ParseQuery.getQuery(Group.class);
         membersQuery.whereEqualTo("members", ParseUser.getCurrentUser());
+
+        ItemClickSupport.addTo(rvGroups).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                Intent i = new Intent(v.getContext(), EventsActivity.class);
+                i.putExtra("groupID", groups.get(position).getObjectId());
+                startActivity(i);
+            }
+        });
 
         ParseQuery<Group> query = ParseQuery.or(Arrays.asList(ownerQuery, membersQuery));
 

@@ -35,16 +35,16 @@ public class Poll extends ParseObject {
     }
 
     public void addLocation(Location location) {
-        getLocation().add(location);
+        getLocationRelation().add(location);
         saveInBackground();
     }
 
-    public ParseRelation<Location> getLocation () {
+    public ParseRelation<Location> getLocationRelation () {
         return getRelation("location");
     }
 
     public void removeLocation(Location location) {
-        getLocation().remove(location);
+        getLocationRelation().remove(location);
         saveInBackground();
     }
 
