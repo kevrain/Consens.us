@@ -10,4 +10,5 @@
     <string name="title_activity_events">Events</string>
     <string name="title_activity_event_details">Event Details</string>
     <string name="description">Description</string>
+    <string name="title_activity_groups">GroupsActivity</string>
 </resources>

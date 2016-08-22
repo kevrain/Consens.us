@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void goToNewGroups() {
-        Intent i = new Intent(this, CreateNewGroupActivity.class);
+        Intent i = new Intent(this, GroupsActivity.class);
         startActivity(i);
     }
 
