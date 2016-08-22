@@ -13,7 +13,7 @@ import android.widget.ListView;
 
 import com.facebook.login.LoginManager;
 import com.kevrain.consensus.R;
-import com.kevrain.consensus.adapter.EventsArrayAdapter;
+import com.kevrain.consensus.adapter.PollsArrayAdapter;
 import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.models.Poll;
 import com.parse.FindCallback;
@@ -29,15 +29,15 @@ import butterknife.ButterKnife;
 
 public class EventsActivity extends AppCompatActivity {
 
-    @BindView(R.id.lvEvents)
-    ListView lvEvents;
+    @BindView(R.id.lvPolls)
+    ListView lvPolls;
     @BindView(R.id.fabCreateEvent)
     FloatingActionButton fabCreateEvent;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     //@BindView(R.id.btnStatus) Button btnStatus;
 
-    EventsArrayAdapter adapter;
+    PollsArrayAdapter adapter;
     ArrayList<Poll> polls;
     Group group;
     private final int REQUEST_CODE = 20;
@@ -53,8 +53,8 @@ public class EventsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         polls = new ArrayList<>();
-        adapter = new EventsArrayAdapter(this, polls);
-        lvEvents.setAdapter(adapter);
+        adapter = new PollsArrayAdapter(this, polls);
+        lvPolls.setAdapter(adapter);
 
         //btnStatus.setTag(0);
         //btnStatus.setText("Interested");

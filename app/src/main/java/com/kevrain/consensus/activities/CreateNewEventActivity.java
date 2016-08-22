@@ -24,6 +24,7 @@ import com.kevrain.consensus.models.Poll;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -133,12 +134,24 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
                 if (e == null) {
                     group = groupItem;
 
-                    Poll newPoll = new Poll();
+                    final Poll newPoll = new Poll();
                     newPoll.setPollName(etEventName.getText().toString());
-                    group.addPoll(newPoll);
+                    newPoll.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            group.addPoll(newPoll);
 
-                    for (int i = 0; i < locations.size(); i++)
-                        newPoll.addLocation(locations.get(i));
+                            for (int i = 0; i < locations.size(); i++) {
+                                final Location loc = locations.get(i);
+                                loc.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        newPoll.addLocation(loc);
+                                    }
+                                });
+                            }
+                        }
+                    });
                 }
             }
         });

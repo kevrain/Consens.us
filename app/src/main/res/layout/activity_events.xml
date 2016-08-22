@@ -17,7 +17,7 @@
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lvEvents"
+        android:id="@+id/lvPolls"
         android:layout_below="@+id/toolbar"
         />
 
@@ -29,7 +29,7 @@
         android:onClick="onCreateNewEvent"
         android:src="@drawable/ic_plus"
         android:tint="@android:color/white"
-        app:layout_anchor="@id/lvEvents"
+        app:layout_anchor="@id/lvPolls"
         app:layout_anchorGravity="bottom|right|end"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
