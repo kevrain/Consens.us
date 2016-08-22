@@ -14,6 +14,7 @@ import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.PollsArrayAdapter;
 import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.models.Poll;
+import com.kevrain.consensus.support.ItemClickSupport;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -54,6 +55,30 @@ public class EventsActivity extends AppCompatActivity {
 
         rvPolls.setLayoutManager(new LinearLayoutManager(this));
 
+        ItemClickSupport.addTo(rvPolls).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                Intent i = new Intent(v.getContext(), EventDetailsActivity.class);
+                i.putExtra("pollID", polls.get(position).getObjectId());
+                startActivity(i);
+            }
+        });
+
+        populateGroupAndPolls();
+
+        //Add New event
+        fabCreateEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("Button click", "Buttton");
+                Intent i = new Intent(EventsActivity.this, CreateNewEventActivity.class);
+                i.putExtra("groupID", group.getObjectId());
+                startActivityForResult(i, REQUEST_CODE);
+            }
+        });
+    }
+
+    private void populateGroupAndPolls() {
         //###### Populate data into events list view here
 
         String groupID = getIntent().getStringExtra("groupID");
@@ -77,17 +102,6 @@ public class EventsActivity extends AppCompatActivity {
                         }
                     });
                 }
-            }
-        });
-
-        //Add New event
-        fabCreateEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("Button click", "Buttton");
-                Intent i = new Intent(EventsActivity.this, CreateNewEventActivity.class);
-                i.putExtra("groupID", group.getObjectId());
-                startActivityForResult(i, REQUEST_CODE);
             }
         });
     }
