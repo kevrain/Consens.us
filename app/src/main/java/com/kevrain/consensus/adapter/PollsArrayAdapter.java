@@ -1,10 +1,10 @@
 package com.kevrain.consensus.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.kevrain.consensus.R;
@@ -21,45 +21,68 @@ import butterknife.ButterKnife;
 /**
  * Created by shravyagarlapati on 8/19/16.
  */
-public class PollsArrayAdapter extends ArrayAdapter<Poll> {
+public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.ViewHolder> {
+    public List<Poll> mPolls;
 
-    public PollsArrayAdapter(Context context, List polls) {
-        super(context, android.R.layout.simple_list_item_1, polls);
+    // Pass in the contact array into the constructor
+    public PollsArrayAdapter(List<Poll> locations) {
+        mPolls = locations;
     }
 
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final ViewHolder viewHolder;
-        Poll poll = getItem(position);
+    // Provide a direct reference to each of the views within a data item
+    // Used to cache the views within the item layout for fast access
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        @BindView(R.id.tvEventName) TextView tvEventName;
+        @BindView(R.id.tvLocationCount) TextView tvLocationCount;
 
-        if(convertView==null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_poll, parent, false);
-            viewHolder = new ViewHolder(convertView);
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+        public ViewHolder(View itemView) {
+            // Stores the itemView in a public final member variable that can be used
+            // to access the context from any ViewHolder instance.
+            super(itemView);
+
+            ButterKnife.bind(this, itemView);
         }
 
-        viewHolder.tvEventName.setText(poll.getPollName());
+        @Override
+        public void onClick(View view) {
+
+        }
+    }
+
+    @Override
+    public PollsArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+
+        // Inflate the custom layout
+        View listItemView = inflater.inflate(R.layout.item_poll, parent, false);
+
+        ButterKnife.bind(listItemView);
+
+        // Return a new holder instance
+        ViewHolder viewHolder = new ViewHolder(listItemView);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(final PollsArrayAdapter.ViewHolder holder, int position) {
+
+        Poll poll = mPolls.get(position);
+
+        holder.tvEventName.setText(poll.getPollName());
 
         poll.getLocationRelation().getQuery().findInBackground(new FindCallback<Location>() {
             @Override
             public void done(List<Location> locations, ParseException e) {
-               viewHolder.tvLocationCount.setText(""+locations.size()+ " Locations");
+                if (e == null) {
+                    holder.tvLocationCount.setText("" + locations.size() + " Locations");
+                }
             }
         });
-
-        return convertView;
     }
 
-    public class ViewHolder {
-        @BindView(R.id.tvEventName) TextView tvEventName;
-        @BindView(R.id.tvLocationCount) TextView tvLocationCount;
-
-        public ViewHolder(View convertView) {
-            ButterKnife.bind(this, convertView);
-        }
+    @Override
+    public int getItemCount() {
+        return mPolls.size();
     }
-
-
-
 }

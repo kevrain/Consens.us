@@ -4,10 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.ListView;
 
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.PollsArrayAdapter;
@@ -25,14 +26,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class EventsActivity extends AppCompatActivity {
-
-    @BindView(R.id.lvPolls)
-    ListView lvPolls;
-    @BindView(R.id.fabCreateEvent)
-    FloatingActionButton fabCreateEvent;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    //@BindView(R.id.btnStatus) Button btnStatus;
+    @BindView(R.id.rvPolls) RecyclerView rvPolls;
+    @BindView(R.id.fabCreateEvent) FloatingActionButton fabCreateEvent;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
     PollsArrayAdapter adapter;
     ArrayList<Poll> polls;
@@ -53,11 +49,10 @@ public class EventsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         polls = new ArrayList<>();
-        adapter = new PollsArrayAdapter(this, polls);
-        lvPolls.setAdapter(adapter);
+        adapter = new PollsArrayAdapter(polls);
+        rvPolls.setAdapter(adapter);
 
-        //btnStatus.setTag(0);
-        //btnStatus.setText("Interested");
+        rvPolls.setLayoutManager(new LinearLayoutManager(this));
 
         //###### Populate data into events list view here
 
@@ -95,10 +90,6 @@ public class EventsActivity extends AppCompatActivity {
                 startActivityForResult(i, REQUEST_CODE);
             }
         });
-    }
-
-    private void populateData() {
-
     }
 
     @Override
