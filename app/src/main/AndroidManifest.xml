@@ -47,17 +47,22 @@
         <activity
             android:name=".activities.EventsActivity"
             android:label="@string/title_activity_events"
+            android:parentActivityName=".activities.GroupsActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.GroupsActivity" />
+        </activity>
+        <activity android:name=".activities.CreateNewGroupActivity"></activity>
+        <activity
+            android:name=".activities.GroupsActivity"
+            android:label="@string/title_activity_groups"
             android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
-        <activity android:name=".activities.CreateNewGroupActivity"></activity>
-        <activity
-            android:name=".activities.GroupsActivity"
-            android:label="@string/title_activity_groups"
-            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
