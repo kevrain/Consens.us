@@ -16,7 +16,8 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -33,6 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/etEventName"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_toRightOf="@id/tvEventName"
             android:layout_gravity="right"
             android:layout_alignBottom="@+id/tvEventName"
@@ -40,13 +42,14 @@
             android:layout_alignParentEnd="true" />
 
         <TextView
-            android:layout_marginTop="40dp"
             android:id="@+id/tvLocation"
             android:text="Add locations"
             android:textColor="@color/colorAccent"
-            android:layout_below="@+id/etEventName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvGroupName"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
         <View
             android:id="@+id/dividerLocation"
@@ -81,10 +84,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:layout_below="@+id/tvLocationName"
             android:text="Date"
             android:id="@+id/tvAddDate"
+            android:layout_below="@+id/tvLocationName"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
@@ -93,27 +95,59 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Add a date"
-            android:layout_toRightOf="@+id/tvAddDate"
-            android:layout_alignBaseline="@+id/tvAddDate"
-            android:layout_below="@+id/tvLocation"
             android:id="@+id/btnAddDate"
-            android:onClick="showDatePickerDialog" />
+            android:onClick="showDatePickerDialog"
+            android:layout_alignTop="@+id/tvAddDate"
+            android:layout_alignLeft="@+id/btnAdd"
+            android:layout_alignStart="@+id/btnAdd" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add Location +"
             android:id="@+id/btnAdd"
-            android:layout_below="@+id/tvAddDate"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/btnAddDate"
             android:layout_centerHorizontal="true" />"
 
         <android.support.v7.widget.RecyclerView
-            android:layout_marginTop="?android:attr/actionBarSize"
             android:id="@+id/rvLocations"
-            android:layout_below="@+id/btnAdd"
-            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="99dp"
+            android:layout_below="@+id/btnAdd"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Invite group"
+            android:id="@+id/tvGroupName"
+            android:layout_below="@+id/etEventName"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/etGroupName"
+            android:layout_toRightOf="@id/tvGroupName"
+            android:layout_gravity="right"
+            android:layout_below="@id/etEventName"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_above="@+id/dividerLocation" />
+
     </RelativeLayout>
-    
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Event"
+        android:id="@+id/btnSaveEvent"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

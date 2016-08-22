@@ -18,11 +18,18 @@ import android.widget.EditText;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.EventLocationsArrayAdapter;
 import com.kevrain.consensus.fragments.DatePickerFragment;
+import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.models.Location;
+import com.kevrain.consensus.models.Poll;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,9 +41,16 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
     @BindView(R.id.btnAdd)Button btnAdd;
     @BindView(R.id.rvLocations) RecyclerView rvLocations;
     @BindView(R.id.etLocation) EditText etLocation;
+    @BindView(R.id.btnSaveEvent)Button btnSaveEvent;
+    @BindView(R.id.etEventName) EditText etEventName;
+    @BindView(R.id.etGroupName) EditText etGroupName;
+
 
     ArrayList<Location> locations;
     EventLocationsArrayAdapter locationsAdapter;
+    Group group;
+    String group_title;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,15 +97,31 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
                 }
             }
         });
+
+        btnSaveEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("Save EVENT", "");
+                Log.d("groupNAME",etGroupName.getText().toString());
+                //Persist the data in DB and then close the activity and go to Events details
+                //Persist using Parse\
+                saveNewEvent(etGroupName.getText().toString());
+
+                //Close and go to events activity
+                Intent intent = new Intent(getApplicationContext(), EventsActivity.class);
+                intent.putExtra("Code",20);
+                finish();
+
+            }
+        });
     }
 
-    // attach to an onclick handler to show the date picker
+    // Attach to an onclick handler to show the date picker
     public void showDatePickerDialog(View v) {
         DatePickerFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
-    // handle the date selected
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         // store the values selected into a Calendar instance
@@ -110,9 +140,44 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
         if (view.getId() == R.id.ibSubmit) {
 
         }
-
         Intent data = new Intent();
         data.putExtra("Code", 200);
         finish();
     }
+
+    //Group_name (get it from the view => Invite group)
+    public void saveNewEvent(final String group_name)
+    {
+        Log.d("Group NAME SAVING DATA", group_name);
+        //Till we get Group info
+        ParseQuery<Group> query = ParseQuery.getQuery(Group.class);
+        query.whereEqualTo("owner", ParseUser.getCurrentUser());
+        query.findInBackground(new FindCallback<Group>() {
+                                   public void done(List<Group> groupList, ParseException e) {
+                                       if (groupList != null && groupList.size() > 0) {
+                                           for(int i=0;i<groupList.size();i++)
+                                           {
+                                               if(group_name == groupList.get(i).getTitle())
+                                                   group = groupList.get(i);
+                                               else
+                                                   Log.d("USER DOESNT BELONG","To group, Provide a valid title");
+                                           }
+                                       }
+                                   }
+
+                               });
+
+
+            //Integrate HERE Iris' getGroup
+        //group = getgroup....();
+
+
+        Poll newPoll = new Poll();
+        group.addPoll(newPoll);
+        newPoll.setPollName(etEventName.getText().toString());
+
+        for(int i=0;i<locations.size();i++)
+            newPoll.addLocation(locations.get(i));
+    }
 }
+

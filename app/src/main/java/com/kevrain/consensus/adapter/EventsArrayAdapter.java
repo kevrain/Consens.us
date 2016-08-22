@@ -39,12 +39,11 @@ public class EventsArrayAdapter extends ArrayAdapter<Events> {
         }
 
         viewHolder.tvEventName.setText(event.getEventName());
-        viewHolder.tvDate.setText(event.getDate());
         viewHolder.tvInvitedBy.setText(event.getInvitedBy());
 
         viewHolder.ivEventImage.setImageResource(android.R.color.transparent);
         Glide.with(getContext())
-                .load(event.getGetEventImage()).into(viewHolder.ivEventImage);
+                .load(event.getEventImage()).into(viewHolder.ivEventImage);
 
         return convertView;
     }

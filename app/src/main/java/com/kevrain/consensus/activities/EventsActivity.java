@@ -66,7 +66,7 @@ public class EventsActivity extends AppCompatActivity {
         query.whereEqualTo("owner", ParseUser.getCurrentUser());
         query.findInBackground(new FindCallback<Group>() {
             public void done(List<Group> groupList, ParseException e) {
-                if (groupList.size() > 0) {
+                if (groupList!=null && groupList.size() > 0) {
                    group = groupList.get(0);
                 } else {
                     group = new Group();

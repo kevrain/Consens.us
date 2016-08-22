@@ -9,6 +9,7 @@ import com.parse.ParseRelation;
  */
 @ParseClassName("Poll")
 public class Poll extends ParseObject {
+
     public Poll() {}
 
     public ParseRelation<Vote> getVotesRelation () {
@@ -32,4 +33,24 @@ public class Poll extends ParseObject {
     public Group getGroup() {
         return (Group) getParseObject("group");
     }
+
+    public void addLocation(Location location) {
+        getLocation().add(location);
+        saveInBackground();
+    }
+
+    public ParseRelation<Location> getLocation () {
+        return getRelation("location");
+    }
+
+    public void removeLocation(Location location) {
+        getLocation().remove(location);
+        saveInBackground();
+    }
+
+    public void setPollName(String name) { put("name", name); }
+
+    public String getPollName() { return (String) get("name"); }
+
+
 }
