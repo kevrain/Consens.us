@@ -7,8 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
+import com.facebook.login.LoginManager;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.GroupsArrayAdapter;
 import com.kevrain.consensus.models.Group;
@@ -99,4 +102,30 @@ public class GroupsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_groups, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.action_logout) {
+            logOut();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void logOut() {
+        LoginManager.getInstance().logOut();
+        finish();
+    }
 }

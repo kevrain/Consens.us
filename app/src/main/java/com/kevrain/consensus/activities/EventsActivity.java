@@ -6,8 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
@@ -102,28 +100,6 @@ public class EventsActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_events, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == R.id.action_logout) {
-            logOut();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // REQUEST_CODE is defined above
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
@@ -144,24 +120,6 @@ public class EventsActivity extends AppCompatActivity {
             });
         }
     }
-
-    private void logOut() {
-        LoginManager.getInstance().logOut();
-        finish();
-    }
-
-    private void statusChange() {
-        //int status = (Integer) btnStatus.getTag();
-
-        //if (status == 0) {
-           //btnStatus.setText("Going");
-           //btnStatus.setTag(1);
-        //} else if (status == 1) {
-           //btnStatus.setText("Interested");
-           //btnStatus.setTag(0);
-        //}
-    }
-
 }
 
 
