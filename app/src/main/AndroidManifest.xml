@@ -43,7 +43,12 @@
         <activity
             android:name=".activities.EventDetailsActivity"
             android:label="@string/title_activity_event_details"
-            android:theme="@style/AppTheme" />
+            android:parentActivityName=".activities.EventsActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.EventsActivity" />
+           </activity>
         <activity
             android:name=".activities.EventsActivity"
             android:label="@string/title_activity_events"

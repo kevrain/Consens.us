@@ -7,9 +7,6 @@ import android.support.v7.widget.Toolbar;
 import com.kevrain.consensus.R;
 
 public class EventDetailsActivity extends AppCompatActivity {
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,9 +14,9 @@ public class EventDetailsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Show back button
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         //TODO (Add the event details here)
-
-
     }
-
 }
