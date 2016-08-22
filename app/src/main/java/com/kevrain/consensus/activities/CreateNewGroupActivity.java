@@ -1,5 +1,6 @@
 package com.kevrain.consensus.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -109,7 +110,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnSave)
     public void saveGroup(Button button) {
-        Group newGroup = new Group();
+        final Group newGroup = new Group();
         newGroup.setOwner(ParseUser.getCurrentUser());
         newGroup.setTitle(etGroupName.getText().toString());
         newGroup.addMembers(friendsArrayAdapter.friendsToAdd);
@@ -118,7 +119,10 @@ public class CreateNewGroupActivity extends AppCompatActivity {
             public void done(ParseException e) {
                 Toast.makeText(CreateNewGroupActivity.this,
                     "New group: signed up", Toast.LENGTH_SHORT).show();
-                setResult(RESULT_OK);
+                Intent data = new Intent();
+                data.putExtra("group_title", newGroup.getTitle());
+                data.putExtra("group_id", newGroup.getObjectId());
+                setResult(RESULT_OK, data);
                 finish();
             }
         });
