@@ -113,16 +113,6 @@ public class EventsActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-//        switch(item.getItemId()) {
-//            case R.id.action_settings:
-//                return true;
-//            case R.id.action_logout:
-//                logOut();
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-
-        //Log.d("DID WE COME HERE?", "onOptionsItemSelected");
         int id = item.getItemId();
 
         if (id == R.id.action_logout) {
@@ -133,8 +123,29 @@ public class EventsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // REQUEST_CODE is defined above
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            // Extract name value from result extras
+
+            String pollID = data.getExtras().getString("pollID");
+
+            ParseQuery<Poll> query = ParseQuery.getQuery(Poll.class);
+
+            query.getInBackground(pollID, new GetCallback<Poll>() {
+                public void done(Poll poll, ParseException e) {
+                    if (e == null) {
+                        // item was found
+                        polls.add(0, poll);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            });
+        }
+    }
+
     private void logOut() {
-        //Log.d("Click on LOGOUT", "LOGOUT BUTTON");
         LoginManager.getInstance().logOut();
         finish();
     }

@@ -150,16 +150,18 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
                                     }
                                 });
                             }
+
+                            //Close and go to events activity
+                            Intent intent = new Intent(getApplicationContext(), EventsActivity.class);
+                            intent.putExtra("Code", 20);
+                            intent.putExtra("pollID", newPoll.getObjectId());
+                            setResult(RESULT_OK, intent);
+                            finish();
                         }
                     });
                 }
             }
         });
-
-        //Close and go to events activity
-        Intent intent = new Intent(getApplicationContext(), EventsActivity.class);
-        intent.putExtra("Code",20);
-        finish();
     }
 }
 
