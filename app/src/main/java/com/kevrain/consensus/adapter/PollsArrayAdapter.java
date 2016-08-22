@@ -8,7 +8,10 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.kevrain.consensus.R;
+import com.kevrain.consensus.models.Location;
 import com.kevrain.consensus.models.Poll;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 
 import java.util.List;
 
@@ -25,7 +28,7 @@ public class PollsArrayAdapter extends ArrayAdapter<Poll> {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
+        final ViewHolder viewHolder;
         Poll poll = getItem(position);
 
         if(convertView==null){
@@ -38,11 +41,19 @@ public class PollsArrayAdapter extends ArrayAdapter<Poll> {
 
         viewHolder.tvEventName.setText(poll.getPollName());
 
+        poll.getLocationRelation().getQuery().findInBackground(new FindCallback<Location>() {
+            @Override
+            public void done(List<Location> locations, ParseException e) {
+               viewHolder.tvLocationCount.setText(""+locations.size()+ " Locations");
+            }
+        });
+
         return convertView;
     }
 
     public class ViewHolder {
         @BindView(R.id.tvEventName) TextView tvEventName;
+        @BindView(R.id.tvLocationCount) TextView tvLocationCount;
 
         public ViewHolder(View convertView) {
             ButterKnife.bind(this, convertView);
