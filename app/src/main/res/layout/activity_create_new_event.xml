@@ -47,7 +47,7 @@
             android:textColor="@color/colorAccent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvGroupName"
+            android:layout_below="@+id/tvEventName"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
@@ -118,36 +118,6 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginTop="20dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Invite group"
-            android:id="@+id/tvGroupName"
-            android:layout_below="@+id/etEventName"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/etGroupName"
-            android:layout_toRightOf="@id/tvGroupName"
-            android:layout_gravity="right"
-            android:layout_below="@id/etEventName"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_above="@+id/dividerLocation" />
-
     </RelativeLayout>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save Event"
-        android:id="@+id/btnSaveEvent"
-        android:layout_below="@+id/relativeLayout"
-        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

@@ -39,16 +39,11 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
     @BindView(R.id.btnAdd)Button btnAdd;
     @BindView(R.id.rvLocations) RecyclerView rvLocations;
     @BindView(R.id.etLocation) EditText etLocation;
-    @BindView(R.id.btnSaveEvent)Button btnSaveEvent;
     @BindView(R.id.etEventName) EditText etEventName;
-    @BindView(R.id.etGroupName) EditText etGroupName;
-
 
     ArrayList<Location> locations;
     EventLocationsArrayAdapter locationsAdapter;
     Group group;
-    String group_title;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,23 +90,6 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
                 }
             }
         });
-
-        btnSaveEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("Save EVENT", "");
-                Log.d("groupNAME",etGroupName.getText().toString());
-                //Persist the data in DB and then close the activity and go to Events details
-                //Persist using Parse\
-                saveNewEvent(etGroupName.getText().toString());
-
-                //Close and go to events activity
-                Intent intent = new Intent(getApplicationContext(), EventsActivity.class);
-                intent.putExtra("Code",20);
-                finish();
-
-            }
-        });
     }
 
     // Attach to an onclick handler to show the date picker
@@ -143,10 +121,7 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
         finish();
     }
 
-    //Group_name (get it from the view => Invite group)
-    public void saveNewEvent(final String group_name) {
-        Log.d("Group NAME SAVING DATA", group_name);
-        //Till we get Group info
+    public void saveNewEvent(View view) {
         String groupID = getIntent().getStringExtra("groupID");
 
         ParseQuery<Group> query = ParseQuery.getQuery(Group.class);
@@ -167,6 +142,11 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
                 }
             }
         });
+
+        //Close and go to events activity
+        Intent intent = new Intent(getApplicationContext(), EventsActivity.class);
+        intent.putExtra("Code",20);
+        finish();
     }
 }
 
