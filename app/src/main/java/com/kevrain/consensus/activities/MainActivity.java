@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     private void getUserDetailsFromFB() {
         // Suggested by https://disqus.com/by/dominiquecanlas/
         Bundle parameters = new Bundle();
-        parameters.putString("fields", "email,name,picture");
+        parameters.putString("fields", "email,name,picture,id");
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 "/me",
@@ -101,43 +101,47 @@ public class MainActivity extends AppCompatActivity {
                             JSONObject data = picture.getJSONObject("data");
                             //  Returns a 50x50 profile picture
                             pictureUrl = data.getString("url");
-
-                            saveNewUser();
+                            saveNewUser(response.getJSONObject().getLong("id"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
                 }
         ).executeAsync();
+
     }
 
-    private void saveNewUser() {
+    private void saveNewUser(long fbId) {
         parseUser = ParseUser.getCurrentUser();
         parseUser.setUsername(name);
         parseUser.setEmail(email);
+        parseUser.put("fb_id", fbId);
 //        Saving profile photo as a ParseFile
-        Glide.with(getBaseContext()).load(pictureUrl).asBitmap().toBytes().into(new SimpleTarget<byte[]>(50, 50) {
-            @Override
-            public void onResourceReady(byte[] data, GlideAnimation anim) {
-                // Post your bytes to a background thread and upload them here.
-                String thumbName = parseUser.getUsername().replaceAll("\\s+", "");
-                final ParseFile parseFile = new ParseFile(thumbName + "_thumb.jpg", data);
-                parseFile.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        parseUser.put("profileThumb", parseFile);
-                        //Finally save all the user details
-                        parseUser.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                Toast.makeText(MainActivity.this, "New user:" + name + " Signed up", Toast.LENGTH_SHORT).show();
-                                goToEvents();
-                            }
-                        });
-                    }
-                });
-            }
-        });
+        Glide.with(getBaseContext()).load(pictureUrl).asBitmap().toBytes().into(
+            new SimpleTarget<byte[]>(50, 50) {
+                @Override
+                public void onResourceReady(byte[] data, GlideAnimation anim) {
+                    // Post your bytes to a background thread and upload them here.
+                    String thumbName = parseUser.getUsername().replaceAll("\\s+", "");
+                    final ParseFile parseFile = new ParseFile(thumbName + "_thumb.jpg", data);
+                    parseFile.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            parseUser.put("profileThumb", parseFile);
+                            //Finally save all the user details
+                            parseUser.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    Toast.makeText(MainActivity.this,
+                                        "New user:" + name + " Signed up", Toast.LENGTH_SHORT)
+                                         .show();
+                                    goToNewGroups();
+                                }
+                            });
+                        }
+                    });
+                }
+            });
     }
 
     private void getUserDetailsFromParse() {
@@ -151,7 +155,12 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        goToEvents();
+        goToNewGroups();
+    }
+
+    private void goToNewGroups() {
+        Intent i = new Intent(this, CreateNewGroupActivity.class);
+        startActivity(i);
     }
 
     private void goToEvents() {

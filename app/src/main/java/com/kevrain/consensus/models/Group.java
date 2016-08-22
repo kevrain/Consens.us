@@ -5,27 +5,36 @@ import com.parse.ParseObject;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
+
+import java.util.Set;
+
 /**
  * Created by kfarst on 8/19/16.
  */
 @ParseClassName("Group")
 public class Group extends ParseObject {
+
     public Group() {}
 
+    public static String OWNER = "owner";
+    public static String MEMBERS = "members";
+    public static String POLLS = "polls";
+    public static String TITLE = "title";
+
     public void setOwner(ParseUser owner) {
-        put("owner", owner);
+        put(OWNER, owner);
     }
 
     public ParseUser getOwner() {
-        return (ParseUser) getParseObject("owner");
+        return (ParseUser) getParseObject(OWNER);
     }
 
     public ParseRelation<ParseUser> getMembersRelation () {
-        return getRelation("members");
+        return getRelation(MEMBERS);
     }
 
     public ParseRelation<Poll> getPollsRelation () {
-        return getRelation("polls");
+        return getRelation(POLLS);
     }
 
     public void addMember(ParseUser user) {
@@ -48,10 +57,18 @@ public class Group extends ParseObject {
         saveInBackground();
     }
 
-    public void setTitle(String title) {
-        put("title", title);
+    public void addMembers(Set<ParseUser> members) {
+        ParseRelation membersRelation = getMembersRelation();
+        for (ParseUser member: members) {
+            membersRelation.add(member);
+        }
     }
+
+    public void setTitle(String title) {
+        put(TITLE, title);
+    }
+
     public String getTitle() {
-        return (String) get("title");
+        return (String) get(TITLE);
     }
 }
