@@ -19,10 +19,12 @@ import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.Profile;
 import com.kevrain.consensus.R;
+import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -155,7 +157,12 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        goToNewGroups();
+        parseUser.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                goToNewGroups();
+            }
+        });
     }
 
     private void goToNewGroups() {
