@@ -18,11 +18,11 @@ import butterknife.ButterKnife;
 /**
  * Created by kfarst on 8/21/16.
  */
-public class EventLocationsArrayAdapter extends RecyclerView.Adapter<EventLocationsArrayAdapter.ViewHolder> {
+public class PollLocationsArrayAdapter extends RecyclerView.Adapter<PollLocationsArrayAdapter.ViewHolder> {
     public List<Location> mLocations;
 
     // Pass in the contact array into the constructor
-    public EventLocationsArrayAdapter(List<Location> locations) {
+    public PollLocationsArrayAdapter(List<Location> locations) {
         mLocations = locations;
     }
 
@@ -48,12 +48,12 @@ public class EventLocationsArrayAdapter extends RecyclerView.Adapter<EventLocati
     }
 
     @Override
-    public EventLocationsArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PollLocationsArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View listItemView = inflater.inflate(R.layout.item_event_location, parent, false);
+        View listItemView = inflater.inflate(R.layout.item_poll_location, parent, false);
 
         ButterKnife.bind(listItemView);
 
@@ -63,7 +63,7 @@ public class EventLocationsArrayAdapter extends RecyclerView.Adapter<EventLocati
     }
 
     @Override
-    public void onBindViewHolder(EventLocationsArrayAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(PollLocationsArrayAdapter.ViewHolder holder, int position) {
 
         Location location = mLocations.get(position);
 

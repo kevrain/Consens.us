@@ -38,22 +38,22 @@
         </activity>
         <activity
             android:launchMode="singleTop"
-            android:name=".activities.CreateNewEventActivity"
+            android:name=".activities.CreateNewPollActivity"
             android:label="@string/title_activity_create_new_event"
             android:theme="@style/AppTheme" />
         <activity
             android:launchMode="singleTop"
-            android:name=".activities.EventDetailsActivity"
+            android:name=".activities.PollDetailsActivity"
             android:label="@string/title_activity_event_details"
-            android:parentActivityName=".activities.EventsActivity"
+            android:parentActivityName=".activities.PollsActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.EventsActivity" />
+                android:value=".activities.PollsActivity" />
            </activity>
         <activity
             android:launchMode="singleTop"
-            android:name=".activities.EventsActivity"
+            android:name=".activities.PollsActivity"
             android:label="@string/title_activity_events"
             android:parentActivityName=".activities.GroupsActivity"
             android:theme="@style/AppTheme">

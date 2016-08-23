@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
 import com.kevrain.consensus.R;
-import com.kevrain.consensus.adapter.EventLocationsArrayAdapter;
+import com.kevrain.consensus.adapter.PollLocationsArrayAdapter;
 import com.kevrain.consensus.models.Location;
 import com.kevrain.consensus.models.Poll;
 import com.parse.FindCallback;
@@ -22,19 +22,19 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class EventDetailsActivity extends AppCompatActivity {
+public class PollDetailsActivity extends AppCompatActivity {
     @BindView(R.id.tvEventName) TextView tvEventName;
     @BindView(R.id.rvPollLocations) RecyclerView rvPollLocations;
     @BindView(R.id.toolbar) Toolbar toolbar;
 
     Poll poll;
-    EventLocationsArrayAdapter adapter;
+    PollLocationsArrayAdapter adapter;
     List<Location> locations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_details);
+        setContentView(R.layout.activity_poll_details);
 
         ButterKnife.bind(this);
 
@@ -46,7 +46,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         //TODO (Add the event details here)
 
         locations = new ArrayList<>();
-        adapter = new EventLocationsArrayAdapter(locations);
+        adapter = new PollLocationsArrayAdapter(locations);
         rvPollLocations.setAdapter(adapter);
 
         rvPollLocations.setLayoutManager(new LinearLayoutManager(this));

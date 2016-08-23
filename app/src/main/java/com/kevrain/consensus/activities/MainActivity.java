@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void goToEvents() {
-        Intent i = new Intent(this, EventsActivity.class);
+        Intent i = new Intent(this, PollsActivity.class);
         startActivity(i);
     }
 }

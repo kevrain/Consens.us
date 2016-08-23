@@ -16,7 +16,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.kevrain.consensus.R;
-import com.kevrain.consensus.adapter.EventLocationsArrayAdapter;
+import com.kevrain.consensus.adapter.PollLocationsArrayAdapter;
 import com.kevrain.consensus.fragments.DatePickerFragment;
 import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.models.Location;
@@ -33,7 +33,7 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CreateNewEventActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class CreateNewPollActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.btnAddDate)Button btnAddDate;
@@ -43,13 +43,13 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
     @BindView(R.id.etEventName) EditText etEventName;
 
     ArrayList<Location> locations;
-    EventLocationsArrayAdapter locationsAdapter;
+    PollLocationsArrayAdapter locationsAdapter;
     Group group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_new_event);
+        setContentView(R.layout.activity_create_new_poll);
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
@@ -60,7 +60,7 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
 
         locations = new ArrayList<>();
 
-        locationsAdapter = new EventLocationsArrayAdapter(locations);
+        locationsAdapter = new PollLocationsArrayAdapter(locations);
         rvLocations.setAdapter(locationsAdapter);
 
         rvLocations.setLayoutManager(new LinearLayoutManager(this));
@@ -152,7 +152,7 @@ public class CreateNewEventActivity extends AppCompatActivity implements DatePic
                             }
 
                             //Close and go to events activity
-                            Intent intent = new Intent(getApplicationContext(), EventsActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), PollsActivity.class);
                             intent.putExtra("Code", 20);
                             intent.putExtra("pollID", newPoll.getObjectId());
                             setResult(RESULT_OK, intent);

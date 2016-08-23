@@ -26,7 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class EventsActivity extends AppCompatActivity {
+public class PollsActivity extends AppCompatActivity {
     @BindView(R.id.rvPolls) RecyclerView rvPolls;
     @BindView(R.id.fabCreateEvent) FloatingActionButton fabCreateEvent;
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -41,7 +41,7 @@ public class EventsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_events);
+        setContentView(R.layout.activity_polls);
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
@@ -58,7 +58,7 @@ public class EventsActivity extends AppCompatActivity {
         ItemClickSupport.addTo(rvPolls).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                Intent i = new Intent(v.getContext(), EventDetailsActivity.class);
+                Intent i = new Intent(v.getContext(), PollDetailsActivity.class);
                 i.putExtra("pollID", polls.get(position).getObjectId());
                 startActivity(i);
             }
@@ -71,7 +71,7 @@ public class EventsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d("Button click", "Buttton");
-                Intent i = new Intent(EventsActivity.this, CreateNewEventActivity.class);
+                Intent i = new Intent(PollsActivity.this, CreateNewPollActivity.class);
                 i.putExtra("groupID", group.getObjectId());
                 startActivityForResult(i, REQUEST_CODE);
             }

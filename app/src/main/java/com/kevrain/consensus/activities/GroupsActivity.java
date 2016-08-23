@@ -72,7 +72,7 @@ public class GroupsActivity extends AppCompatActivity {
         ItemClickSupport.addTo(rvGroups).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                Intent i = new Intent(v.getContext(), EventsActivity.class);
+                Intent i = new Intent(v.getContext(), PollsActivity.class);
                 i.putExtra("groupID", groups.get(position).getObjectId());
                 startActivity(i);
             }
