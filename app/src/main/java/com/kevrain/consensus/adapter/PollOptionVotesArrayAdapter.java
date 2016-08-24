@@ -5,13 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.models.PollOption;
-import com.kevrain.consensus.models.Poll;
-import com.parse.FindCallback;
-import com.parse.ParseException;
 
 import java.util.List;
 
@@ -19,21 +17,23 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by shravyagarlapati on 8/19/16.
+ * Created by kfarst on 8/22/16.
  */
-public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.ViewHolder> {
-    public List<Poll> mPolls;
+public class PollOptionVotesArrayAdapter extends RecyclerView.Adapter<PollOptionVotesArrayAdapter.ViewHolder> {
+    public List<PollOption> mPollOptions;
 
     // Pass in the contact array into the constructor
-    public PollsArrayAdapter(List<Poll> locations) {
-        mPolls = locations;
+    public PollOptionVotesArrayAdapter(List<PollOption> pollOptions) {
+        mPollOptions = pollOptions;
     }
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.tvPollName) TextView tvPollName;
-        @BindView(R.id.tvPollOptionCount) TextView tvPollOptionCount;
+        @BindView(R.id.tvPollOptionListName) TextView tvPollOptionListName;
+        @BindView(R.id.tvPollOptionListDate) TextView tvPollOptionListDate;
+        @BindView(R.id.tvPollOptionVoteCount) TextView tvPollOptionVoteCount;
+        @BindView(R.id.cbPollOptionVote) CheckBox cbPollOptionVote;
 
         public ViewHolder(View itemView) {
             // Stores the itemView in a public final member variable that can be used
@@ -45,17 +45,16 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
 
         @Override
         public void onClick(View view) {
-
         }
     }
 
     @Override
-    public PollsArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PollOptionVotesArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View listItemView = inflater.inflate(R.layout.item_poll, parent, false);
+        View listItemView = inflater.inflate(R.layout.item_poll_option_vote, parent, false);
 
         ButterKnife.bind(listItemView);
 
@@ -65,24 +64,24 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(final PollsArrayAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(PollOptionVotesArrayAdapter.ViewHolder holder, int position) {
 
-        Poll poll = mPolls.get(position);
+        PollOption pollOption = mPollOptions.get(position);
 
-        holder.tvPollName.setText(poll.getPollName());
+        holder.tvPollOptionListName.setText(pollOption.getName());
+        holder.tvPollOptionListDate.setText(pollOption.getDate());
+        holder.tvPollOptionVoteCount.setText("0 Votes");
 
-        poll.getPollOptionRelation().getQuery().findInBackground(new FindCallback<PollOption>() {
-            @Override
-            public void done(List<PollOption> pollOptions, ParseException e) {
-                if (e == null) {
-                    holder.tvPollOptionCount.setText("" + pollOptions.size() + " Locations");
-                }
-            }
-        });
+        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");h
     }
 
     @Override
     public int getItemCount() {
-        return mPolls.size();
+        return mPollOptions.size();
     }
+
+
+
+
 }
+

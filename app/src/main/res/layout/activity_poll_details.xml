@@ -26,12 +26,12 @@
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold"
-            android:text="EVENT NAME"
-            android:id="@+id/tvEventName" />
+            android:text="POLL NAME"
+            android:id="@+id/tvPollName" />
         
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvPollLocations"
-            android:layout_below="@+id/tvEventName"
+            android:id="@+id/rvPollOptions"
+            android:layout_below="@+id/tvPollName"
             android:layout_alignParentBottom="true"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_width="match_parent"

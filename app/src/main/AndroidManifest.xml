@@ -39,12 +39,12 @@
         <activity
             android:launchMode="singleTop"
             android:name=".activities.CreateNewPollActivity"
-            android:label="@string/title_activity_create_new_event"
+            android:label="@string/title_activity_create_new_poll"
             android:theme="@style/AppTheme" />
         <activity
             android:launchMode="singleTop"
             android:name=".activities.PollDetailsActivity"
-            android:label="@string/title_activity_event_details"
+            android:label="@string/title_activity_poll_details"
             android:parentActivityName=".activities.PollsActivity"
             android:theme="@style/AppTheme">
             <meta-data
@@ -54,7 +54,7 @@
         <activity
             android:launchMode="singleTop"
             android:name=".activities.PollsActivity"
-            android:label="@string/title_activity_events"
+            android:label="@string/title_activity_polls"
             android:parentActivityName=".activities.GroupsActivity"
             android:theme="@style/AppTheme">
             <meta-data

@@ -16,10 +16,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.kevrain.consensus.R;
-import com.kevrain.consensus.adapter.PollLocationsArrayAdapter;
+import com.kevrain.consensus.adapter.PollOptionsArrayAdapter;
 import com.kevrain.consensus.fragments.DatePickerFragment;
 import com.kevrain.consensus.models.Group;
-import com.kevrain.consensus.models.Location;
+import com.kevrain.consensus.models.PollOption;
 import com.kevrain.consensus.models.Poll;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -38,12 +38,12 @@ public class CreateNewPollActivity extends AppCompatActivity implements DatePick
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.btnAddDate)Button btnAddDate;
     @BindView(R.id.btnAdd)Button btnAdd;
-    @BindView(R.id.rvLocations) RecyclerView rvLocations;
-    @BindView(R.id.etLocation) EditText etLocation;
+    @BindView(R.id.rvPollOptions) RecyclerView rvPollOptions;
+    @BindView(R.id.etPollOption) EditText etPollOption;
     @BindView(R.id.etEventName) EditText etEventName;
 
-    ArrayList<Location> locations;
-    PollLocationsArrayAdapter locationsAdapter;
+    ArrayList<PollOption> pollOptions;
+    PollOptionsArrayAdapter locationsAdapter;
     Group group;
 
     @Override
@@ -56,37 +56,37 @@ public class CreateNewPollActivity extends AppCompatActivity implements DatePick
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 
         // Custom toolbar for displaying rounded profile image
-        getSupportActionBar().setCustomView(R.layout.toolbar_new_event);
+        getSupportActionBar().setCustomView(R.layout.toolbar_new_poll);
 
-        locations = new ArrayList<>();
+        pollOptions = new ArrayList<>();
 
-        locationsAdapter = new PollLocationsArrayAdapter(locations);
-        rvLocations.setAdapter(locationsAdapter);
+        locationsAdapter = new PollOptionsArrayAdapter(pollOptions);
+        rvPollOptions.setAdapter(locationsAdapter);
 
-        rvLocations.setLayoutManager(new LinearLayoutManager(this));
+        rvPollOptions.setLayoutManager(new LinearLayoutManager(this));
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!TextUtils.isEmpty(etLocation.getText().toString()) && !TextUtils.isEmpty(btnAddDate.getText().toString())) {
+                if (!TextUtils.isEmpty(etPollOption.getText().toString()) && !TextUtils.isEmpty(btnAddDate.getText().toString())) {
 
                     //Check if the location/date is already part of the list
                     boolean isDuplicate = false;
-                    for (int i=0;i<locations.size();i++)
+                    for (int i = 0; i< pollOptions.size(); i++)
                     {
-                        if(locations.get(i).getDate().toString().equalsIgnoreCase(btnAddDate.getText().toString()) &&
-                                locations.get(i).getName().toString().equalsIgnoreCase(etLocation.getText().toString())) {
+                        if(pollOptions.get(i).getDate().toString().equalsIgnoreCase(btnAddDate.getText().toString()) &&
+                                pollOptions.get(i).getName().toString().equalsIgnoreCase(etPollOption.getText().toString())) {
                             isDuplicate= true;
                         }
                     }
 
                     if(isDuplicate==false)
                     {
-                        locations.add(0, new Location(etLocation.getText().toString(), btnAddDate.getText().toString()));
+                        pollOptions.add(0, new PollOption(etPollOption.getText().toString(), btnAddDate.getText().toString()));
                         locationsAdapter.notifyItemChanged(0);
                     }
 
-                    etLocation.setText("");
+                    etPollOption.setText("");
                     btnAddDate.setText("");
                 }
             }
@@ -122,7 +122,7 @@ public class CreateNewPollActivity extends AppCompatActivity implements DatePick
         finish();
     }
 
-    public void saveNewEvent(View view) {
+    public void saveNewPoll(View view) {
         String groupID = getIntent().getStringExtra("groupID");
 
         ParseQuery<Group> query = ParseQuery.getQuery(Group.class);
@@ -141,12 +141,12 @@ public class CreateNewPollActivity extends AppCompatActivity implements DatePick
                         public void done(ParseException e) {
                             group.addPoll(newPoll);
 
-                            for (int i = 0; i < locations.size(); i++) {
-                                final Location loc = locations.get(i);
+                            for (int i = 0; i < pollOptions.size(); i++) {
+                                final PollOption loc = pollOptions.get(i);
                                 loc.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
-                                        newPoll.addLocation(loc);
+                                        newPoll.addPollOption(loc);
                                     }
                                 });
                             }

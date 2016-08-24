@@ -7,11 +7,11 @@ import com.parse.ParseRelation;
 /**
  * Created by kfarst on 8/19/16.
  */
-@ParseClassName("Location")
-public class Location extends ParseObject {
-    public Location() {}
+@ParseClassName("PollOption")
+public class PollOption extends ParseObject {
+    public PollOption() {}
 
-    public Location(String name, String date) {
+    public PollOption(String name, String date) {
         setName(name);
         setDate(date);
     }

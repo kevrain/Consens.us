@@ -5,7 +5,7 @@ import android.app.Application;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.kevrain.consensus.models.Group;
-import com.kevrain.consensus.models.Location;
+import com.kevrain.consensus.models.PollOption;
 import com.kevrain.consensus.models.Poll;
 import com.kevrain.consensus.models.Vote;
 import com.parse.Parse;
@@ -27,7 +27,7 @@ public class ConsensusApplication extends Application {
         AppEventsLogger.activateApp(this);
 
         ParseObject.registerSubclass(Group.class);
-        ParseObject.registerSubclass(Location.class);
+        ParseObject.registerSubclass(PollOption.class);
         ParseObject.registerSubclass(Poll.class);
         ParseObject.registerSubclass(Vote.class);
 

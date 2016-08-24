@@ -16,7 +16,7 @@
         android:layout_height="match_parent" />
 
     <TextView
-        android:text="@string/title_activity_create_new_event"
+        android:text="@string/title_activity_create_new_poll"
         android:layout_width="wrap_content"
         android:textColor="@android:color/white"
         android:textAlignment="center"
@@ -31,7 +31,7 @@
         android:src="@drawable/ic_done"
         android:layout_width="wrap_content"
         android:layout_alignParentRight="true"
-        android:onClick="saveNewEvent"
+        android:onClick="saveNewPoll"
         android:background="@android:color/transparent"
         android:tint="@android:color/white"
         android:layout_height="match_parent" />

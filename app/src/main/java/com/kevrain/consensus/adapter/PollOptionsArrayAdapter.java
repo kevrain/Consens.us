@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kevrain.consensus.R;
-import com.kevrain.consensus.models.Location;
+import com.kevrain.consensus.models.PollOption;
 
 import java.util.List;
 
@@ -18,21 +18,21 @@ import butterknife.ButterKnife;
 /**
  * Created by kfarst on 8/21/16.
  */
-public class PollLocationsArrayAdapter extends RecyclerView.Adapter<PollLocationsArrayAdapter.ViewHolder> {
-    public List<Location> mLocations;
+public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArrayAdapter.ViewHolder> {
+    public List<PollOption> mPollOptions;
 
     // Pass in the contact array into the constructor
-    public PollLocationsArrayAdapter(List<Location> locations) {
-        mLocations = locations;
+    public PollOptionsArrayAdapter(List<PollOption> pollOptions) {
+        mPollOptions = pollOptions;
     }
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.tvLocationListName)
-        TextView tvLocationListName;
-        @BindView(R.id.tvLocationListDate)
-        TextView tvLocationListDate;
+        @BindView(R.id.tvPollOptionListName)
+        TextView tvPollOptionListName;
+        @BindView(R.id.tvPollOptionListDate)
+        TextView tvPollOptionListDate;
 
         public ViewHolder(View itemView) {
             // Stores the itemView in a public final member variable that can be used
@@ -48,12 +48,12 @@ public class PollLocationsArrayAdapter extends RecyclerView.Adapter<PollLocation
     }
 
     @Override
-    public PollLocationsArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PollOptionsArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View listItemView = inflater.inflate(R.layout.item_poll_location, parent, false);
+        View listItemView = inflater.inflate(R.layout.item_poll_option, parent, false);
 
         ButterKnife.bind(listItemView);
 
@@ -63,19 +63,19 @@ public class PollLocationsArrayAdapter extends RecyclerView.Adapter<PollLocation
     }
 
     @Override
-    public void onBindViewHolder(PollLocationsArrayAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(PollOptionsArrayAdapter.ViewHolder holder, int position) {
 
-        Location location = mLocations.get(position);
+        PollOption pollOption = mPollOptions.get(position);
 
-        holder.tvLocationListName.setText(location.getName());
-        holder.tvLocationListDate.setText(location.getDate());
+        holder.tvPollOptionListName.setText(pollOption.getName());
+        holder.tvPollOptionListDate.setText(pollOption.getDate());
 
         //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");h
     }
 
     @Override
     public int getItemCount() {
-        return mLocations.size();
+        return mPollOptions.size();
     }
 
 
