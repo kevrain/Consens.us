@@ -1,6 +1,5 @@
 package com.kevrain.consensus.activities;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -8,8 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +14,6 @@ import android.widget.Toast;
 
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.PollOptionsArrayAdapter;
-import com.kevrain.consensus.fragments.DatePickerFragment;
 import com.kevrain.consensus.fragments.NewPollOptionFragment;
 import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.models.Poll;
@@ -27,20 +23,22 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CreateNewPollActivity extends AppCompatActivity implements
-    NewPollOptionFragment.OnItemSaveListener {
+        NewPollOptionFragment.OnItemSaveListener {
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.btnAdd)Button btnAdd;
-    @BindView(R.id.rvPollOptions) RecyclerView rvPollOptions;
-    @BindView(R.id.etEventName) EditText etEventName;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.btnAdd)
+    Button btnAdd;
+    @BindView(R.id.rvPollOptions)
+    RecyclerView rvPollOptions;
+    @BindView(R.id.etEventName)
+    EditText etEventName;
 
     ArrayList<PollOption> pollOptions;
     PollOptionsArrayAdapter locationsAdapter;
@@ -127,6 +125,16 @@ public class CreateNewPollActivity extends AppCompatActivity implements
                                     });
                                 }
 
+                                // Add none of the above option
+                                final PollOption noOption = new PollOption();
+                                noOption.setName(getString(R.string.none_of_the_above));
+                                noOption.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        newPoll.addPollOption(noOption);
+                                    }
+                                });
+
                                 //Close and go to events activity
                                 Intent intent = new Intent(getApplicationContext(), PollsActivity.class);
                                 intent.putExtra("Code", 20);
@@ -142,4 +150,3 @@ public class CreateNewPollActivity extends AppCompatActivity implements
         }
     }
 }
-
