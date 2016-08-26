@@ -1,10 +1,9 @@
 package com.kevrain.consensus.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -19,16 +18,13 @@ import com.kevrain.consensus.adapter.GroupFriendsArrayAdapter;
 import com.kevrain.consensus.models.Group;
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,22 +106,35 @@ public class CreateNewGroupActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnSave)
     public void saveGroup(Button button) {
+        boolean isInvalidData = false;
+        String groupTitle = etGroupName.getText().toString();
         final Group newGroup = new Group();
         newGroup.setOwner(ParseUser.getCurrentUser());
-        newGroup.setTitle(etGroupName.getText().toString());
-        newGroup.addMembers(friendsArrayAdapter.friendsToAdd);
-        newGroup.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                Toast.makeText(CreateNewGroupActivity.this,
-                    "New group: signed up", Toast.LENGTH_SHORT).show();
-                Intent data = new Intent();
-                data.putExtra("group_title", newGroup.getTitle());
-                data.putExtra("group_id", newGroup.getObjectId());
-                setResult(RESULT_OK, data);
-                finish();
-            }
-        });
+
+        if(groupTitle==null || groupTitle.length()<1) {
+            isInvalidData = true;
+            Toast.makeText(this, "Please provide a group name", Toast.LENGTH_LONG).show();
+        }
+
+        if(friendsArrayAdapter.friendsToAdd.size() <= 1) {
+            isInvalidData = true;
+            Toast.makeText(this, "Group should have atleast 2 friends", Toast.LENGTH_LONG).show();
+        }
+
+        if(!isInvalidData) {
+            newGroup.setTitle(groupTitle);
+            newGroup.addMembers(friendsArrayAdapter.friendsToAdd);
+            newGroup.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    Intent data = new Intent();
+                    data.putExtra("group_title", newGroup.getTitle());
+                    data.putExtra("group_id", newGroup.getObjectId());
+                    setResult(RESULT_OK, data);
+                    finish();
+                }
+            });
+        }
     }
 
 }

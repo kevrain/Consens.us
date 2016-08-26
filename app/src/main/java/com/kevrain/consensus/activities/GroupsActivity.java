@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.kevrain.consensus.R;
@@ -92,13 +93,31 @@ public class GroupsActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        boolean isDuplicateGroup = false;
+
         if (requestCode == ADD_GROUP_REQUEST_CODE && resultCode == RESULT_OK) {
             String groupTitle = data.getExtras().getString("group_title");
             String groupId = data.getExtras().getString("group_id");
-            Group newGroup = ParseObject.createWithoutData(Group.class, groupId);
-            newGroup.setTitle(groupTitle);
-            groups.add(newGroup);
-            adapter.notifyItemInserted(groups.size() - 1);
+
+            //Log.d("Group Title", groupTitle);
+            for(int i=0; i<groups.size(); i++){
+                //Log.d("Duplicate group name", groups.get(i).getTitle());
+                if(groups.get(i).getTitle().equalsIgnoreCase(groupTitle)){
+                    isDuplicateGroup = true;
+                }
+            }
+
+            if(!isDuplicateGroup) {
+                Group newGroup = ParseObject.createWithoutData(Group.class, groupId);
+                newGroup.setTitle(groupTitle);
+                groups.add(newGroup);
+                adapter.notifyItemInserted(groups.size() - 1);
+                Toast.makeText(this, "New group: signed up", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(this, "Group with this name already exists", Toast.LENGTH_LONG).show();
+            }
+
         }
     }
 
