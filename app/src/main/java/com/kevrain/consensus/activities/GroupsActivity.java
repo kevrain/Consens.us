@@ -57,7 +57,7 @@ public class GroupsActivity extends AppCompatActivity {
         fabAddGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(view.getContext(), CreateNewGroupActivity.class);
+                Intent i = new Intent(view.getContext(), CreateOrEditGroupActivity.class);
                 startActivityForResult(i, ADD_GROUP_REQUEST_CODE);
             }
         });

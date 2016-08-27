@@ -61,7 +61,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.GroupsActivity" />
         </activity>
-        <activity android:launchMode="singleTop" android:name=".activities.CreateNewGroupActivity"></activity>
+        <activity android:launchMode="singleTop" android:name=".activities.CreateOrEditGroupActivity"></activity>
         <activity
             android:launchMode="singleTop"
             android:name=".activities.GroupsActivity"

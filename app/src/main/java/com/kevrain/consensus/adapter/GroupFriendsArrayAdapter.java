@@ -39,10 +39,14 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 public class GroupFriendsArrayAdapter extends ArrayAdapter<ParseUser> {
 
     public Set<ParseUser> friendsToAdd;
+    public Set<ParseUser> alreadyAddedFriends;
+    public Set<ParseUser> friendsToRemove;
 
     public GroupFriendsArrayAdapter(Context context, ArrayList<ParseUser> users) {
         super(context, 0, users);
         friendsToAdd = new HashSet<>();
+        friendsToRemove = new HashSet<>();
+        alreadyAddedFriends = new HashSet<>();
     }
 
     @Override public View getView(int position, View view, ViewGroup parent) {
@@ -61,7 +65,8 @@ public class GroupFriendsArrayAdapter extends ArrayAdapter<ParseUser> {
             @Override
             public void done(byte[] data, ParseException e) {
                 Glide.with(getContext()).load(data).
-                    bitmapTransform(new RoundedCornersTransformation(getContext(), 2, 2)).into(holder.ivProfile);
+                    bitmapTransform(new RoundedCornersTransformation(getContext(), 2, 2))
+                     .into(holder.ivProfile);
             }
         });
         holder.tvFriendName.setText(user.getUsername());
