@@ -1,36 +1,28 @@
 package com.kevrain.consensus.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.kevrain.consensus.R;
 import com.parse.GetDataCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
-
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
@@ -67,6 +59,7 @@ public class GroupFriendsArrayAdapter extends ArrayAdapter<ParseUser> {
             holder = new ViewHolder(view);
             view.setTag(holder);
         }
+
         ParseUser user = getItem(position);
         ParseFile profileImage = (ParseFile) user.get("profileThumb");
         profileImage.getDataInBackground(new GetDataCallback() {

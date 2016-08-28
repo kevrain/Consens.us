@@ -6,14 +6,18 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.github.underscore.$;
 import com.github.underscore.Function1;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.models.Group;
 import com.parse.FindCallback;
+import com.parse.GetDataCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -30,8 +34,15 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
 
     // Pass in the contact array into the constructor
     public GroupsArrayAdapter(List<Group> groups) {
-        mGroups = groups;
+       mGroups = groups;
     }
+
+    //public GroupsArrayAdapter(List<Group> groups, Context context) {
+        //super();
+    //    mGroups=groups;
+    //}
+    ArrayList<ParseFile> profileImages;
+
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
@@ -40,6 +51,15 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
         TextView tvGroupName;
         @BindView(R.id.tvGroupMembers)
         TextView tvGroupMembers;
+        @BindView(R.id.imgGroupCollage1)
+        ImageView imgGroupCollage1;
+        @BindView(R.id.imgGroupCollage2)
+        ImageView imgGroupCollage2;
+        @BindView(R.id.imgGroupCollage3)
+        ImageView imgGroupCollage3;
+        @BindView(R.id.imgGroupCollage4)
+        ImageView imgGroupCollage4;
+
 
         public ViewHolder(View itemView) {
             // Stores the itemView in a public final member variable that can be used
@@ -76,6 +96,7 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
         final Group group = mGroups.get(position);
 
         holder.tvGroupName.setText(group.getTitle());
+        profileImages = new ArrayList<>();
 
         group.getMembersRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
             public void done(List<ParseUser> results, ParseException e) {
@@ -83,19 +104,27 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
                     // results have all the Posts the current user liked.
                     List<String> memberNames = new ArrayList<String>($.map(results, new Function1<ParseUser, String>() {
                         public String apply(ParseUser user) {
+
+                            if (profileImages.size() < 4) {
+                                profileImages.add((ParseFile) user.get("profileThumb"));
+                            }
                             return user.getUsername();
                         }
                     }));
 
                     holder.tvGroupMembers.setText(TextUtils.join(", ", memberNames));
-                } else {
-                    // There was an error
-                }
-            }
-        });
 
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");h
+                    //Log.d("SHRAVYA Profile images", "::" + profileImages.size());
+
+                    if (profileImages.size() >= 4) {
+                        populateImage(holder); }
+
+                    }
+                }
+        });
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -121,6 +150,42 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
         });
 
         return TextUtils.join(",", memberNames);
+    }
+
+    private void populateImage(final ViewHolder holder){
+
+        profileImages.get(0).getDataInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] data, ParseException e) {
+                Glide.with(holder.itemView.getContext()).load(data).
+                        placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage1);
+            }
+        });
+
+        profileImages.get(1).getDataInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] data, ParseException e) {
+                Glide.with(holder.itemView.getContext()).load(data).
+                        placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage2);
+            }
+        });
+
+        profileImages.get(2).getDataInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] data, ParseException e) {
+                Glide.with(holder.itemView.getContext()).load(data).
+                        placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage3);
+            }
+        });
+
+        profileImages.get(3).getDataInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] data, ParseException e) {
+                Glide.with(holder.itemView.getContext()).load(data).
+                        placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage4);
+            }
+        });
+
     }
 
 
