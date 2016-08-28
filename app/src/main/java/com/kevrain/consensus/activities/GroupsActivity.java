@@ -16,7 +16,9 @@ import com.facebook.login.LoginManager;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.GroupsArrayAdapter;
 import com.kevrain.consensus.models.Group;
+import com.kevrain.consensus.activities.CreateOrEditGroupActivity;
 import com.kevrain.consensus.support.ItemClickSupport;
+import com.kevrain.consensus.support.ItemClickSupport.OnItemLongClickListener;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -31,8 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class GroupsActivity extends AppCompatActivity {
-    public static int ADD_GROUP_REQUEST_CODE = 0;
-    @BindView(R.id.fabAddGroup) FloatingActionButton fabAddGroup;
+   @BindView(R.id.fabAddGroup) FloatingActionButton fabAddGroup;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.rvGroups) RecyclerView rvGroups;
 
@@ -58,7 +59,9 @@ public class GroupsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(view.getContext(), CreateOrEditGroupActivity.class);
-                startActivityForResult(i, ADD_GROUP_REQUEST_CODE);
+                i.putExtra("requestCode", CreateOrEditGroupActivity.ADD_GROUP_REQUEST_CODE);
+                startActivityForResult(i,
+                    CreateOrEditGroupActivity.ADD_GROUP_REQUEST_CODE);
             }
         });
     }
@@ -70,15 +73,17 @@ public class GroupsActivity extends AppCompatActivity {
         ParseQuery<Group> membersQuery = ParseQuery.getQuery(Group.class);
         membersQuery.whereEqualTo("members", ParseUser.getCurrentUser());
 
-        ItemClickSupport.addTo(rvGroups).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-            @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                Intent i = new Intent(v.getContext(), PollsActivity.class);
-                i.putExtra("groupID", groups.get(position).getObjectId());
-                startActivity(i);
-            }
-        });
+        ItemClickSupport.addTo(rvGroups).setOnItemClickListener(
+            new ItemClickSupport.OnItemClickListener() {
+                @Override
+                public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                    Intent i = new Intent(v.getContext(), PollsActivity.class);
+                    i.putExtra("groupID", groups.get(position).getObjectId());
+                    startActivity(i);
+                }
+            });
 
+        addGroupLongClickHandler();
         ParseQuery<Group> query = ParseQuery.or(Arrays.asList(ownerQuery, membersQuery));
 
         query.findInBackground(new FindCallback<Group>() {
@@ -91,17 +96,31 @@ public class GroupsActivity extends AppCompatActivity {
         });
     }
 
+    private void addGroupLongClickHandler() {
+        ItemClickSupport.addTo(rvGroups).setOnItemLongClickListener(
+            new OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+                    Intent i = new Intent(v.getContext(), CreateOrEditGroupActivity.class);
+                    i.putExtra("groupID", groups.get(position).getObjectId());
+                    i.putExtra("requestCode",
+                        CreateOrEditGroupActivity.EDIT_GROUP_REQUEST_CODE);
+                    startActivity(i);
+                    return true;
+                }
+            });
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         boolean isDuplicateGroup = false;
 
-        if (requestCode == ADD_GROUP_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == CreateOrEditGroupActivity.ADD_GROUP_REQUEST_CODE
+            && resultCode == RESULT_OK) {
             String groupTitle = data.getExtras().getString("group_title");
             String groupId = data.getExtras().getString("group_id");
 
-            //Log.d("Group Title", groupTitle);
             for(int i=0; i<groups.size(); i++){
-                //Log.d("Duplicate group name", groups.get(i).getTitle());
                 if(groups.get(i).getTitle().equalsIgnoreCase(groupTitle)){
                     isDuplicateGroup = true;
                 }

@@ -47,6 +47,13 @@ public class Group extends ParseObject {
         saveInBackground();
     }
 
+    public void removeMember(Set<ParseUser> users) {
+        ParseRelation membersRelation = getMembersRelation();
+        for (ParseUser user: users) {
+           membersRelation.remove(user);
+        }
+    }
+
     public void addPoll(Poll poll) {
         getPollsRelation().add(poll);
         saveInBackground();

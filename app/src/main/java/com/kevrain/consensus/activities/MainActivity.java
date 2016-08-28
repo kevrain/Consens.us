@@ -160,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void goToNewGroups() {
         Intent i = new Intent(this, GroupsActivity.class);
+        i.putExtra("requestCode", CreateOrEditGroupActivity.ADD_GROUP_REQUEST_CODE);
         startActivity(i);
     }
 

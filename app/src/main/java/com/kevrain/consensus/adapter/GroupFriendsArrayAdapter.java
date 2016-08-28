@@ -39,7 +39,7 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 public class GroupFriendsArrayAdapter extends ArrayAdapter<ParseUser> {
 
     public Set<ParseUser> friendsToAdd;
-    public Set<ParseUser> alreadyAddedFriends;
+    public Set<String> alreadyAddedFriends;
     public Set<ParseUser> friendsToRemove;
 
     public GroupFriendsArrayAdapter(Context context, ArrayList<ParseUser> users) {
@@ -47,6 +47,14 @@ public class GroupFriendsArrayAdapter extends ArrayAdapter<ParseUser> {
         friendsToAdd = new HashSet<>();
         friendsToRemove = new HashSet<>();
         alreadyAddedFriends = new HashSet<>();
+    }
+
+    public GroupFriendsArrayAdapter(Context context, ArrayList<ParseUser> users,
+        HashSet<String> currMembers) {
+        super(context, 0, users);
+        friendsToAdd = new HashSet<>();
+        friendsToRemove = new HashSet<>();
+        alreadyAddedFriends = currMembers;
     }
 
     @Override public View getView(int position, View view, ViewGroup parent) {
@@ -70,6 +78,14 @@ public class GroupFriendsArrayAdapter extends ArrayAdapter<ParseUser> {
             }
         });
         holder.tvFriendName.setText(user.getUsername());
+        setUpCheckbox(holder, user);
+        return view;
+    }
+
+    private void setUpCheckbox(ViewHolder holder, ParseUser user) {
+        if (alreadyAddedFriends.contains(user.getObjectId())) {
+            holder.checkBox.setChecked(true);
+        }
         holder.checkBox.setTag(user);
         holder.checkBox.setOnClickListener(new OnClickListener() {
             @Override
@@ -83,12 +99,11 @@ public class GroupFriendsArrayAdapter extends ArrayAdapter<ParseUser> {
                 }
             }
         });
-        return view;
     }
 
     static class ViewHolder {
         @BindView(R.id.tvFriendName) TextView tvFriendName;
-        @BindView(R.id.checkBox) TextView checkBox;
+        @BindView(R.id.checkBox) CheckBox checkBox;
         @BindView(R.id.ivProfile) ImageView ivProfile;
 
         public ViewHolder(View view) {
