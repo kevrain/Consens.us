@@ -83,6 +83,7 @@ public class GroupFriendsArrayAdapter extends ArrayAdapter<ParseUser> {
     }
 
     private void setUpCheckbox(ViewHolder holder, ParseUser user) {
+        holder.checkBox.setChecked(false);
         if (alreadyAddedFriends.contains(user.getObjectId())) {
             holder.checkBox.setChecked(true);
         }
@@ -92,9 +93,13 @@ public class GroupFriendsArrayAdapter extends ArrayAdapter<ParseUser> {
             public void onClick(View view) {
                 CheckBox checkBox = (CheckBox) view;
                 ParseUser friend = (ParseUser) view.getTag();
-                if (checkBox.isChecked()) {
+                if (checkBox.isChecked() && ! alreadyAddedFriends.contains(friend.getObjectId())) {
                     friendsToAdd.add(friend);
+                    friendsToRemove.remove(friend);
                 } else {
+                    if (alreadyAddedFriends.contains(friend.getObjectId())) {
+                        friendsToRemove.add(friend);
+                    }
                     friendsToAdd.remove(friend);
                 }
             }

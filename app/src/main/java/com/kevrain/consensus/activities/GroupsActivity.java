@@ -16,9 +16,9 @@ import com.facebook.login.LoginManager;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.GroupsArrayAdapter;
 import com.kevrain.consensus.models.Group;
-import com.kevrain.consensus.activities.CreateOrEditGroupActivity;
 import com.kevrain.consensus.support.ItemClickSupport;
 import com.kevrain.consensus.support.ItemClickSupport.OnItemLongClickListener;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -103,41 +103,45 @@ public class GroupsActivity extends AppCompatActivity {
                 public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
                     Intent i = new Intent(v.getContext(), CreateOrEditGroupActivity.class);
                     i.putExtra("groupID", groups.get(position).getObjectId());
+                    i.putExtra("group_position", position);
                     i.putExtra("requestCode",
                         CreateOrEditGroupActivity.EDIT_GROUP_REQUEST_CODE);
-                    startActivity(i);
+                    startActivityForResult(i, CreateOrEditGroupActivity.EDIT_GROUP_REQUEST_CODE);
+//                    groups.get(position).deleteInBackground(new DeleteCallback() {
+//                        @Override
+//                        public void done(ParseException e) {
+//                           Toast.makeText(getApplicationContext(), "Deleted!", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
                     return true;
                 }
             });
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        boolean isDuplicateGroup = false;
 
         if (requestCode == CreateOrEditGroupActivity.ADD_GROUP_REQUEST_CODE
             && resultCode == RESULT_OK) {
-            String groupTitle = data.getExtras().getString("group_title");
-            String groupId = data.getExtras().getString("group_id");
-
-            for(int i=0; i<groups.size(); i++){
-                if(groups.get(i).getTitle().equalsIgnoreCase(groupTitle)){
-                    isDuplicateGroup = true;
-                }
-            }
-
-            if(!isDuplicateGroup) {
-                Group newGroup = ParseObject.createWithoutData(Group.class, groupId);
-                newGroup.setTitle(groupTitle);
-                groups.add(newGroup);
-                adapter.notifyItemInserted(groups.size() - 1);
-                Toast.makeText(this, "New group: signed up", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Toast.makeText(this, "Group with this name already exists", Toast.LENGTH_LONG).show();
-            }
-
+            updateGroups(data);
+            Toast.makeText(this, "New group: signed up", Toast.LENGTH_SHORT).show();
         }
+        if (requestCode == CreateOrEditGroupActivity.EDIT_GROUP_REQUEST_CODE
+            && resultCode == RESULT_OK) {
+            groups.remove(data.getExtras().getInt("group_position"));
+            updateGroups(data);
+            Toast.makeText(this, "Edited group", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateGroups(Intent data) {
+        String groupTitle = data.getExtras().getString("group_title");
+        String groupId = data.getExtras().getString("group_id");
+        Group newGroup = ParseObject.createWithoutData(Group.class, groupId);
+        newGroup.setTitle(groupTitle);
+        groups.add(newGroup);
+        adapter.notifyDataSetChanged();
     }
 
     @Override

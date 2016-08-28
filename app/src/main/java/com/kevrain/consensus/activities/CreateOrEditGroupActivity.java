@@ -160,18 +160,26 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnSave)
     public void saveGroup(Button button) {
+        if (requestCode == ADD_GROUP_REQUEST_CODE) {
+            group = new Group();
+            group.setOwner(ParseUser.getCurrentUser());
+        }
         String groupTitle = etGroupName.getText().toString();
-        final Group newGroup = new Group();
-        newGroup.setOwner(ParseUser.getCurrentUser());
         if (isValidGroup(groupTitle)) {
-            newGroup.setTitle(groupTitle);
-            newGroup.addMembers(friendsArrayAdapter.friendsToAdd);
-            newGroup.saveInBackground(new SaveCallback() {
+            group.setTitle(groupTitle);
+            group.addMembers(friendsArrayAdapter.friendsToAdd);
+            if (requestCode == EDIT_GROUP_REQUEST_CODE) {
+               group.removeMember(friendsArrayAdapter.friendsToRemove);
+            }
+            group.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
                     Intent data = new Intent();
-                    data.putExtra("group_title", newGroup.getTitle());
-                    data.putExtra("group_id", newGroup.getObjectId());
+                    data.putExtra("group_title", group.getTitle());
+                    data.putExtra("group_id", group.getObjectId());
+                    if (requestCode == EDIT_GROUP_REQUEST_CODE) {
+                        data.putExtra("group_position", getIntent().getIntExtra("group_position", -1));
+                    }
                     setResult(RESULT_OK, data);
                     finish();
                 }
@@ -179,15 +187,17 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isValidGroup(String groupTitle){
-        if(groupTitle == null || groupTitle.length()<1) {
+    private boolean isValidGroup(String groupTitle) {
+        if (groupTitle == null || groupTitle.length() < 1) {
             Toast.makeText(this, "Please provide a group name", Toast.LENGTH_LONG).show();
             return false;
         }
-        if(friendsArrayAdapter.friendsToAdd.size() <= 1) {
+        if (requestCode == ADD_GROUP_REQUEST_CODE &&
+            friendsArrayAdapter.friendsToAdd.size() < 1) {
             Toast.makeText(this, "Group should have at least 2 friends", Toast.LENGTH_LONG).show();
             return false;
         }
+
         return true;
     }
 
