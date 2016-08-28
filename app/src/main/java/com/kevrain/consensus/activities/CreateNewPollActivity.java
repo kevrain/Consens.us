@@ -28,17 +28,11 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CreateNewPollActivity extends AppCompatActivity implements
-        NewPollOptionFragment.OnItemSaveListener {
-
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.btnAdd)
-    Button btnAdd;
-    @BindView(R.id.rvPollOptions)
-    RecyclerView rvPollOptions;
-    @BindView(R.id.etEventName)
-    EditText etEventName;
+public class CreateNewPollActivity extends AppCompatActivity implements NewPollOptionFragment.OnItemSaveListener {
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.btnAdd) Button btnAdd;
+    @BindView(R.id.rvPollOptions) RecyclerView rvPollOptions;
+    @BindView(R.id.etEventName) EditText etEventName;
 
     ArrayList<PollOption> pollOptions;
     PollOptionsArrayAdapter locationsAdapter;
