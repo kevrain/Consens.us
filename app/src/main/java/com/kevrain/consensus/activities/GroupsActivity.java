@@ -107,12 +107,6 @@ public class GroupsActivity extends AppCompatActivity {
                     i.putExtra("requestCode",
                         CreateOrEditGroupActivity.EDIT_GROUP_REQUEST_CODE);
                     startActivityForResult(i, CreateOrEditGroupActivity.EDIT_GROUP_REQUEST_CODE);
-//                    groups.get(position).deleteInBackground(new DeleteCallback() {
-//                        @Override
-//                        public void done(ParseException e) {
-//                           Toast.makeText(getApplicationContext(), "Deleted!", Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
                     return true;
                 }
             });
@@ -131,6 +125,11 @@ public class GroupsActivity extends AppCompatActivity {
             && resultCode == RESULT_OK) {
             groups.remove(data.getExtras().getInt("group_position"));
             updateGroups(data);
+            Toast.makeText(this, "Edited group", Toast.LENGTH_SHORT).show();
+        }
+        if (resultCode == CreateOrEditGroupActivity.RESULT_DELETE) {
+            groups.remove(data.getExtras().getInt("group_position"));
+            adapter.notifyDataSetChanged();
             Toast.makeText(this, "Edited group", Toast.LENGTH_SHORT).show();
         }
     }

@@ -3,7 +3,12 @@ package com.kevrain.consensus.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -41,15 +46,17 @@ import butterknife.OnClick;
 public class CreateOrEditGroupActivity extends AppCompatActivity {
     public static int ADD_GROUP_REQUEST_CODE = 0;
     public static int EDIT_GROUP_REQUEST_CODE = 1;
+    public static int RESULT_DELETE = 100;
     private int requestCode;
     private Group group;
 
     ParseUser user;
-    @BindView(R.id.btnCancel) Button btnCancel;
+    @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.btnSave) Button btnSave;
     @BindView(R.id.etGroupName) EditText etGroupName;
     @BindView(R.id.lvAddFriends) ListView lvAddFriends;
     GroupFriendsArrayAdapter friendsArrayAdapter;
+    List<ParseUser> existingMembers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +64,30 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_new_group);
         ButterKnife.bind(this);
         requestCode = getIntent().getIntExtra("requestCode", -1);
-        Toast.makeText(getApplicationContext(), "request code " + Integer.toString(requestCode), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "request code " + Integer.toString(requestCode),
+            Toast.LENGTH_SHORT).show();
         user = ParseUser.getCurrentUser();
         if (requestCode == EDIT_GROUP_REQUEST_CODE) {
             getExistingGroupData();
         } else {
             getUserFriendsFromFB();
         }
+        setUpToolbar();
+    }
+
+    private void setUpToolbar() {
+        setSupportActionBar(toolbar);
+        if (requestCode == EDIT_GROUP_REQUEST_CODE) {
+            getSupportActionBar().setTitle("Edit Group");
+        } else if (requestCode == ADD_GROUP_REQUEST_CODE) {
+            getSupportActionBar().setTitle("Create New Group");
+        }
+        toolbar.setNavigationOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     private void getUserFriendsFromFB() {
@@ -140,6 +164,7 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
             @Override
             public void done(List<ParseUser> users, ParseException e) {
                 if (e == null) {
+                    existingMembers = users;
                     HashSet<String> userIds = new HashSet<String>();
                     for (ParseUser user : users) {
                         userIds.add(user.getObjectId());
@@ -150,12 +175,6 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    @OnClick(R.id.btnCancel)
-    public void cancel(Button button) {
-        setResult(RESULT_CANCELED);
-        finish();
     }
 
     @OnClick(R.id.btnSave)
@@ -199,6 +218,41 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    private void deleteGroup() {
+        group.removeMember(new HashSet<ParseUser>(existingMembers));
+        group.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                group.deleteInBackground();
+                Intent data = new Intent();
+                data.putExtra("group_position", getIntent().getIntExtra("group_position", -1));
+                setResult(RESULT_DELETE, data);
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        if (getIntent().getIntExtra("requestCode", -1) == EDIT_GROUP_REQUEST_CODE) {
+            getMenuInflater().inflate(R.menu.menu_edit_group, menu);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.miDelete:
+                deleteGroup();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }
