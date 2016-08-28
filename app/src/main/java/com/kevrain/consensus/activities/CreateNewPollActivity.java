@@ -73,17 +73,18 @@ public class CreateNewPollActivity extends AppCompatActivity implements DatePick
 
                     //Check if the location/date is already part of the list
                     boolean isDuplicate = false;
-                    for (int i = 0; i< pollOptions.size(); i++)
-                    {
-                        if(pollOptions.get(i).getDate().toString().equalsIgnoreCase(btnAddDate.getText().toString()) &&
-                                pollOptions.get(i).getName().toString().equalsIgnoreCase(etPollOption.getText().toString())) {
+                    for (int i = 0; i< pollOptions.size(); i++) {
+                        if (pollOptions.get(i).getDate().toString().equalsIgnoreCase(
+                            btnAddDate.getText().toString()) &&
+                                pollOptions.get(i).getName().toString()
+                                           .equalsIgnoreCase(etPollOption.getText().toString())) {
                             isDuplicate= true;
                         }
                     }
 
-                    if(isDuplicate==false)
-                    {
-                        pollOptions.add(0, new PollOption(etPollOption.getText().toString(), btnAddDate.getText().toString()));
+                    if (isDuplicate==false) {
+                        pollOptions.add(0, new PollOption(etPollOption.getText().toString(),
+                            btnAddDate.getText().toString()));
                         locationsAdapter.notifyItemChanged(0);
                     }
 
@@ -123,25 +124,26 @@ public class CreateNewPollActivity extends AppCompatActivity implements DatePick
         finish();
     }
 
+    private boolean validateData() {
+        String pollName = etEventName.getText().toString();
+        if (pollName.length() < 1 || pollName == null) {
+            Toast.makeText(this, "Please provide a poll name", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if (pollOptions.size() < 2) {
+            Toast.makeText(this, "Poll should have atleast 2 locations", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
+    }
+
     public void saveNewPoll(View view) {
         String groupID = getIntent().getStringExtra("groupID");
-        boolean isInvalidData = false;
-
         ParseQuery<Group> query = ParseQuery.getQuery(Group.class);
         query.include("polls");
-        String pollName = etEventName.getText().toString();
 
-        if(pollName.length() <1 || pollName==null) {
-            isInvalidData = true;
-            Toast.makeText(this, "Please provide a poll name", Toast.LENGTH_LONG).show();
-        }
-
-        if(pollOptions.size()<2) {
-            isInvalidData = true;
-            Toast.makeText(this, "Poll should have atleast 2 locations", Toast.LENGTH_LONG).show();
-        }
-
-        if(!isInvalidData) {
+        if (validateData()) {
             query.getInBackground(groupID, new GetCallback<Group>() {
                 public void done(Group groupItem, ParseException e) {
                     if (e == null) {
