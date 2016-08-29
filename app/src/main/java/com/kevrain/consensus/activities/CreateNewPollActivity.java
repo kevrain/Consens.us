@@ -103,6 +103,7 @@ public class CreateNewPollActivity extends AppCompatActivity implements NewPollO
                     if (e == null) {
                         group = groupItem;
                         final Poll newPoll = new Poll();
+                        newPoll.setGroup(group);
                         newPoll.setPollName(etEventName.getText().toString());
                         newPoll.saveInBackground(new SaveCallback() {
                             @Override
