@@ -37,13 +37,12 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_toRightOf="@id/tvPollName"
             android:layout_gravity="right"
-            android:layout_alignBottom="@+id/tvPollName"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 
         <TextView
             android:id="@+id/tvPollOption"
-            android:text="Add Locations"
+            android:text="Poll Options"
             android:textColor="@color/colorAccent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,65 +58,25 @@
             android:layout_marginBottom="25dp"
             android:layout_height="1dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:text="Name"
-            android:id="@+id/tvPollOptionName"
-            android:layout_below="@+id/dividerPollOption"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/etPollOption"
-            android:layout_toRightOf="@id/tvPollOptionName"
-            android:layout_gravity="right"
-            android:layout_alignBottom="@+id/tvPollOptionName"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Date"
-            android:id="@+id/tvAddDate"
-            android:layout_below="@+id/tvPollOptionName"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Add a date"
-            android:id="@+id/btnAddDate"
-            android:onClick="showDatePickerDialog"
-            android:layout_alignTop="@+id/tvAddDate"
-            android:layout_alignLeft="@+id/btnAdd"
-            android:layout_alignStart="@+id/btnAdd" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Location +"
-            android:id="@+id/btnAdd"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/btnAddDate"
-            android:layout_centerHorizontal="true" />"
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvPollOptions"
-            android:layout_width="match_parent"
-            android:layout_height="99dp"
-            android:layout_below="@+id/btnAdd"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="20dp" />
     </RelativeLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_poll_option"
+        android:onClick="addNewOption"
+        android:id="@+id/btnAdd"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/relativeLayout"
+        android:layout_alignEnd="@+id/relativeLayout"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvPollOptions"
+        android:layout_width="match_parent"
+        android:layout_height="99dp"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_alignLeft="@+id/relativeLayout"
+        android:layout_alignStart="@+id/relativeLayout"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

@@ -19,4 +19,8 @@
     <string name="group_name">Group Name</string>
     <string name="save">Save</string>
     <string name="delete_group">Delete Group</string>
+    <string name="add_poll_option">Add A Poll Option</string>
+    <string name="poll_option_name_hint">Enter a title here...</string>
+    <string name="pick_date">Pick a date</string>
+    <string name="set_date">Set a date</string>
 </resources>
