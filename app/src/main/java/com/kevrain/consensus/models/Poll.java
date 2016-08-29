@@ -16,16 +16,6 @@ public class Poll extends ParseObject {
         return getRelation("vote");
     }
 
-    public void addVote(Vote user) {
-        getVotesRelation().add(user);
-        saveInBackground();
-    }
-
-    public void removeVote(Vote user) {
-        getVotesRelation().remove(user);
-        saveInBackground();
-    }
-
     public void setGroup(Group group) {
         put("group", group);
     }
@@ -51,6 +41,4 @@ public class Poll extends ParseObject {
     public void setPollName(String name) { put("name", name); }
 
     public String getPollName() { return (String) get("name"); }
-
-
 }

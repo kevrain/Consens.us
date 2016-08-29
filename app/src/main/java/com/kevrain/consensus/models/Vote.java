@@ -36,12 +36,4 @@ public class Vote extends ParseObject {
     public PollOption getPollOption() {
         return (PollOption) getParseObject("location");
     }
-
-    public void setNoneOfTheAbove(boolean noneOfTheAbove) {
-        put("noneOfTheAbove", noneOfTheAbove);
-    }
-
-    public boolean getNoneOfTheAbove() {
-        return (boolean) get("noneOfTheAbove");
-    }
 }
