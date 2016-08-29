@@ -4,6 +4,9 @@ import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseRelation;
 
+
+import java.util.Set;
+
 /**
  * Created by kfarst on 8/19/16.
  */
@@ -35,6 +38,13 @@ public class Poll extends ParseObject {
 
     public void removePollOption(PollOption pollOption) {
         getPollOptionRelation().remove(pollOption);
+        saveInBackground();
+    }
+
+    public void removePollOptions(Set<PollOption> pollOptions) {
+        for (PollOption option: pollOptions) {
+            getPollOptionRelation().remove(option);
+        }
         saveInBackground();
     }
 

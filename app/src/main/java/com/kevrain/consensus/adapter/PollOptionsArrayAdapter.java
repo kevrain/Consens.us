@@ -4,13 +4,17 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.models.PollOption;
 
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,9 +24,13 @@ import butterknife.ButterKnife;
  */
 public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArrayAdapter.ViewHolder> {
     public List<PollOption> mPollOptions;
+    public Set<PollOption> pollOptionsToDelete;
+    public Set<PollOption> pollOptionsToAdd;
 
     // Pass in the contact array into the constructor
     public PollOptionsArrayAdapter(List<PollOption> pollOptions) {
+        pollOptionsToDelete = new HashSet<PollOption>();
+        pollOptionsToAdd = new HashSet<PollOption>();
         mPollOptions = pollOptions;
     }
 
@@ -65,20 +73,34 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
     @Override
     public void onBindViewHolder(PollOptionsArrayAdapter.ViewHolder holder, int position) {
 
-        PollOption pollOption = mPollOptions.get(position);
+        final PollOption pollOption = mPollOptions.get(position);
 
         holder.tvPollOptionListName.setText(pollOption.getName());
         holder.tvPollOptionListDate.setText(pollOption.getDate());
 
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");h
+        holder.itemView.setOnLongClickListener(
+            new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    pollOptionsToAdd.remove(pollOption);
+                    pollOptionsToDelete.add(pollOption);
+                    mPollOptions.remove(pollOption);
+                    notifyDataSetChanged();
+                    return false;
+                }
+            }
+        );
+    }
+
+    public void addPollOption(PollOption option) {
+        pollOptionsToAdd.add(option);
+        mPollOptions.add(option);
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
         return mPollOptions.size();
     }
-
-
-
 
 }

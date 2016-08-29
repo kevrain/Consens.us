@@ -38,7 +38,7 @@
         </activity>
         <activity
             android:launchMode="singleTop"
-            android:name=".activities.CreateNewPollActivity"
+            android:name=".activities.CreateOrEditPollActivity"
             android:label="@string/title_activity_create_new_poll"
             android:theme="@style/AppTheme" />
         <activity
