@@ -86,7 +86,7 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
                                 pollOptions.addAll($.sortBy(objects, new Function1<PollOption, Integer>() {
                                     @Override
                                     public Integer apply(PollOption option) {
-                                        return option.getName().equals(getString(R.string.none_of_the_above)) ? -1 : 0;
+                                        return option.getName().equals(getString(R.string.none_of_the_above)) ? 0 : -1;
                                     }
                                 }));
 
