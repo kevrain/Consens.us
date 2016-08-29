@@ -1,13 +1,19 @@
 package com.kevrain.consensus.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kevrain.consensus.R;
+import com.kevrain.consensus.activities.CreateOrEditGroupActivity;
+import com.kevrain.consensus.activities.CreateOrEditPollActivity;
+import com.kevrain.consensus.activities.PollsActivity;
 import com.kevrain.consensus.models.Poll;
 import com.kevrain.consensus.models.PollOption;
 import com.parse.FindCallback;
@@ -65,9 +71,9 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(final PollsArrayAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final PollsArrayAdapter.ViewHolder holder, final int position) {
 
-        Poll poll = mPolls.get(position);
+        final Poll poll = mPolls.get(position);
 
         holder.tvPollName.setText(poll.getPollName());
 
@@ -79,6 +85,20 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
                 }
             }
         });
+        holder.itemView.setOnLongClickListener(
+            new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Intent i = new Intent(view.getContext(), CreateOrEditPollActivity.class);
+                    i.putExtra("pollID", poll.getObjectId());
+                    i.putExtra("poll_position", position);
+                    i.putExtra("request_code", PollsActivity.EDIT_POLL_REQUEST_CODE);
+                    ((Activity) holder.itemView.getContext()).startActivityForResult(i,
+                        PollsActivity.EDIT_POLL_REQUEST_CODE);
+                    return true;
+                }
+            }
+        );
     }
 
     @Override

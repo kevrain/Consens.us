@@ -37,7 +37,8 @@ public class PollsActivity extends AppCompatActivity {
     PollsArrayAdapter adapter;
     ArrayList<Poll> polls;
     Group group;
-    private final int REQUEST_CODE = 20;
+    public static final int ADD_POLL_REQUEST_CODE = 20;
+    public static final int EDIT_POLL_REQUEST_CODE = 30;
     boolean isValidPoll = true;
 
     //###### Network call to the Event Client to get Data
@@ -75,9 +76,10 @@ public class PollsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d("Button click", "Buttton");
-                Intent i = new Intent(PollsActivity.this, CreateNewPollActivity.class);
+                Intent i = new Intent(PollsActivity.this, CreateOrEditPollActivity.class);
                 i.putExtra("groupID", group.getObjectId());
-                startActivityForResult(i, REQUEST_CODE);
+                i.putExtra("request_code", ADD_POLL_REQUEST_CODE);
+                startActivityForResult(i, ADD_POLL_REQUEST_CODE);
             }
         });
     }
@@ -103,8 +105,8 @@ public class PollsActivity extends AppCompatActivity {
                             if (objects != null && objects.size() > 0) {
                                 polls.addAll(objects);
                                 adapter.notifyDataSetChanged();
-                                progressIndicator.hide();
                             }
+                            progressIndicator.hide();
                         }
                     });
                 }
@@ -117,33 +119,57 @@ public class PollsActivity extends AppCompatActivity {
         isValidPoll = true;
 
         // REQUEST_CODE is defined above
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+        if (resultCode == RESULT_OK && requestCode == ADD_POLL_REQUEST_CODE) {
             // Extract name value from result extras
-            String pollID = data.getExtras().getString("pollID");
-            String pollName = data.getExtras().getString("pollName");
+            handleAddPollResult(data);
+        }
+        if (resultCode == RESULT_OK && requestCode == EDIT_POLL_REQUEST_CODE) {
+            handleEditPollResult(data);
+        }
+    }
 
-            for(int i=0;i<polls.size();i++) {
-                if(polls.get(i).getPollName().equalsIgnoreCase(pollName))
-                    isValidPoll = false;
-            }
+    private void handleAddPollResult(Intent data) {
+        String pollID = data.getExtras().getString("pollID");
+        ParseQuery<Poll> query = ParseQuery.getQuery(Poll.class);
 
-            ParseQuery<Poll> query = ParseQuery.getQuery(Poll.class);
-
-            query.getInBackground(pollID, new GetCallback<Poll>() {
-                public void done(Poll poll, ParseException e) {
-                    if (e == null) {
-                        // item was found
-                        if(isValidPoll) {
-                            polls.add(0, poll);
-                            adapter.notifyDataSetChanged();
-                        }
-                        else {
-                            Toast.makeText(getApplicationContext(), "Poll with this name already exists", Toast.LENGTH_LONG).show();
-                        }
+        query.getInBackground(pollID, new GetCallback<Poll>() {
+            public void done(Poll poll, ParseException e) {
+                if (e == null) {
+                    // item was found
+                    if(isValidPoll) {
+                        polls.add(0, poll);
+                        adapter.notifyDataSetChanged();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(),
+                            "Poll with this name already exists", Toast.LENGTH_LONG).show();
                     }
                 }
-            });
-        }
+            }
+        });
+    }
+
+    private void handleEditPollResult(Intent data) {
+        int pollPosition = data.getExtras().getInt("poll_position");
+        String pollID = data.getExtras().getString("pollID");
+        ParseQuery<Poll> query = ParseQuery.getQuery(Poll.class);
+        polls.remove(pollPosition);
+
+        query.getInBackground(pollID, new GetCallback<Poll>() {
+            public void done(Poll poll, ParseException e) {
+                if (e == null) {
+                    // item was found
+                    if (isValidPoll) {
+                        polls.add(0, poll);
+                        adapter.notifyDataSetChanged();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(),
+                            "Poll with this name already exists", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
     }
 }
 
