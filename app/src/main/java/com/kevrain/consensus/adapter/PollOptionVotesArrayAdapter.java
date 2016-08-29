@@ -103,6 +103,7 @@ public class PollOptionVotesArrayAdapter extends RecyclerView.Adapter<PollOption
         query.findInBackground(new FindCallback<Vote>() {
             @Override
             public void done(List<Vote> votes, ParseException e) {
+                mVotes.clear();
                 mVotes.addAll(votes);
                 holder.voteCount = mVotes.size();
                 holder.tvPollOptionVoteCount.setText(holder.voteCount + " Votes");
