@@ -24,6 +24,7 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
     @BindView(R.id.tvPollName) TextView tvPollName;
     @BindView(R.id.rvPollOptions) RecyclerView rvPollOptions;
     @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.progressIndicator) AVLoadingIndicatorView progressIndicator;
 
     Poll poll;
     PollOptionVotesArrayAdapter adapter;
@@ -79,6 +81,7 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
 
                     tvPollName.setText(poll.getPollName());
 
+                    progressIndicator.show();
                     poll.getPollOptionRelation().getQuery().findInBackground(new FindCallback<PollOption>() {
                         @Override
                         public void done(List<PollOption> objects, ParseException e) {
@@ -91,6 +94,7 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
                                 }));
 
                                 adapter.notifyDataSetChanged();
+                                progressIndicator.hide();
                             }
                         }
                     });

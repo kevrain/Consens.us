@@ -23,6 +23,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +36,7 @@ public class GroupsActivity extends AppCompatActivity {
    @BindView(R.id.fabAddGroup) FloatingActionButton fabAddGroup;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.rvGroups) RecyclerView rvGroups;
+    @BindView(R.id.progressIndicator) AVLoadingIndicatorView progressIndicator;
 
     ArrayList<Group> groups;
     GroupsArrayAdapter adapter;
@@ -85,11 +87,13 @@ public class GroupsActivity extends AppCompatActivity {
         addGroupLongClickHandler();
         ParseQuery<Group> query = ParseQuery.or(Arrays.asList(ownerQuery, membersQuery));
 
+        progressIndicator.show();
         query.findInBackground(new FindCallback<Group>() {
             public void done(List<Group> groupsList, ParseException e) {
                 if (e == null) {
                     groups.addAll(groupsList);
                     adapter.notifyDataSetChanged();
+                    progressIndicator.hide();
                 }
             }
         });

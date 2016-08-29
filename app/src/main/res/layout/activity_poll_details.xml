@@ -39,4 +39,6 @@
 
     </RelativeLayout>
 
+    <include layout="@layout/view_progress_indicator" />
+
 </RelativeLayout>
