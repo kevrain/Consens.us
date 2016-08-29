@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kevrain.consensus.R;
-import com.kevrain.consensus.models.PollOption;
 import com.kevrain.consensus.models.Poll;
+import com.kevrain.consensus.models.PollOption;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 

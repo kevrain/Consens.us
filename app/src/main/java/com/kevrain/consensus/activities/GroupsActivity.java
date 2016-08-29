@@ -18,7 +18,6 @@ import com.kevrain.consensus.adapter.GroupsArrayAdapter;
 import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.support.ItemClickSupport;
 import com.kevrain.consensus.support.ItemClickSupport.OnItemLongClickListener;
-import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
