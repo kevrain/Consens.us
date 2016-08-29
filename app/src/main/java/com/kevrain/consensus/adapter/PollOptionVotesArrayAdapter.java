@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.github.underscore.$;
 import com.github.underscore.Block;
+import com.github.underscore.Optional;
+import com.github.underscore.Predicate;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.models.Poll;
 import com.kevrain.consensus.models.PollOption;
@@ -109,7 +111,14 @@ public class PollOptionVotesArrayAdapter extends RecyclerView.Adapter<PollOption
                 holder.voteCount = mVotes.size();
                 holder.tvPollOptionVoteCount.setText(holder.voteCount + " Votes");
 
-                holder.cbPollOptionVote.setChecked(holder.voteCount > 0);
+                Optional<Vote> userVote = $.find(votes, new Predicate<Vote>() {
+                    @Override
+                    public Boolean apply(Vote vote) {
+                        return vote.getUser().getInt("fb_id") == ParseUser.getCurrentUser().getInt("fb_id");
+                    }
+                });
+
+                holder.cbPollOptionVote.setChecked(userVote.isPresent());
 
                 if (pollOption.getName().equals(holder.itemView.getContext().getString(R.string.none_of_the_above)) &&
                         holder.cbPollOptionVote.isChecked()) {
