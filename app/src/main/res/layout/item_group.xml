@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <TextView
@@ -7,16 +7,20 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_width="wrap_content"
         android:layout_gravity="left"
-        android:layout_height="50dp" />
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tvGroupMembers"
+        android:textColor="@android:color/darker_gray"
+        android:layout_gravity="left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_gravity="right"
-        android:layout_toRightOf="@+id/tvGroupName"
-        android:layout_alignParentRight="true"
-        >
+        android:layout_gravity="right">
 
         <ImageView
             android:layout_width="25dp"
@@ -24,9 +28,9 @@
             android:id="@+id/imgGroupCollage1"
             android:src="@mipmap/ic_launcher"
             android:layout_gravity="left"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/imgGroupCollage2"
-            android:layout_toStartOf="@+id/imgGroupCollage2" />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            />
 
         <ImageView
             android:layout_width="25dp"
@@ -34,9 +38,8 @@
             android:id="@+id/imgGroupCollage4"
             android:src="@mipmap/ic_launcher"
             android:layout_gravity="left"
-            android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@+id/imgGroupCollage3"
-            android:layout_toStartOf="@+id/imgGroupCollage3" />
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/imgGroupCollage1"/>
 
         <ImageView
             android:layout_width="25dp"
@@ -57,12 +60,6 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tvGroupMembers"
-        android:textColor="@android:color/darker_gray"
-        android:layout_gravity="left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvGroupName"/>
 
-</RelativeLayout>
+
+</LinearLayout>

@@ -123,7 +123,7 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
                 }
         });
     }
-
+    
     @Override
     public int getItemCount() {
         return mGroups.size();
@@ -151,89 +151,43 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
     }
 
     private void populateImage(final ViewHolder holder){
-        holder.imgGroupCollage1.setImageResource(0);
-        holder.imgGroupCollage2.setImageResource(0);
-        holder.imgGroupCollage3.setImageResource(0);
-        holder.imgGroupCollage4.setImageResource(0);
 
         if(profileImages.size()==1) {
             profileImages.get(0).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
                     Glide.with(holder.itemView.getContext()).load(data).
-                            placeholder(R.mipmap.ic_placeholder).into(holder.imgGroupCollage1);
+                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage1);
                 }
             });
         }
 
         if(profileImages.size()==2) {
-            profileImages.get(0).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                            placeholder(R.mipmap.ic_placeholder).into(holder.imgGroupCollage1);
-                }
-            });
             profileImages.get(1).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
                     Glide.with(holder.itemView.getContext()).load(data).
-                            placeholder(R.mipmap.ic_placeholder).into(holder.imgGroupCollage2);
+                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage2);
                 }
             });
         }
 
         if(profileImages.size()==3) {
-            profileImages.get(0).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                            placeholder(R.mipmap.ic_placeholder).into(holder.imgGroupCollage1);
-                }
-            });
-            profileImages.get(1).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                            placeholder(R.mipmap.ic_placeholder).into(holder.imgGroupCollage2);
-                }
-            });
             profileImages.get(2).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
                     Glide.with(holder.itemView.getContext()).load(data).
-                            placeholder(R.mipmap.ic_placeholder).into(holder.imgGroupCollage3);
+                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage3);
                 }
             });
         }
 
         if(profileImages.size()==4) {
-            profileImages.get(0).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                            placeholder(R.mipmap.ic_placeholder).into(holder.imgGroupCollage1);
-                }
-            });
-            profileImages.get(1).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                            placeholder(R.mipmap.ic_placeholder).into(holder.imgGroupCollage2);
-                }
-            });
-            profileImages.get(2).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                            placeholder(R.mipmap.ic_placeholder).into(holder.imgGroupCollage3);
-                }
-            });
             profileImages.get(3).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
                     Glide.with(holder.itemView.getContext()).load(data).
-                            placeholder(R.mipmap.ic_placeholder).into(holder.imgGroupCollage4);
+                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage4);
                 }
             });
         }

@@ -62,10 +62,6 @@ public class PollsActivity extends AppCompatActivity {
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 Intent i = new Intent(v.getContext(), PollDetailsActivity.class);
                 i.putExtra("pollID", polls.get(position).getObjectId());
-
-                Log.d(" POLL SHRAVYA group ",polls.get(position).getGroup().getObjectId());
-                i.putExtra("groupID", polls.get(position).getGroup().getObjectId());
-
                 startActivity(i);
             }
         });
