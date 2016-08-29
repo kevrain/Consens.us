@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.github.underscore.$;
@@ -272,9 +271,17 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
         }).get();
 
         int itemPosition = pollOptions.indexOf(optionInList);
-        RecyclerView.ViewHolder nonOptionView = rvPollOptions.findViewHolderForAdapterPosition(itemPosition);
-        CheckBox cbPollOptionVote = (CheckBox) nonOptionView.itemView.findViewById(R.id.cbPollOptionVote);
-        cbPollOptionVote.setChecked(false);
+       //PollOptionVotesArrayAdapter.ViewHolder optionView = (PollOptionVotesArrayAdapter.ViewHolder) rvPollOptions.findViewHolderForAdapterPosition(itemPosition);
+       //CheckBox cbPollOptionVote = (CheckBox) optionView.itemView.findViewById(R.id.cbPollOptionVote);
+       //final TextView tvPollOptionVoteCount = (TextView) optionView.itemView.findViewById(R.id.tvPollOptionVoteCount);
+       //cbPollOptionVote.setChecked(false);
+
+       //if (optionInList.getName().equals(getString(R.string.none_of_the_above))) {
+       //    cbPollOptionVote.setClickable(true);
+       //}
+
+       //--optionView.voteCount;
+       //tvPollOptionVoteCount.setText(optionView.voteCount + " Votes");
         adapter.notifyItemChanged(itemPosition);
     }
 }
