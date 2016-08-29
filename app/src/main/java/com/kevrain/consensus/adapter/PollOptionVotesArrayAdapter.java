@@ -164,14 +164,17 @@ public class PollOptionVotesArrayAdapter extends RecyclerView.Adapter<PollOption
         vote.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                holder.voteCount++;
-                holder.tvPollOptionVoteCount.setText(holder.voteCount + " Votes");
+                pollOption.addVote(vote);
+                pollOption.getVotesRelation().getQuery().findInBackground(new FindCallback<Vote>() {
+                    @Override
+                    public void done(List<Vote> votes, ParseException e) {
+                        holder.tvPollOptionVoteCount.setText(votes.size() + " Votes");
+                    }
+                });
 
                 if (!pollOption.getName().equals(holder.itemView.getContext().getString(R.string.none_of_the_above))) {
                     listener.deleteNoneOfTheAboveVoteIfNeeded();
                 }
-
-                pollOption.addVote(vote);
             }
         });
     }
@@ -188,10 +191,14 @@ public class PollOptionVotesArrayAdapter extends RecyclerView.Adapter<PollOption
                         vote.deleteInBackground(new DeleteCallback() {
                             @Override
                             public void done(ParseException e) {
-                                --holder.voteCount;
-                                holder.tvPollOptionVoteCount.setText(holder.voteCount + " Votes");
                                 listener.createNoneOfTheAboveVoteIfNeeded();
                                 pollOption.removeVote(vote);
+                                pollOption.getVotesRelation().getQuery().findInBackground(new FindCallback<Vote>() {
+                                    @Override
+                                    public void done(List<Vote> votes, ParseException e) {
+                                        holder.tvPollOptionVoteCount.setText(votes.size() + " Votes");
+                                    }
+                                });
                             }
                         });
                     }

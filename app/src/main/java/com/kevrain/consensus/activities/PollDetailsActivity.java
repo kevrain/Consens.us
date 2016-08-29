@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.github.underscore.$;
@@ -105,28 +106,34 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
     @Override
     public void createNoneOfTheAboveVoteIfNeeded() {
         ParseQuery query = ParseQuery.getQuery(Vote.class);
+        query.include("pollOption");
         query.whereEqualTo("poll", poll);
         query.whereEqualTo("user", ParseUser.getCurrentUser());
-        query.whereNotEqualTo("name", getString(R.string.none_of_the_above));
         query.findInBackground(new FindCallback() {
             @Override
             public void done(List votes, ParseException e) {
                 if (votes.isEmpty()) {
-                    PollOption noneOption = $.find(pollOptions, new Predicate<PollOption>() {
+                    final PollOption noneOption = $.find(pollOptions, new Predicate<PollOption>() {
                         @Override
                         public Boolean apply(PollOption option) {
                             return option.getName() == getString(R.string.none_of_the_above);
                         }
                     }).get();
 
-                    Vote vote = new Vote();
-                    vote.setPollOption(noneOption);
-                    vote.setPoll(poll);
-                    vote.setUser(ParseUser.getCurrentUser());
-                    vote.saveInBackground(new SaveCallback() {
+                    final Vote newVote = new Vote();
+                    newVote.setPollOption(noneOption);
+                    newVote.setPoll(poll);
+                    newVote.setUser(ParseUser.getCurrentUser());
+                    newVote.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
-                            adapter.notifyDataSetChanged();
+                            noneOption.getVotesRelation().add(newVote);
+                            noneOption.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    checkOption(noneOption);
+                                }
+                            });
                         }
                     });
                 }
@@ -151,8 +158,13 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
                     newVote.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
-                            noneOption.addVote(newVote);
-                            adapter.notifyDataSetChanged();
+                            noneOption.getVotesRelation().add(newVote);
+                            noneOption.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    checkOption(noneOption);
+                                }
+                            });
                         }
                     });
                 }
@@ -177,8 +189,13 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
                                 vote.deleteInBackground(new DeleteCallback() {
                                     @Override
                                     public void done(ParseException e) {
-                                        option.removeVote(vote);
-                                        uncheckOption(option);
+                                        option.getVotesRelation().remove(vote);
+                                        option.saveInBackground(new SaveCallback() {
+                                            @Override
+                                            public void done(ParseException e) {
+                                                uncheckOption(option);
+                                            }
+                                        });
                                     }
                                 });
                             }
@@ -199,8 +216,13 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
                                 vote.deleteInBackground(new DeleteCallback() {
                                     @Override
                                     public void done(ParseException e) {
-                                        option.removeVote(vote);
-                                        uncheckOption(option);
+                                        option.getVotesRelation().remove(vote);
+                                        option.saveInBackground(new SaveCallback() {
+                                            @Override
+                                            public void done(ParseException e) {
+                                                uncheckOption(option);
+                                            }
+                                        });
                                     }
                                 });
                             }
@@ -228,8 +250,13 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
                                 vote.deleteInBackground(new DeleteCallback() {
                                     @Override
                                     public void done(ParseException e) {
-                                        option.removeVote(vote);
-                                        uncheckOption(option);
+                                        option.getVotesRelation().remove(vote);
+                                        option.saveInBackground(new SaveCallback() {
+                                            @Override
+                                            public void done(ParseException e) {
+                                                uncheckOption(option);
+                                            }
+                                        });
                                     }
                                 });
                             }
@@ -250,8 +277,13 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
                                 vote.deleteInBackground(new DeleteCallback() {
                                     @Override
                                     public void done(ParseException e) {
-                                        option.removeVote(vote);
-                                        uncheckOption(option);
+                                        option.getVotesRelation().remove(vote);
+                                        option.saveInBackground(new SaveCallback() {
+                                            @Override
+                                            public void done(ParseException e) {
+                                                uncheckOption(option);
+                                            }
+                                        });
                                     }
                                 });
                             }
@@ -271,17 +303,48 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
         }).get();
 
         int itemPosition = pollOptions.indexOf(optionInList);
-       //PollOptionVotesArrayAdapter.ViewHolder optionView = (PollOptionVotesArrayAdapter.ViewHolder) rvPollOptions.findViewHolderForAdapterPosition(itemPosition);
-       //CheckBox cbPollOptionVote = (CheckBox) optionView.itemView.findViewById(R.id.cbPollOptionVote);
-       //final TextView tvPollOptionVoteCount = (TextView) optionView.itemView.findViewById(R.id.tvPollOptionVoteCount);
-       //cbPollOptionVote.setChecked(false);
+        PollOptionVotesArrayAdapter.ViewHolder optionView = (PollOptionVotesArrayAdapter.ViewHolder) rvPollOptions.findViewHolderForAdapterPosition(itemPosition);
+        CheckBox cbPollOptionVote = (CheckBox) optionView.itemView.findViewById(R.id.cbPollOptionVote);
+        final TextView tvPollOptionVoteCount = (TextView) optionView.itemView.findViewById(R.id.tvPollOptionVoteCount);
+        cbPollOptionVote.setChecked(false);
 
-       //if (optionInList.getName().equals(getString(R.string.none_of_the_above))) {
-       //    cbPollOptionVote.setClickable(true);
-       //}
+        if (optionInList.getName().equals(getString(R.string.none_of_the_above))) {
+            cbPollOptionVote.setClickable(true);
+        }
 
-       //--optionView.voteCount;
-       //tvPollOptionVoteCount.setText(optionView.voteCount + " Votes");
-        adapter.notifyItemChanged(itemPosition);
+        option.getVotesRelation().getQuery().findInBackground(new FindCallback<Vote>() {
+            @Override
+            public void done(List<Vote> votes, ParseException e) {
+                tvPollOptionVoteCount.setText(votes.size() + " Votes");
+            }
+        });
+        //adapter.notifyItemChanged(itemPosition);
+    }
+
+    private void checkOption(final PollOption option) {
+        PollOption optionInList = $.find(pollOptions, new Predicate<PollOption>() {
+            @Override
+            public Boolean apply(PollOption currentOption) {
+                return currentOption.getName().equals(option.getName());
+            }
+        }).get();
+
+        int itemPosition = pollOptions.indexOf(optionInList);
+        PollOptionVotesArrayAdapter.ViewHolder optionView = (PollOptionVotesArrayAdapter.ViewHolder) rvPollOptions.findViewHolderForAdapterPosition(itemPosition);
+        CheckBox cbPollOptionVote = (CheckBox) optionView.itemView.findViewById(R.id.cbPollOptionVote);
+        final TextView tvPollOptionVoteCount = (TextView) optionView.itemView.findViewById(R.id.tvPollOptionVoteCount);
+        cbPollOptionVote.setChecked(true);
+
+        if (optionInList.getName().equals(getString(R.string.none_of_the_above))) {
+            cbPollOptionVote.setClickable(false);
+        }
+
+        option.getVotesRelation().getQuery().findInBackground(new FindCallback<Vote>() {
+            @Override
+            public void done(List<Vote> votes, ParseException e) {
+                tvPollOptionVoteCount.setText(votes.size() + " Votes");
+            }
+        });
+        //adapter.notifyItemChanged(itemPosition);
     }
 }
