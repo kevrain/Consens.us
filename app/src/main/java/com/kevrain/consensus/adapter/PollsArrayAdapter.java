@@ -12,6 +12,8 @@ import com.kevrain.consensus.models.Poll;
 import com.kevrain.consensus.models.PollOption;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.tr4android.recyclerviewslideitem.SwipeAdapter;
+import com.tr4android.recyclerviewslideitem.SwipeConfiguration;
 
 import java.util.List;
 
@@ -21,7 +23,7 @@ import butterknife.ButterKnife;
 /**
  * Created by shravyagarlapati on 8/19/16.
  */
-public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.ViewHolder> {
+public class PollsArrayAdapter extends SwipeAdapter {
     public List<Poll> mPolls;
 
     // Pass in the contact array into the constructor
@@ -45,12 +47,12 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
     }
 
     @Override
-    public PollsArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PollsArrayAdapter.ViewHolder onCreateSwipeViewHolder(ViewGroup parent, int i) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View listItemView = inflater.inflate(R.layout.item_poll, parent, false);
+        View listItemView = inflater.inflate(R.layout.item_poll, parent, true);
 
         ButterKnife.bind(listItemView);
 
@@ -60,24 +62,40 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(final PollsArrayAdapter.ViewHolder holder, final int position) {
+    public void onBindSwipeViewHolder(final RecyclerView.ViewHolder holder, int position) {
+        Poll poll = mPolls.get(position);
+        final PollsArrayAdapter.ViewHolder viewHolder = (PollsArrayAdapter.ViewHolder) holder;
 
-        final Poll poll = mPolls.get(position);
-
-        holder.tvPollName.setText(poll.getPollName());
+        viewHolder.tvPollName.setText(poll.getPollName());
 
         poll.getPollOptionRelation().getQuery().findInBackground(new FindCallback<PollOption>() {
             @Override
             public void done(List<PollOption> pollOptions, ParseException e) {
                 if (e == null) {
-                    holder.tvPollOptionCount.setText("" + pollOptions.size() + " Locations");
+                    viewHolder.tvPollOptionCount.setText("" + pollOptions.size() + " Locations");
                 }
             }
         });
+
     }
 
     @Override
     public int getItemCount() {
         return mPolls.size();
+    }
+
+    @Override
+    public SwipeConfiguration onCreateSwipeConfiguration(Context context, int i) {
+        return new SwipeConfiguration.Builder(context)
+                .setLeftBackgroundColorResource(android.R.color.holo_red_light)
+                .setLeftDrawableResource(R.drawable.ic_close)
+                .setLeftSwipeBehaviour(SwipeConfiguration.SwipeBehaviour.RESTRICTED_SWIPE)
+                .setRightSwipeBehaviour(SwipeConfiguration.SwipeBehaviour.NO_SWIPE)
+                .build();
+    }
+
+    @Override
+    public void onSwipe(int i, int i1) {
+
     }
 }
