@@ -287,8 +287,7 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
         cbPollOptionVote.setChecked(false);
         adapter.notifyItemChanged(itemPosition);
     }
-}
-    
+
 private void populateGroupMembersinPoll() {
         String groupID = getIntent().getStringExtra("groupID");
         ParseQuery<Group> query = ParseQuery.getQuery(Group.class);
@@ -306,7 +305,6 @@ private void populateGroupMembersinPoll() {
                                 memberImageURls.add((ParseFile) objects.get(i).get("profileThumb"));
                                 adapter2.notifyDataSetChanged();
                             }
-
                         }
                     });
                 }
