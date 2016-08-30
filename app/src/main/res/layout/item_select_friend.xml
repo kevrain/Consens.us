@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
+        android:textAppearance="@style/AppTheme.Widget.TextView.Normal"
         android:id="@+id/tvFriendName"
         android:layout_toRightOf="@+id/ivProfile"
         android:layout_centerVertical="true"

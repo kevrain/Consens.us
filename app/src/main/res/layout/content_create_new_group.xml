@@ -17,40 +17,43 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/group_name"
-        android:id="@+id/tvGroupName"
-        android:layout_alignTop="@+id/etGroupName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignBottom="@+id/etGroupName"/>
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/group_name_hint"
         android:id="@+id/etGroupName"
         android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="10dp"/>
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/lvAddFriends"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@+id/btnSave"
-        android:layout_below="@+id/tvAddFriends"/>
+        android:layout_below="@+id/divider"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_friends"
+        android:textColor="@color/colorBlack"
         android:id="@+id/tvAddFriends"
-        android:layout_below="@+id/tvGroupName"
+        android:layout_below="@+id/etGroupName"
         android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dp"
         android:layout_alignParentStart="true"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_below="@id/tvAddFriends"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_margin="5dp"
+        android:background="@color/colorEditItemDivider"/>
 </RelativeLayout>
