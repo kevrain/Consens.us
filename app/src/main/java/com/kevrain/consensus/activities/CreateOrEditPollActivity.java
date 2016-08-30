@@ -1,5 +1,6 @@
 package com.kevrain.consensus.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -29,6 +30,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class CreateOrEditPollActivity extends AppCompatActivity implements NewPollOptionFragment.OnItemSaveListener {
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -212,5 +214,10 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements NewPo
             }
         });
 
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

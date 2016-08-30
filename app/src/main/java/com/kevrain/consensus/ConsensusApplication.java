@@ -13,6 +13,8 @@ import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
 import com.parse.interceptors.ParseLogInterceptor;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+
 /**
  * Created by kfarst on 8/17/16.
  */
@@ -38,5 +40,11 @@ public class ConsensusApplication extends Application {
                 .server(BuildConfig.PARSE_SERVER_URL).build());
 
         ParseFacebookUtils.initialize(this);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/HelveticaNeue-Light.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
     }
 }
