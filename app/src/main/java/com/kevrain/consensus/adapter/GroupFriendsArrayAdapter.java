@@ -65,6 +65,7 @@ public class GroupFriendsArrayAdapter extends ArrayAdapter<ParseUser> {
         profileImage.getDataInBackground(new GetDataCallback() {
             @Override
             public void done(byte[] data, ParseException e) {
+                Glide.clear(holder.ivProfile);
                 Glide.with(getContext()).load(data).
                     bitmapTransform(new RoundedCornersTransformation(getContext(), 2, 2))
                      .into(holder.ivProfile);
