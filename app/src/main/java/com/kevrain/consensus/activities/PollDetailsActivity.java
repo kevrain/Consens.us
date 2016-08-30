@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -15,6 +16,8 @@ import com.github.underscore.Function1;
 import com.github.underscore.Predicate;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.PollOptionVotesArrayAdapter;
+import com.kevrain.consensus.adapter.PollsPhotoArrayAdapter;
+import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.models.Poll;
 import com.kevrain.consensus.models.PollOption;
 import com.kevrain.consensus.models.Vote;
@@ -22,6 +25,7 @@ import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -35,14 +39,23 @@ import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class PollDetailsActivity extends AppCompatActivity implements PollOptionVotesArrayAdapter.PollOptionSelectionListener {
-    @BindView(R.id.tvPollName) TextView tvPollName;
-    @BindView(R.id.rvPollOptions) RecyclerView rvPollOptions;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.progressIndicator) AVLoadingIndicatorView progressIndicator;
+    @BindView(R.id.tvPollName)
+    TextView tvPollName;
+    @BindView(R.id.rvPollOptions)
+    RecyclerView rvPollOptions;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.progressIndicator)
+    AVLoadingIndicatorView progressIndicator;
+    @BindView(R.id.imgGroupMembers)
+    RecyclerView imgGroupMembers;
 
     Poll poll;
     PollOptionVotesArrayAdapter adapter;
+    PollsPhotoArrayAdapter adapter2;
     List<PollOption> pollOptions;
+    ArrayList<ParseFile> memberImageURls;
+    Group group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +74,13 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
         pollOptions = new ArrayList<>();
 
         rvPollOptions.setLayoutManager(new LinearLayoutManager(this));
-
         populatePollAndPollOptions();
+
+        memberImageURls = new ArrayList<>();
+        adapter2 = new PollsPhotoArrayAdapter(memberImageURls);
+        imgGroupMembers.setAdapter(adapter2);
+        imgGroupMembers.setLayoutManager(new LinearLayoutManager(this));
+        populateGroupMembersinPoll();
     }
 
 
@@ -353,5 +371,31 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    private void populateGroupMembersinPoll() {
+        String groupID = getIntent().getStringExtra("groupID");
+        ParseQuery<Group> query = ParseQuery.getQuery(Group.class);
+        query.getInBackground(groupID, new GetCallback<Group>() {
+            @Override
+            public void done(Group currGroup, ParseException e) {
+                if (e == null) {
+                    group = currGroup;
+
+                    group.getMembersRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
+                        @Override
+                        public void done(List<ParseUser> objects, ParseException e) {
+                            for(int i=0;i<objects.size();i++){
+                                Log.d("Shravya PROFILE", ":"+ objects.get(i).get("profileThumb"));
+                                memberImageURls.add((ParseFile) objects.get(i).get("profileThumb"));
+                                adapter2.notifyDataSetChanged();
+                            }
+                        }
+                    });
+                }
+                else
+                    e.printStackTrace();
+            }
+        });
     }
 }
