@@ -86,6 +86,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements NewPo
             public void done(Poll pollItem, ParseException e) {
                 if (e == null) {
                     originalPoll = pollItem;
+                    originalPoll.setGroup(group);
                     etEventName.setText(originalPoll.getPollName());
                     etEventName.setSelection(etEventName.getText().length());
 
@@ -160,6 +161,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements NewPo
         originalPoll.removePollOptions(pollOptionsAdapter.pollOptionsToDelete);
         String newPollName = etEventName.getText().toString();
         if (originalPoll.getPollName() != newPollName) {
+            originalPoll.setGroup(group);
             originalPoll.setPollName(newPollName);
             originalPoll.saveInBackground(new SaveCallback() {
                 @Override
@@ -190,6 +192,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements NewPo
     private void saveNewPoll(final Group group) {
         final Poll newPoll = new Poll();
         newPoll.setPollName(etEventName.getText().toString());
+        newPoll.setGroup(group);
         newPoll.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {

@@ -28,11 +28,17 @@
             android:textStyle="bold"
             android:text="POLL NAME"
             android:id="@+id/tvPollName" />
-        
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/imgGroupMembers"
+            android:layout_below="@+id/tvPollName"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvPollOptions"
-            android:layout_below="@+id/tvPollName"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/imgGroupMembers"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
