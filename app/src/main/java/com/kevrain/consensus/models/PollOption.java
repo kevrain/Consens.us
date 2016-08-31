@@ -11,7 +11,7 @@ import com.parse.ParseRelation;
 public class PollOption extends ParseObject {
     public PollOption() {}
 
-    public PollOption(String name, String date) {
+    public PollOption(String name, long date) {
         setName(name);
         setDate(date);
     }
@@ -46,11 +46,11 @@ public class PollOption extends ParseObject {
         return (String) get("name");
     }
 
-    public void setDate(String date) {
+    public void setDate(long date) {
         put("date", date);
     }
 
-    public String getDate() {
-        return (String) get("date");
+    public long getDate() {
+        return getLong("date");
     }
 }

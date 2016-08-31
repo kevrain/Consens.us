@@ -1,19 +1,13 @@
 package com.kevrain.consensus.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kevrain.consensus.R;
-import com.kevrain.consensus.activities.CreateOrEditGroupActivity;
-import com.kevrain.consensus.activities.CreateOrEditPollActivity;
-import com.kevrain.consensus.activities.PollsActivity;
 import com.kevrain.consensus.models.Poll;
 import com.kevrain.consensus.models.PollOption;
 import com.parse.FindCallback;
@@ -37,7 +31,7 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvPollName) TextView tvPollName;
         @BindView(R.id.tvPollOptionCount) TextView tvPollOptionCount;
 
@@ -47,11 +41,6 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
             super(itemView);
 
             ButterKnife.bind(this, itemView);
-        }
-
-        @Override
-        public void onClick(View view) {
-
         }
     }
 
@@ -85,20 +74,6 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
                 }
             }
         });
-        holder.itemView.setOnLongClickListener(
-            new OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    Intent i = new Intent(view.getContext(), CreateOrEditPollActivity.class);
-                    i.putExtra("pollID", poll.getObjectId());
-                    i.putExtra("poll_position", position);
-                    i.putExtra("request_code", PollsActivity.EDIT_POLL_REQUEST_CODE);
-                    ((Activity) holder.itemView.getContext()).startActivityForResult(i,
-                        PollsActivity.EDIT_POLL_REQUEST_CODE);
-                    return true;
-                }
-            }
-        );
     }
 
     @Override

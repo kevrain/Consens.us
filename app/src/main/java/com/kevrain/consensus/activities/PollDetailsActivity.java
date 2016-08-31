@@ -15,7 +15,7 @@ import com.github.underscore.Block;
 import com.github.underscore.Function1;
 import com.github.underscore.Predicate;
 import com.kevrain.consensus.R;
-import com.kevrain.consensus.adapter.PollOptionVotesArrayAdapter;
+import com.kevrain.consensus.adapter.PollOptionsArrayAdapter;
 import com.kevrain.consensus.adapter.PollsPhotoArrayAdapter;
 import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.models.Poll;
@@ -38,20 +38,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class PollDetailsActivity extends AppCompatActivity implements PollOptionVotesArrayAdapter.PollOptionSelectionListener {
+public class PollDetailsActivity extends AppCompatActivity implements PollOptionsArrayAdapter.PollOptionSelectionListener {
     @BindView(R.id.tvPollName)
     TextView tvPollName;
     @BindView(R.id.rvPollOptions)
     RecyclerView rvPollOptions;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.progressIndicator)
-    AVLoadingIndicatorView progressIndicator;
+    @BindView(R.id.progressIndicator) AVLoadingIndicatorView progressIndicator;
     @BindView(R.id.imgGroupMembers)
     RecyclerView imgGroupMembers;
 
     Poll poll;
-    PollOptionVotesArrayAdapter adapter;
+    PollOptionsArrayAdapter adapter;
     PollsPhotoArrayAdapter adapter2;
     List<PollOption> pollOptions;
     ArrayList<ParseFile> memberImageURls;
@@ -95,7 +94,7 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
             public void done(Poll pollItem, ParseException e) {
                 if (e == null) {
                     poll = pollItem;
-                    adapter = new PollOptionVotesArrayAdapter(pollOptions, poll);
+                    adapter = new PollOptionsArrayAdapter(pollOptions, poll);
                     rvPollOptions.setAdapter(adapter);
                     adapter.setPollOptionSelectionListener(PollDetailsActivity.this);
 
@@ -323,7 +322,7 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
         }).get();
 
         int itemPosition = pollOptions.indexOf(optionInList);
-        PollOptionVotesArrayAdapter.ViewHolder optionView = (PollOptionVotesArrayAdapter.ViewHolder) rvPollOptions.findViewHolderForAdapterPosition(itemPosition);
+        PollOptionsArrayAdapter.ViewHolder optionView = (PollOptionsArrayAdapter.ViewHolder) rvPollOptions.findViewHolderForAdapterPosition(itemPosition);
         CheckBox cbPollOptionVote = (CheckBox) optionView.itemView.findViewById(R.id.cbPollOptionVote);
         final TextView tvPollOptionVoteCount = (TextView) optionView.itemView.findViewById(R.id.tvPollOptionVoteCount);
         cbPollOptionVote.setChecked(false);
@@ -350,7 +349,7 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
         }).get();
 
         int itemPosition = pollOptions.indexOf(optionInList);
-        PollOptionVotesArrayAdapter.ViewHolder optionView = (PollOptionVotesArrayAdapter.ViewHolder) rvPollOptions.findViewHolderForAdapterPosition(itemPosition);
+        PollOptionsArrayAdapter.ViewHolder optionView = (PollOptionsArrayAdapter.ViewHolder) rvPollOptions.findViewHolderForAdapterPosition(itemPosition);
         CheckBox cbPollOptionVote = (CheckBox) optionView.itemView.findViewById(R.id.cbPollOptionVote);
         final TextView tvPollOptionVoteCount = (TextView) optionView.itemView.findViewById(R.id.tvPollOptionVoteCount);
         cbPollOptionVote.setChecked(true);

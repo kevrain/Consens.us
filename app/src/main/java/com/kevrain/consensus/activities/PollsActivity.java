@@ -1,5 +1,6 @@
 package com.kevrain.consensus.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -65,10 +66,24 @@ public class PollsActivity extends AppCompatActivity {
         ItemClickSupport.addTo(rvPolls).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                Intent i = new Intent(v.getContext(), PollDetailsActivity.class);
+                Intent i = new Intent(v.getContext(), CreateOrEditPollActivity.class);
                 i.putExtra("pollID", polls.get(position).getObjectId());
                 i.putExtra("groupID", polls.get(position).getGroup().getObjectId());
                 startActivity(i);
+            }
+        });
+
+        ItemClickSupport.addTo(rvPolls).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+                Poll poll = polls.get(position);
+                Intent i = new Intent(v.getContext(), CreateOrEditPollActivity.class);
+                i.putExtra("pollID", poll.getObjectId());
+                i.putExtra("poll_position", position);
+                i.putExtra("request_code", PollsActivity.EDIT_POLL_REQUEST_CODE);
+                ((Activity) v.getContext()).startActivityForResult(i,
+                        PollsActivity.EDIT_POLL_REQUEST_CODE);
+                return true;
             }
         });
 
