@@ -3,7 +3,9 @@ package com.kevrain.consensus.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +19,8 @@ import com.facebook.login.LoginManager;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.GroupsArrayAdapter;
 import com.kevrain.consensus.models.Group;
+import com.kevrain.consensus.network.AppNetworkCheck;
+import com.kevrain.consensus.support.ColoredSnackBar;
 import com.kevrain.consensus.support.ItemClickSupport;
 import com.kevrain.consensus.support.ItemClickSupport.OnItemLongClickListener;
 import com.parse.FindCallback;
@@ -35,10 +39,11 @@ import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class GroupsActivity extends AppCompatActivity {
-   @BindView(R.id.fabAddGroup) FloatingActionButton fabAddGroup;
+    @BindView(R.id.fabAddGroup) FloatingActionButton fabAddGroup;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.rvGroups) RecyclerView rvGroups;
     @BindView(R.id.progressIndicator) AVLoadingIndicatorView progressIndicator;
+    @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
 
     ArrayList<Group> groups;
     GroupsArrayAdapter adapter;
@@ -76,6 +81,12 @@ public class GroupsActivity extends AppCompatActivity {
         ParseQuery<Group> membersQuery = ParseQuery.getQuery(Group.class);
         membersQuery.whereEqualTo("members", ParseUser.getCurrentUser());
 
+        //Checking the Internet connection
+        if (!AppNetworkCheck.getInstance(this).isOnline()) {
+            Snackbar snackbar = Snackbar.make(rvGroups, R.string.snackbar_NOTOK_text, Snackbar.LENGTH_LONG);
+            ColoredSnackBar.alert(snackbar).show();
+        }
+
         ItemClickSupport.addTo(rvGroups).setOnItemClickListener(
             new ItemClickSupport.OnItemClickListener() {
                 @Override
@@ -85,7 +96,7 @@ public class GroupsActivity extends AppCompatActivity {
                     startActivity(i);
                 }
             });
-
+        
         addGroupLongClickHandler();
         ParseQuery<Group> query = ParseQuery.or(Arrays.asList(ownerQuery, membersQuery));
 

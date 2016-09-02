@@ -23,4 +23,7 @@
     <string name="poll_option_name_hint">Enter a title here...</string>
     <string name="pick_date">Pick a date</string>
     <string name="set_date">Set a date</string>
+    <string name="snackbar_OK_text">You are online, continue....</string>
+    <string name="snackbar_NOTOK_text">You are offline, turn on WIFI in settings....</string>
+
 </resources>
