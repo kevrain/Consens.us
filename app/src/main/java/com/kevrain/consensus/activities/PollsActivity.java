@@ -1,6 +1,5 @@
 package com.kevrain.consensus.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,10 +12,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.h6ah4i.android.widget.advrecyclerview.animator.SwipeDismissItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.PollsArrayAdapter;
 import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.models.Poll;
+import com.kevrain.consensus.support.DividerItemDecoration;
 import com.kevrain.consensus.support.ItemClickSupport;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -61,31 +63,39 @@ public class PollsActivity extends AppCompatActivity {
         adapter = new PollsArrayAdapter(polls);
         rvPolls.setAdapter(adapter);
 
+        RecyclerViewSwipeManager swipeMgr = new RecyclerViewSwipeManager();
+
         rvPolls.setLayoutManager(new LinearLayoutManager(this));
+        rvPolls.setAdapter(swipeMgr.createWrappedAdapter(adapter));
+        rvPolls.setItemAnimator(new SwipeDismissItemAnimator());
 
-        ItemClickSupport.addTo(rvPolls).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-            @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                Intent i = new Intent(v.getContext(), CreateOrEditPollActivity.class);
-                i.putExtra("pollID", polls.get(position).getObjectId());
-                i.putExtra("groupID", polls.get(position).getGroup().getObjectId());
-                startActivity(i);
-            }
-        });
+        swipeMgr.attachRecyclerView(rvPolls);
 
-        ItemClickSupport.addTo(rvPolls).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
-                Poll poll = polls.get(position);
-                Intent i = new Intent(v.getContext(), CreateOrEditPollActivity.class);
-                i.putExtra("pollID", poll.getObjectId());
-                i.putExtra("poll_position", position);
-                i.putExtra("request_code", PollsActivity.EDIT_POLL_REQUEST_CODE);
-                ((Activity) v.getContext()).startActivityForResult(i,
-                        PollsActivity.EDIT_POLL_REQUEST_CODE);
-                return true;
-            }
-        });
+        rvPolls.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+
+       ItemClickSupport.addTo(rvPolls).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+           @Override
+           public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+               Intent i = new Intent(v.getContext(), CreateOrEditPollActivity.class);
+               i.putExtra("pollID", polls.get(position).getObjectId());
+               i.putExtra("groupID", polls.get(position).getGroup().getObjectId());
+               startActivity(i);
+           }
+       });
+
+       //ItemClickSupport.addTo(rvPolls).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
+       //    @Override
+       //    public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+       //        Poll poll = polls.get(position);
+       //        Intent i = new Intent(v.getContext(), CreateOrEditPollActivity.class);
+       //        i.putExtra("pollID", poll.getObjectId());
+       //        i.putExtra("poll_position", position);
+       //        i.putExtra("request_code", PollsActivity.EDIT_POLL_REQUEST_CODE);
+       //        ((Activity) v.getContext()).startActivityForResult(i,
+       //                PollsActivity.EDIT_POLL_REQUEST_CODE);
+       //        return true;
+       //    }
+       //});
 
         populateGroupAndPolls();
 

@@ -1,23 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/activity_vertical_margin">
+<FrameLayout android:layout_height="75dp"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout
+    android:id="@+id/option_view_1"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="right"
+    android:background="#33f"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground">
+        <ImageView
+            android:src="@drawable/ic_edit"
+            android:background="@android:color/transparent"
+            android:tint="@android:color/white"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+
+    <FrameLayout
+    android:id="@+id/option_view_2"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="right"
+    android:background="#f66"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground">
+        <ImageView
+            android:src="@drawable/ic_close"
+            android:background="@android:color/transparent"
+            android:tint="@android:color/white"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/swipeableContainer"
+        android:clickable="true"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foreground="?attr/selectableItemBackground"
+        android:padding="@dimen/activity_vertical_margin">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_alignParentLeft="true"
+        android:layout_gravity="left|top"
         android:text="@string/poll_name"
         android:id="@+id/tvPollName" />
 
     <TextView
         android:id="@+id/tvPollOptionCount"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/tvPollName"
+        android:layout_gravity="left|bottom"
         android:textColor="@android:color/darker_gray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-</RelativeLayout>
+    </FrameLayout>
+</FrameLayout>

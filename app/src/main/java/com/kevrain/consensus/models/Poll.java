@@ -12,6 +12,7 @@ import java.util.Set;
  */
 @ParseClassName("Poll")
 public class Poll extends ParseObject {
+    public boolean pinned;
 
     public Poll() {}
 
