@@ -8,4 +8,5 @@
     <color name="colorEditItemDivider">#CFD2D5</color>
     <color name="white_transparent">#80FFFFFF</color>
     <color name="gray_transparent">#FFC0C0C0</color>
+    <color name="color_transparent">#00000000</color>
 </resources>

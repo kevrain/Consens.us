@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.facebook.login.LoginManager;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.GroupsArrayAdapter;
+import com.kevrain.consensus.adapter.GroupsArrayAdapter.OnSelectMenuItemListener;
 import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.network.AppNetworkCheck;
 import com.kevrain.consensus.support.ColoredSnackBar;
@@ -39,7 +40,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class GroupsActivity extends AppCompatActivity {
+public class GroupsActivity extends AppCompatActivity implements OnSelectMenuItemListener {
     @BindView(R.id.fabAddGroup) FloatingActionButton fabAddGroup;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.rvGroups) RecyclerView rvGroups;
@@ -89,12 +90,12 @@ public class GroupsActivity extends AppCompatActivity {
             ColoredSnackBar.alert(snackbar).show();
 
             snackbar.setAction("Settings", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(android.provider.Settings.ACTION_SETTINGS);
-                startActivity(i);
-            }
-        });
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(android.provider.Settings.ACTION_SETTINGS);
+                    startActivity(i);
+                }
+            });
 
     }
 
@@ -108,7 +109,6 @@ public class GroupsActivity extends AppCompatActivity {
                 }
             });
         
-        addGroupLongClickHandler();
         ParseQuery<Group> query = ParseQuery.or(Arrays.asList(ownerQuery, membersQuery));
 
         progressIndicator.show();
@@ -123,20 +123,15 @@ public class GroupsActivity extends AppCompatActivity {
         });
     }
 
-    private void addGroupLongClickHandler() {
-        ItemClickSupport.addTo(rvGroups).setOnItemLongClickListener(
-            new OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
-                    Intent i = new Intent(v.getContext(), CreateOrEditGroupActivity.class);
-                    i.putExtra("groupID", groups.get(position).getObjectId());
-                    i.putExtra("group_position", position);
-                    i.putExtra("requestCode",
-                        CreateOrEditGroupActivity.EDIT_GROUP_REQUEST_CODE);
-                    startActivityForResult(i, CreateOrEditGroupActivity.EDIT_GROUP_REQUEST_CODE);
-                    return true;
-                }
-            });
+
+    @Override
+    public void showEditGroup(Group group, int position) {
+        Intent i = new Intent(getApplicationContext(), CreateOrEditGroupActivity.class);
+        i.putExtra("groupID", group.getObjectId());
+        i.putExtra("group_position", position);
+        i.putExtra("requestCode",
+            CreateOrEditGroupActivity.EDIT_GROUP_REQUEST_CODE);
+        startActivityForResult(i, CreateOrEditGroupActivity.EDIT_GROUP_REQUEST_CODE);
     }
 
     @Override

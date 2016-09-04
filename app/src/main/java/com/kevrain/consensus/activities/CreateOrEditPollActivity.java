@@ -46,7 +46,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class CreateOrEditPollActivity extends AppCompatActivity implements NewPollOptionFragment.OnItemSaveListener, PollOptionsArrayAdapter.PollOptionSelectionListener {
+public class CreateOrEditPollActivity extends AppCompatActivity implements
+    NewPollOptionFragment.OnItemSaveListener, PollOptionsArrayAdapter.PollOptionSelectionListener {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.btnAdd) FloatingActionButton btnAdd;
     @BindView(R.id.rvPollOptions) RecyclerView rvPollOptions;

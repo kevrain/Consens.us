@@ -12,6 +12,17 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp">
 
+        <ImageButton
+            android:id="@+id/btnMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_more_vert_24dp"
+            android:background="#00000000"
+            android:tint="@color/white_transparent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight ="true"
+            android:onClick="showMenuPopUp"/>
+
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="horizontal"
             android:layout_width="60dp"
@@ -54,7 +65,6 @@
                 android:layout_alignLeft="@+id/imgGroupCollage1"
                 android:layout_toLeftOf="@+id/imgGroupCollage3"/>
 
-
         </RelativeLayout>
 
         <TextView
@@ -78,7 +88,7 @@
             android:id="@+id/tvGroupMembers"
             android:textColor="@android:color/darker_gray"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_gravity="left"
+            android:layout_gravity="center"
             android:layout_centerHorizontal="true"
             android:maxLines="2"
             android:ellipsize="end"

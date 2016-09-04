@@ -1,11 +1,18 @@
 package com.kevrain.consensus.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.github.underscore.$;
 import com.github.underscore.Function1;
 import com.kevrain.consensus.R;
+import com.kevrain.consensus.adapter.GroupFriendsArrayAdapter.ViewHolder;
 import com.kevrain.consensus.models.Group;
 import com.parse.FindCallback;
 import com.parse.GetDataCallback;
@@ -35,7 +43,7 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
 
     // Pass in the contact array into the constructor
     public GroupsArrayAdapter(List<Group> groups) {
-       mGroups = groups;
+        mGroups = groups;
     }
 
     //public GroupsArrayAdapter(List<Group> groups, Context context) {
@@ -43,6 +51,12 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
     //    mGroups=groups;
     //}
     ArrayList<ParseFile> profileImages;
+
+    private OnSelectMenuItemListener listener;
+
+    public interface OnSelectMenuItemListener {
+        public void showEditGroup(Group group, int position);
+    };
 
 
     // Provide a direct reference to each of the views within a data item
@@ -60,7 +74,8 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
         ImageView imgGroupCollage3;
         @BindView(R.id.imgGroupCollage4)
         ImageView imgGroupCollage4;
-
+        @BindView(R.id.btnMenu)
+        ImageButton btnMenu;
 
         public ViewHolder(View itemView) {
             // Stores the itemView in a public final member variable that can be used
@@ -83,6 +98,8 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
 
         // Inflate the custom layout
         View listItemView = inflater.inflate(R.layout.item_group, parent, false);
+
+        listener = (OnSelectMenuItemListener) context;
 
         ButterKnife.bind(listItemView);
 
@@ -123,8 +140,33 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
                     }
                 }
         });
+        setUpMenu(holder, position);
     }
-    
+
+    private void setUpMenu(GroupsArrayAdapter.ViewHolder holder, final int position) {
+        holder.btnMenu.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(view.getContext(), view);
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.menu_group_card_view, popup.getMenu());
+                popup.show();
+                popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.miEditGroup:
+                                listener.showEditGroup(mGroups.get(position), position);
+                                return true;
+                            default:
+                                return true;
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     @Override
     public int getItemCount() {
         return mGroups.size();
@@ -182,7 +224,7 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
                 @Override
                 public void done(byte[] data, ParseException e) {
                     Glide.with(holder.itemView.getContext()).load(data).
-                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
+                        bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
                             placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage4);
                 }
             });
@@ -217,7 +259,7 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
                 @Override
                 public void done(byte[] data, ParseException e) {
                     Glide.with(holder.itemView.getContext()).load(data).
-                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
+                        bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
                             placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage4);
                 }
             });
@@ -253,7 +295,7 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
                 @Override
                 public void done(byte[] data, ParseException e) {
                     Glide.with(holder.itemView.getContext()).load(data).
-                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
+                        bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
                             placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage4);
                 }
             });
@@ -290,14 +332,14 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
                 @Override
                 public void done(byte[] data, ParseException e) {
                     Glide.with(holder.itemView.getContext()).load(data).
-                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
+                        bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
                             placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage4);
                 }
             });
         }
 
     }
-
-
 }
+
+
 
