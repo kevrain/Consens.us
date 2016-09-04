@@ -5,4 +5,9 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="profile_image_width">50dp</dimen>
     <dimen name="profile_image_height">50dp</dimen>
+    <dimen name="group_divider_height">0.5dp</dimen>
+    <dimen name="group_divider_top_margin">5dp</dimen>
+    <dimen name="group_member_image_width">30dp</dimen>
+    <dimen name="group_member_image_height">30dp</dimen>
+    <dimen name="group_cardview_margin">5dp</dimen>
 </resources>
