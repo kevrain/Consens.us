@@ -85,7 +85,16 @@ public class GroupsActivity extends AppCompatActivity {
         if (!AppNetworkCheck.getInstance(this).isOnline()) {
             Snackbar snackbar = Snackbar.make(rvGroups, R.string.snackbar_NOTOK_text, Snackbar.LENGTH_LONG);
             ColoredSnackBar.alert(snackbar).show();
-        }
+
+            snackbar.setAction("Settings", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(android.provider.Settings.ACTION_SETTINGS);
+                startActivity(i);
+            }
+        });
+
+    }
 
         ItemClickSupport.addTo(rvGroups).setOnItemClickListener(
             new ItemClickSupport.OnItemClickListener() {
@@ -127,7 +136,6 @@ public class GroupsActivity extends AppCompatActivity {
                 }
             });
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

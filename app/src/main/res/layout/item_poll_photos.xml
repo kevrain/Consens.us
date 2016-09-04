@@ -11,6 +11,7 @@
         android:layout_gravity="left"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/imgGroupCollage2"
-        android:layout_toStartOf="@+id/imgGroupCollage2" />
+        android:layout_toStartOf="@+id/imgGroupCollage2"
+        android:background="@drawable/round_shape"/>
     
 </LinearLayout>

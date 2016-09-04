@@ -16,6 +16,7 @@
         android:layout_gravity="right"
         android:layout_toRightOf="@+id/tvGroupName"
         android:layout_alignParentRight="true"
+        android:background="@drawable/round_shape"
         >
 
         <ImageView
@@ -26,7 +27,8 @@
             android:layout_gravity="left"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/imgGroupCollage2"
-            android:layout_toStartOf="@+id/imgGroupCollage2" />
+            android:layout_toStartOf="@+id/imgGroupCollage2"
+            android:background="@drawable/round_shape"/>
 
         <ImageView
             android:layout_width="25dp"
@@ -36,7 +38,8 @@
             android:layout_gravity="left"
             android:layout_alignParentBottom="true"
             android:layout_toLeftOf="@+id/imgGroupCollage3"
-            android:layout_toStartOf="@+id/imgGroupCollage3" />
+            android:layout_toStartOf="@+id/imgGroupCollage3"
+            android:background="@drawable/round_shape"/>
 
         <ImageView
             android:layout_width="25dp"
@@ -44,7 +47,8 @@
             android:id="@+id/imgGroupCollage2"
             android:src="@mipmap/ic_launcher"
             android:layout_gravity="right"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:background="@drawable/round_shape"/>
 
         <ImageView
             android:layout_width="25dp"
@@ -53,7 +57,8 @@
             android:src="@mipmap/ic_launcher"
             android:layout_gravity="right"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/imgGroupCollage2"/>
+            android:layout_below="@id/imgGroupCollage2"
+            android:background="@drawable/round_shape"/>
 
     </RelativeLayout>
 
