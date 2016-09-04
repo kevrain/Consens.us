@@ -212,50 +212,41 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
 
     private void populateImage(final ViewHolder holder, ArrayList<ParseFile> profileImages){
 
-        if (profileImages.size() == 1) {
-            profileImages.get(0).getDataInBackground(new GetDataCallback() {
+        holder.imgGroupCollage1.setImageResource(0);
+        holder.imgGroupCollage2.setImageResource(0);
+        holder.imgGroupCollage3.setImageResource(0);
+        holder.imgGroupCollage4.setImageResource(0);
+
+        profileImages.get(0).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
                     populateSingleImage(data, holder, holder.imgGroupCollage1);
                 }
             });
-            profileImages.get(0).getDataInBackground(new GetDataCallback() {
+        profileImages.get(0).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
                     populateSingleImage(data, holder, holder.imgGroupCollage2);
                 }
             });
-            profileImages.get(0).getDataInBackground(new GetDataCallback() {
+        profileImages.get(0).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
                     populateSingleImage(data, holder, holder.imgGroupCollage3);
                 }
             });
-            profileImages.get(0).getDataInBackground(new GetDataCallback() {
+        profileImages.get(0).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
                     populateSingleImage(data, holder, holder.imgGroupCollage4);
                 }
             });
-        }
 
         if (profileImages.size()==2) {
-            profileImages.get(0).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    populateSingleImage(data, holder, holder.imgGroupCollage1);
-                }
-            });
             profileImages.get(1).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
                     populateSingleImage(data, holder, holder.imgGroupCollage2);
-                }
-            });
-            profileImages.get(0).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    populateSingleImage(data, holder, holder.imgGroupCollage3);
                 }
             });
             profileImages.get(1).getDataInBackground(new GetDataCallback() {
@@ -268,22 +259,10 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
         }
 
         if(profileImages.size()==3) {
-            profileImages.get(0).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    populateSingleImage(data, holder, holder.imgGroupCollage1);
-                }
-            });
             profileImages.get(1).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
                     populateSingleImage(data, holder, holder.imgGroupCollage2);
-                }
-            });
-            profileImages.get(2).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    populateSingleImage(data, holder, holder.imgGroupCollage3);
                 }
             });
             profileImages.get(2).getDataInBackground(new GetDataCallback() {
@@ -314,7 +293,6 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
                     populateSingleImage(data, holder, holder.imgGroupCollage3);
                 }
             });
-
             profileImages.get(3).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
