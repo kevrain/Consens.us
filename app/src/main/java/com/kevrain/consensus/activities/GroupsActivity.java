@@ -158,6 +158,7 @@ public class GroupsActivity extends AppCompatActivity implements OnSelectMenuIte
         String groupTitle = data.getExtras().getString("group_title");
         String groupId = data.getExtras().getString("group_id");
         Group newGroup = ParseObject.createWithoutData(Group.class, groupId);
+        newGroup.setOwner(ParseUser.getCurrentUser());
         newGroup.setTitle(groupTitle);
         groups.add(newGroup);
         adapter.notifyDataSetChanged();

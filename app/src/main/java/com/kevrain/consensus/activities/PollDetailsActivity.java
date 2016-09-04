@@ -380,11 +380,10 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
             public void done(Group currGroup, ParseException e) {
                 if (e == null) {
                     group = currGroup;
-
                     group.getMembersRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
                         @Override
                         public void done(List<ParseUser> objects, ParseException e) {
-                            for(int i=0;i<objects.size();i++){
+                            for(int i = 0; i < objects.size(); i++){
                                 Log.d("Shravya PROFILE", ":"+ objects.get(i).get("profileThumb"));
                                 memberImageURls.add((ParseFile) objects.get(i).get("profileThumb"));
                                 adapter2.notifyDataSetChanged();
