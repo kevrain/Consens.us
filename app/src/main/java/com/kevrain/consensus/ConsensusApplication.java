@@ -42,7 +42,7 @@ public class ConsensusApplication extends Application {
         ParseFacebookUtils.initialize(this);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/HelveticaNeue-Light.ttf")
+                .setDefaultFontPath("fonts/Lato-Light.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
