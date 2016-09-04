@@ -10,4 +10,5 @@
     <dimen name="group_member_image_width">30dp</dimen>
     <dimen name="group_member_image_height">30dp</dimen>
     <dimen name="group_cardview_margin">5dp</dimen>
+    <dimen name="group_image_view_vertical_margin">15dp</dimen>
 </resources>

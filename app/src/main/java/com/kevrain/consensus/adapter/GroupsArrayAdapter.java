@@ -115,20 +115,21 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
 
         holder.tvGroupName.setText(group.getTitle());
         profileImages = new ArrayList<>();
+        final ParseUser currUser = ParseUser.getCurrentUser();
 
         group.getMembersRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
             public void done(List<ParseUser> results, ParseException e) {
                 if (e == null) {
                     // results have all the Posts the current user liked.
-                    List<String> memberNames = new ArrayList<String>($.map(results, new Function1<ParseUser, String>() {
-                        public String apply(ParseUser user) {
-
-                            if (profileImages.size() < 4) {
-                                profileImages.add((ParseFile) user.get("profileThumb"));
-                            }
-                            return user.getUsername();
+                    List<String> memberNames = new ArrayList<String>();
+                    for (ParseUser user: results) {
+                        if (profileImages.size() < 4) {
+                            profileImages.add((ParseFile) user.get("profileThumb"));
                         }
-                    }));
+                        if (currUser.getObjectId() != user.getObjectId()) {
+                            memberNames.add(user.getUsername());
+                        }
+                    }
 
                     holder.tvGroupMembers.setText(TextUtils.join(", ", memberNames));
 

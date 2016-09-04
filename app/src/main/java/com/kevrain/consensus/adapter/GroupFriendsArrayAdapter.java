@@ -62,6 +62,7 @@ public class GroupFriendsArrayAdapter extends ArrayAdapter<ParseUser> {
 
         ParseUser user = getItem(position);
         ParseFile profileImage = (ParseFile) user.get("profileThumb");
+        holder.ivProfile.setImageResource(android.R.color.transparent);
         profileImage.getDataInBackground(new GetDataCallback() {
             @Override
             public void done(byte[] data, ParseException e) {
