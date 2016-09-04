@@ -96,8 +96,7 @@ public class GroupsActivity extends AppCompatActivity implements OnSelectMenuIte
                     startActivity(i);
                 }
             });
-
-    }
+        }
 
         ItemClickSupport.addTo(rvGroups).setOnItemClickListener(
             new ItemClickSupport.OnItemClickListener() {

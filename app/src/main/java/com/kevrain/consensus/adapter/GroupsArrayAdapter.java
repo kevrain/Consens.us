@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -20,12 +19,13 @@ import com.bumptech.glide.Glide;
 import com.github.underscore.$;
 import com.github.underscore.Function1;
 import com.kevrain.consensus.R;
-import com.kevrain.consensus.adapter.GroupFriendsArrayAdapter.ViewHolder;
 import com.kevrain.consensus.models.Group;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -46,18 +46,11 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
         mGroups = groups;
     }
 
-    //public GroupsArrayAdapter(List<Group> groups, Context context) {
-        //super();
-    //    mGroups=groups;
-    //}
-    ArrayList<ParseFile> profileImages;
-
     private OnSelectMenuItemListener listener;
 
     public interface OnSelectMenuItemListener {
-        public void showEditGroup(Group group, int position);
-    };
-
+        void showEditGroup(Group group, int position);
+    }
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
@@ -114,34 +107,50 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
         final Group group = mGroups.get(position);
 
         holder.tvGroupName.setText(group.getTitle());
-        profileImages = new ArrayList<>();
-        final ParseUser currUser = ParseUser.getCurrentUser();
+        group.getOwner().fetchInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                getGroupMembers(group, holder, (ParseUser) object);
+            }
+        });
 
+        setUpMenu(holder, position);
+    }
+
+    private void getGroupMembers(Group group, final GroupsArrayAdapter.ViewHolder holder,
+        final ParseUser owner) {
+        final ParseUser currUser = ParseUser.getCurrentUser();
         group.getMembersRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
             public void done(List<ParseUser> results, ParseException e) {
                 if (e == null) {
                     // results have all the Posts the current user liked.
                     List<String> memberNames = new ArrayList<String>();
-                    for (ParseUser user: results) {
+                    ArrayList<ParseFile> profileImages = new ArrayList<>();
+                    for (ParseUser user : results) {
                         if (profileImages.size() < 4) {
                             profileImages.add((ParseFile) user.get("profileThumb"));
                         }
-                        if (currUser.getObjectId() != user.getObjectId()) {
+                        if (!currUser.getObjectId().equals(user.getObjectId())) {
                             memberNames.add(user.getUsername());
                         }
                     }
-
+                    if (profileImages.size() < 4) {
+                        profileImages.add((ParseFile) owner.get("profileThumb"));
+                    }
+                    if (!currUser.getObjectId().equals(owner.getObjectId())) {
+                        memberNames.add(owner.getUsername());
+                    }
                     holder.tvGroupMembers.setText(TextUtils.join(", ", memberNames));
 
                     //Log.d("SHRAVYA Profile images", "::" + profileImages.size());
 
-                    if (profileImages.size() >=1) {
-                        populateImage(holder); }
-
+                    if (profileImages.size() >= 1) {
+                        populateImage(holder, profileImages);
                     }
+
                 }
+            }
         });
-        setUpMenu(holder, position);
     }
 
     private void setUpMenu(GroupsArrayAdapter.ViewHolder holder, final int position) {
@@ -194,74 +203,65 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
         return TextUtils.join(",", memberNames);
     }
 
-    private void populateImage(final ViewHolder holder){
+    private void populateSingleImage(byte[] data, ViewHolder holder, ImageView view) {
+        view.setImageResource(android.R.color.transparent);
+        Glide.with(holder.itemView.getContext()).load(data).
+            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
+                 placeholder(R.mipmap.ic_launcher).into(view);
+    }
 
-        if(profileImages.size()==1) {
+    private void populateImage(final ViewHolder holder, ArrayList<ParseFile> profileImages){
+
+        if (profileImages.size() == 1) {
             profileImages.get(0).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                    bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
-                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage1);
+                    populateSingleImage(data, holder, holder.imgGroupCollage1);
                 }
             });
             profileImages.get(0).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
-                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage2);
+                    populateSingleImage(data, holder, holder.imgGroupCollage2);
                 }
             });
             profileImages.get(0).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
-                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage3);
+                    populateSingleImage(data, holder, holder.imgGroupCollage3);
                 }
             });
             profileImages.get(0).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                        bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
-                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage4);
+                    populateSingleImage(data, holder, holder.imgGroupCollage4);
                 }
             });
         }
 
-        if(profileImages.size()==2) {
+        if (profileImages.size()==2) {
             profileImages.get(0).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
-                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage1);
+                    populateSingleImage(data, holder, holder.imgGroupCollage1);
                 }
             });
             profileImages.get(1).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
-                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage2);
+                    populateSingleImage(data, holder, holder.imgGroupCollage2);
                 }
             });
             profileImages.get(0).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
-                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage3);
+                    populateSingleImage(data, holder, holder.imgGroupCollage3);
                 }
             });
             profileImages.get(1).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                        bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
-                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage4);
+                    populateSingleImage(data, holder, holder.imgGroupCollage4);
                 }
             });
 
@@ -271,33 +271,25 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
             profileImages.get(0).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
-                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage1);
+                    populateSingleImage(data, holder, holder.imgGroupCollage1);
                 }
             });
             profileImages.get(1).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
-                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage2);
+                    populateSingleImage(data, holder, holder.imgGroupCollage2);
                 }
             });
             profileImages.get(2).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
-                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage3);
+                    populateSingleImage(data, holder, holder.imgGroupCollage3);
                 }
             });
             profileImages.get(2).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                        bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
-                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage4);
+                    populateSingleImage(data, holder, holder.imgGroupCollage4);
                 }
             });
 
@@ -307,34 +299,26 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
             profileImages.get(0).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
-                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage1);
+                    populateSingleImage(data, holder, holder.imgGroupCollage1);
                 }
             });
             profileImages.get(1).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
-                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage2);
+                    populateSingleImage(data, holder, holder.imgGroupCollage2);
                 }
             });
             profileImages.get(2).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
-                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage3);
+                    populateSingleImage(data, holder, holder.imgGroupCollage3);
                 }
             });
 
             profileImages.get(3).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
-                    Glide.with(holder.itemView.getContext()).load(data).
-                        bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
-                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage4);
+                    populateSingleImage(data, holder, holder.imgGroupCollage4);
                 }
             });
         }
