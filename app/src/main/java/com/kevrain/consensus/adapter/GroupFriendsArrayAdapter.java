@@ -23,7 +23,7 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
  * Created by iris on 8/21/16.
@@ -67,7 +67,7 @@ public class GroupFriendsArrayAdapter extends ArrayAdapter<ParseUser> {
             public void done(byte[] data, ParseException e) {
                 Glide.clear(holder.ivProfile);
                 Glide.with(getContext()).load(data).
-                    bitmapTransform(new RoundedCornersTransformation(getContext(), 2, 2))
+                    bitmapTransform(new CropCircleTransformation(getContext()))
                      .into(holder.ivProfile);
             }
         });

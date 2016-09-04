@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/Consens.us.iml" filepath="$PROJECT_DIR$/Consens.us.iml" />
+=======
+>>>>>>> 8ae32ce9b9553f318023a118c3bdfb42da07593d
       <module fileurl="file://$PROJECT_DIR$/Consens4.iml" filepath="$PROJECT_DIR$/Consens4.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

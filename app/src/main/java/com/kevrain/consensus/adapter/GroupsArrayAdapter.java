@@ -25,6 +25,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
  * Created by kfarst on 8/21/16.
@@ -157,36 +158,139 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
                 @Override
                 public void done(byte[] data, ParseException e) {
                     Glide.with(holder.itemView.getContext()).load(data).
+                    bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
                             placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage1);
+                }
+            });
+            profileImages.get(0).getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    Glide.with(holder.itemView.getContext()).load(data).
+                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
+                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage2);
+                }
+            });
+            profileImages.get(0).getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    Glide.with(holder.itemView.getContext()).load(data).
+                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
+                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage3);
+                }
+            });
+            profileImages.get(0).getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    Glide.with(holder.itemView.getContext()).load(data).
+                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
+                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage4);
                 }
             });
         }
 
         if(profileImages.size()==2) {
+            profileImages.get(0).getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    Glide.with(holder.itemView.getContext()).load(data).
+                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
+                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage1);
+                }
+            });
             profileImages.get(1).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
                     Glide.with(holder.itemView.getContext()).load(data).
+                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
                             placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage2);
                 }
             });
+            profileImages.get(0).getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    Glide.with(holder.itemView.getContext()).load(data).
+                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
+                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage3);
+                }
+            });
+            profileImages.get(1).getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    Glide.with(holder.itemView.getContext()).load(data).
+                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
+                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage4);
+                }
+            });
+
         }
 
         if(profileImages.size()==3) {
+            profileImages.get(0).getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    Glide.with(holder.itemView.getContext()).load(data).
+                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
+                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage1);
+                }
+            });
+            profileImages.get(1).getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    Glide.with(holder.itemView.getContext()).load(data).
+                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
+                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage2);
+                }
+            });
             profileImages.get(2).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
                     Glide.with(holder.itemView.getContext()).load(data).
+                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
                             placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage3);
                 }
             });
+            profileImages.get(2).getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    Glide.with(holder.itemView.getContext()).load(data).
+                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
+                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage4);
+                }
+            });
+
         }
 
         if(profileImages.size()==4) {
+            profileImages.get(0).getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    Glide.with(holder.itemView.getContext()).load(data).
+                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
+                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage1);
+                }
+            });
+            profileImages.get(1).getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    Glide.with(holder.itemView.getContext()).load(data).
+                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
+                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage2);
+                }
+            });
+            profileImages.get(2).getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    Glide.with(holder.itemView.getContext()).load(data).
+                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
+                            placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage3);
+                }
+            });
+
             profileImages.get(3).getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
                     Glide.with(holder.itemView.getContext()).load(data).
+                            bitmapTransform(new CropCircleTransformation(holder.itemView.getContext())).
                             placeholder(R.mipmap.ic_launcher).into(holder.imgGroupCollage4);
                 }
             });
