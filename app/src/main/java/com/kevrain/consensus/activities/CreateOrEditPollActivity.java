@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -37,6 +38,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.wang.avi.AVLoadingIndicatorView;
+import com.wrapp.floatlabelededittext.FloatLabeledEditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +53,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.btnAdd) FloatingActionButton btnAdd;
     @BindView(R.id.rvPollOptions) RecyclerView rvPollOptions;
+    @BindView(R.id.fletEventName) FloatLabeledEditText fletEventName;
     @BindView(R.id.etEventName) EditText etEventName;
     @BindView(R.id.rlHeader) RelativeLayout rlHeader;
     @BindView(R.id.rlPollOptionPlaceholder) RelativeLayout rlPollOptionPlaceholder;
@@ -82,11 +85,17 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
 
         pollOptions = new ArrayList<>();
 
-
         rlHeader.getLayoutParams().height = (int) (DeviceDimensionsHelper.getDisplayHeight(getBaseContext()) * .25);
 
         requestCode = getIntent().getIntExtra("request_code", -1);
         pollOptionsAdapter = new PollOptionsArrayAdapter(pollOptions, requestCode);
+
+        if (requestCode == PollsActivity.SHOW_POLL_REQUEST_CODE) {
+            btnAdd.setVisibility(View.GONE);
+            etEventName.setInputType(InputType.TYPE_NULL);
+            fletEventName.setHint("");
+        }
+
         rvPollOptions.setAdapter(pollOptionsAdapter);
         rvPollOptions.setLayoutManager(new LinearLayoutManager(this));
         rvPollOptions.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));

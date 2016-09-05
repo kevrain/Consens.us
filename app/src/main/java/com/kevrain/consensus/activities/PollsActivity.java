@@ -74,20 +74,6 @@ public class PollsActivity extends AppCompatActivity {
 
         rvPolls.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
 
-       //ItemClickSupport.addTo(rvPolls).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
-       //    @Override
-       //    public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
-       //        Poll poll = polls.get(position);
-       //        Intent i = new Intent(v.getContext(), CreateOrEditPollActivity.class);
-       //        i.putExtra("pollID", poll.getObjectId());
-       //        i.putExtra("poll_position", position);
-       //        i.putExtra("request_code", PollsActivity.EDIT_POLL_REQUEST_CODE);
-       //        ((Activity) v.getContext()).startActivityForResult(i,
-       //                PollsActivity.EDIT_POLL_REQUEST_CODE);
-       //        return true;
-       //    }
-       //});
-
         populateGroupAndPolls();
 
         //Add New event
