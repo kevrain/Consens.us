@@ -39,12 +39,16 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
     static final float OPTIONS_AREA_PROPORTION = 0.3f;
     static final float REMOVE_ITEM_THRESHOLD = 0.6f;
     public List<Poll> mPolls;
-    float touchPosition;
+    private boolean isOwner;
 
     // Pass in the contact array into the constructor
     public PollsArrayAdapter(List<Poll> locations) {
         setHasStableIds(true);
         mPolls = locations;
+    }
+
+    public void setIsOwner(boolean isOwner) {
+        this.isOwner = isOwner;
     }
 
     @Override
@@ -172,7 +176,7 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
 
     @Override
     public int onGetSwipeReactionType(ViewHolder holder, int position, int x, int y) {
-        return Swipeable.REACTION_CAN_SWIPE_LEFT;
+        return isOwner ? Swipeable.REACTION_CAN_SWIPE_LEFT : Swipeable.REACTION_CAN_NOT_SWIPE_LEFT;
     }
 
     @Override
