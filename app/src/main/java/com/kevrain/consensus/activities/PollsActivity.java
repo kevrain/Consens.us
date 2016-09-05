@@ -19,11 +19,11 @@ import com.kevrain.consensus.adapter.PollsArrayAdapter;
 import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.models.Poll;
 import com.kevrain.consensus.support.DividerItemDecoration;
-import com.kevrain.consensus.support.ItemClickSupport;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
@@ -74,16 +74,6 @@ public class PollsActivity extends AppCompatActivity {
 
         rvPolls.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
 
-       ItemClickSupport.addTo(rvPolls).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-           @Override
-           public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-               Intent i = new Intent(v.getContext(), CreateOrEditPollActivity.class);
-               i.putExtra("pollID", polls.get(position).getObjectId());
-               i.putExtra("groupID", polls.get(position).getGroup().getObjectId());
-               startActivity(i);
-           }
-       });
-
        //ItemClickSupport.addTo(rvPolls).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
        //    @Override
        //    public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
@@ -126,6 +116,8 @@ public class PollsActivity extends AppCompatActivity {
             public void done(Group groupItem, ParseException e) {
                 if (e == null) {
                     group = groupItem;
+
+                    adapter.setIsOwner(group.getOwner().getObjectId().equals(ParseUser.getCurrentUser().getObjectId()));
 
                     progressIndicator.show();
                     group.getPollsRelation().getQuery().findInBackground(new FindCallback<Poll>() {
