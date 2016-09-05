@@ -73,20 +73,12 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
             swipeableContainer.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
-                    switch (motionEvent.getAction()) {
-                        case MotionEvent.ACTION_DOWN: {
-                            touchPosition = motionEvent.getY();
-                        }
-                        case MotionEvent.ACTION_UP: {
-                            if (touchPosition == motionEvent.getY()) {
-                                Intent i = new Intent(view.getContext(), CreateOrEditPollActivity.class);
-                                i.putExtra("pollID", mPolls.get(getAdapterPosition()).getObjectId());
-                                i.putExtra("request_code", PollsActivity.SHOW_POLL_REQUEST_CODE);
-                                i.putExtra("groupID", mPolls.get(getAdapterPosition()).getGroup().getObjectId());
-                                view.getContext().startActivity(i);
-                            }
-                            touchPosition = 0.0f;
-                        }
+                    if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
+                        Intent i = new Intent(view.getContext(), CreateOrEditPollActivity.class);
+                        i.putExtra("pollID", mPolls.get(getAdapterPosition()).getObjectId());
+                        i.putExtra("request_code", PollsActivity.SHOW_POLL_REQUEST_CODE);
+                        i.putExtra("groupID", mPolls.get(getAdapterPosition()).getGroup().getObjectId());
+                        view.getContext().startActivity(i);
                     }
                     return true;
                 }
