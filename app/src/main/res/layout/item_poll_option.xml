@@ -50,19 +50,21 @@
     <TextView
         android:id="@+id/tvPollOptionVoteCount"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_alignParentRight="true"
-        android:layout_alignBaseline="@+id/tvPollOptionListName"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <CheckBox
-        android:id="@+id/cbPollOptionVote"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/tvPollOptionListName"
+        android:layout_toRightOf="@+id/tvPollOptionListDate"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <cn.refactor.library.SmoothCheckBox
+        android:id="@+id/cbPollOptionVote"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:visibility="gone"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
 
 </RelativeLayout>

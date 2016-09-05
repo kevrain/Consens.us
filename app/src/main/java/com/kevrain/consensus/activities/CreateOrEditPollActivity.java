@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,6 +43,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.refactor.library.SmoothCheckBox;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class CreateOrEditPollActivity extends AppCompatActivity implements
@@ -82,10 +82,11 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
 
         pollOptions = new ArrayList<>();
 
-        pollOptionsAdapter = new PollOptionsArrayAdapter(pollOptions, originalPoll);
 
         rlHeader.getLayoutParams().height = (int) (DeviceDimensionsHelper.getDisplayHeight(getBaseContext()) * .25);
 
+        requestCode = getIntent().getIntExtra("request_code", -1);
+        pollOptionsAdapter = new PollOptionsArrayAdapter(pollOptions, requestCode);
         rvPollOptions.setAdapter(pollOptionsAdapter);
         rvPollOptions.setLayoutManager(new LinearLayoutManager(this));
         rvPollOptions.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
@@ -96,7 +97,6 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
 
     private void getIntentData() {
         groupID = getIntent().getStringExtra("groupID");
-        requestCode = getIntent().getIntExtra("request_code", -1);
         pollID = getIntent().getStringExtra("pollID");
 
         if (pollID != null) {
@@ -117,6 +117,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
             public void done(Poll pollItem, ParseException e) {
                 if (e == null) {
                     originalPoll = pollItem;
+                    pollOptionsAdapter.setPoll(originalPoll);
                     etEventName.setText(originalPoll.getPollName());
                     etEventName.setSelection(etEventName.getText().length());
 
@@ -464,9 +465,9 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
 
         int itemPosition = pollOptions.indexOf(optionInList);
         PollOptionsArrayAdapter.ViewHolder optionView = (PollOptionsArrayAdapter.ViewHolder) rvPollOptions.findViewHolderForAdapterPosition(itemPosition);
-        CheckBox cbPollOptionVote = (CheckBox) optionView.itemView.findViewById(R.id.cbPollOptionVote);
+        SmoothCheckBox cbPollOptionVote = (SmoothCheckBox) optionView.itemView.findViewById(R.id.cbPollOptionVote);
         final TextView tvPollOptionVoteCount = (TextView) optionView.itemView.findViewById(R.id.tvPollOptionVoteCount);
-        cbPollOptionVote.setChecked(false);
+        cbPollOptionVote.setChecked(false, true);
 
         if (optionInList.getName().equals(getString(R.string.none_of_the_above))) {
             cbPollOptionVote.setClickable(true);
@@ -490,21 +491,21 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
         }).get();
 
         int itemPosition = pollOptions.indexOf(optionInList);
-        PollOptionsArrayAdapter.ViewHolder optionView = (PollOptionsArrayAdapter.ViewHolder) rvPollOptions.findViewHolderForAdapterPosition(itemPosition);
-        CheckBox cbPollOptionVote = (CheckBox) optionView.itemView.findViewById(R.id.cbPollOptionVote);
-        final TextView tvPollOptionVoteCount = (TextView) optionView.itemView.findViewById(R.id.tvPollOptionVoteCount);
-        cbPollOptionVote.setChecked(true);
+       PollOptionsArrayAdapter.ViewHolder optionView = (PollOptionsArrayAdapter.ViewHolder) rvPollOptions.findViewHolderForAdapterPosition(itemPosition);
+       SmoothCheckBox cbPollOptionVote = (SmoothCheckBox) optionView.itemView.findViewById(R.id.cbPollOptionVote);
+       final TextView tvPollOptionVoteCount = (TextView) optionView.itemView.findViewById(R.id.tvPollOptionVoteCount);
+       cbPollOptionVote.setChecked(true, true);
 
-        if (optionInList.getName().equals(getString(R.string.none_of_the_above))) {
-            cbPollOptionVote.setClickable(false);
-        }
+       if (optionInList.getName().equals(getString(R.string.none_of_the_above))) {
+           cbPollOptionVote.setClickable(false);
+       }
 
-        option.getVotesRelation().getQuery().findInBackground(new FindCallback<Vote>() {
-            @Override
-            public void done(List<Vote> votes, ParseException e) {
-                tvPollOptionVoteCount.setText(votes.size() + " Votes");
-            }
-        });
+       option.getVotesRelation().getQuery().findInBackground(new FindCallback<Vote>() {
+           @Override
+           public void done(List<Vote> votes, ParseException e) {
+               tvPollOptionVoteCount.setText(votes.size() + " Votes");
+           }
+       });
         //adapter.notifyItemChanged(itemPosition);
     }
 

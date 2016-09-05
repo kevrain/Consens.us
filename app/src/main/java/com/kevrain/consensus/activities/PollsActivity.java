@@ -44,6 +44,7 @@ public class PollsActivity extends AppCompatActivity {
     Group group;
     public static final int ADD_POLL_REQUEST_CODE = 20;
     public static final int EDIT_POLL_REQUEST_CODE = 30;
+    public static final int SHOW_POLL_REQUEST_CODE = 40;
     boolean isValidPoll = true;
 
     //###### Network call to the Event Client to get Data
