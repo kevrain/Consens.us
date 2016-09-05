@@ -18,6 +18,7 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAct
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemViewHolder;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.activities.CreateOrEditPollActivity;
+import com.kevrain.consensus.activities.PollsActivity;
 import com.kevrain.consensus.models.Poll;
 import com.kevrain.consensus.models.PollOption;
 import com.parse.FindCallback;
@@ -53,7 +54,7 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public class ViewHolder extends AbstractSwipeableItemViewHolder implements View.OnTouchListener {
+    public class ViewHolder extends AbstractSwipeableItemViewHolder {
         @BindView(R.id.tvPollName) TextView tvPollName;
         @BindView(R.id.tvPollOptionCount) TextView tvPollOptionCount;
         @BindView(R.id.swipeableContainer) View swipeableContainer;
@@ -68,6 +69,28 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
             super(itemView);
 
             ButterKnife.bind(this, itemView);
+
+            swipeableContainer.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN: {
+                            touchPosition = motionEvent.getY();
+                        }
+                        case MotionEvent.ACTION_UP: {
+                            if (touchPosition == motionEvent.getY()) {
+                                Intent i = new Intent(view.getContext(), CreateOrEditPollActivity.class);
+                                i.putExtra("pollID", mPolls.get(getAdapterPosition()).getObjectId());
+                                i.putExtra("request_code", PollsActivity.SHOW_POLL_REQUEST_CODE);
+                                i.putExtra("groupID", mPolls.get(getAdapterPosition()).getGroup().getObjectId());
+                                view.getContext().startActivity(i);
+                            }
+                            touchPosition = 0.0f;
+                        }
+                    }
+                    return true;
+                }
+            });
         }
 
         @Override
@@ -101,26 +124,6 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
             ViewGroup.LayoutParams lp = v.getLayoutParams();
             lp.width = width;
             v.setLayoutParams(lp);
-        }
-
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-
-            switch (motionEvent.getAction()) {
-                case MotionEvent.ACTION_DOWN: {
-                   touchPosition = motionEvent.getY();
-                }
-                case MotionEvent.ACTION_UP: {
-                    if (touchPosition == motionEvent.getY()) {
-                        Intent i = new Intent(view.getContext(), CreateOrEditPollActivity.class);
-                        i.putExtra("pollID", mPolls.get(getAdapterPosition()).getObjectId());
-                        i.putExtra("groupID", mPolls.get(getAdapterPosition()).getGroup().getObjectId());
-                        view.getContext().startActivity(i);
-                    }
-                    touchPosition = Float.parseFloat(null);
-                }
-            }
-            return true;
         }
     }
 

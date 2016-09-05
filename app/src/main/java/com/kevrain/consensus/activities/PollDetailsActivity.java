@@ -94,7 +94,7 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
             public void done(Poll pollItem, ParseException e) {
                 if (e == null) {
                     poll = pollItem;
-                    adapter = new PollOptionsArrayAdapter(pollOptions, poll);
+                    adapter = new PollOptionsArrayAdapter(pollOptions, PollsActivity.SHOW_POLL_REQUEST_CODE);
                     rvPollOptions.setAdapter(adapter);
                     adapter.setPollOptionSelectionListener(PollDetailsActivity.this);
 

@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.github.underscore.$;
@@ -13,6 +12,7 @@ import com.github.underscore.Block;
 import com.github.underscore.Optional;
 import com.github.underscore.Predicate;
 import com.kevrain.consensus.R;
+import com.kevrain.consensus.activities.PollsActivity;
 import com.kevrain.consensus.models.Poll;
 import com.kevrain.consensus.models.PollOption;
 import com.kevrain.consensus.models.Vote;
@@ -31,21 +31,23 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.refactor.library.SmoothCheckBox;
 
 /**
  * Created by kfarst on 8/22/16.
  */
 public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArrayAdapter.ViewHolder> {
     public interface PollOptionSelectionListener {
-        public void createNoneOfTheAboveVoteIfNeeded();
-        public void deleteNoneOfTheAboveVoteIfNeeded();
-        public void deleteAllOptionVotes();
+        void createNoneOfTheAboveVoteIfNeeded();
+        void deleteNoneOfTheAboveVoteIfNeeded();
+        void deleteAllOptionVotes();
     }
 
     public List<PollOption> mPollOptions;
     public Set<PollOption> pollOptionsToDelete;
     public Set<PollOption> pollOptionsToAdd;
     public Poll mPoll;
+    public int mRequestCode;
     public List<Vote> mVotes;
     private PollOptionSelectionListener listener;
 
@@ -55,12 +57,12 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
     }
 
     // Pass in the contact array into the constructor
-    public PollOptionsArrayAdapter(List<PollOption> pollOptions, Poll poll) {
+    public PollOptionsArrayAdapter(List<PollOption> pollOptions, int requestCode) {
         mPollOptions = pollOptions;
-        mPoll = poll;
         mVotes = new ArrayList<>();
         pollOptionsToDelete = new HashSet<PollOption>();
         pollOptionsToAdd = new HashSet<PollOption>();
+        mRequestCode = requestCode;
         this.listener = null;
     }
 
@@ -72,8 +74,7 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
         @BindView(R.id.tvPollOptionListDate) TextView tvPollOptionListDate;
         @BindView(R.id.tvPollOptionListMonth) TextView tvPollOptionListMonth;
         @BindView(R.id.tvPollOptionVoteCount) TextView tvPollOptionVoteCount;
-        @BindView(R.id.cbPollOptionVote) CheckBox cbPollOptionVote;
-        public int voteCount;
+        @BindView(R.id.cbPollOptionVote) SmoothCheckBox cbPollOptionVote;
 
         public ViewHolder(View itemView) {
             // Stores the itemView in a public final member variable that can be used
@@ -103,7 +104,6 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
     public void onBindViewHolder(final PollOptionsArrayAdapter.ViewHolder holder, int position) {
         final PollOption pollOption = mPollOptions.get(position);
 
-        holder.voteCount = 0;
         holder.tvPollOptionListName.setText(pollOption.getName());
 
         if (!pollOption.getName().equals(holder.itemView.getContext().getString(R.string.none_of_the_above))) {
@@ -112,7 +112,11 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
             holder.tvPollOptionListMonth.setText(DateUtil.toString(pollOption.getDate(), "MMM"));
         }
 
-        if (mPoll != null) {
+        if (mRequestCode == PollsActivity.SHOW_POLL_REQUEST_CODE) {
+            holder.cbPollOptionVote.setVisibility(View.VISIBLE);
+
+            holder.tvPollOptionVoteCount.setVisibility(View.VISIBLE);
+
             ParseQuery<Vote> query = pollOption.getVotesRelation().getQuery();
             query.include("user");
             query.findInBackground(new FindCallback<Vote>() {
@@ -120,8 +124,7 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
                 public void done(List<Vote> votes, ParseException e) {
                     mVotes.clear();
                     mVotes.addAll(votes);
-                    holder.voteCount = mVotes.size();
-                    holder.tvPollOptionVoteCount.setText(holder.voteCount + " Votes");
+                    holder.tvPollOptionVoteCount.setText(mVotes.size() + " Votes");
 
                     Optional<Vote> userVote = $.find(votes, new Predicate<Vote>() {
                         @Override
@@ -130,7 +133,7 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
                         }
                     });
 
-                    holder.cbPollOptionVote.setChecked(userVote.isPresent());
+                    holder.cbPollOptionVote.setChecked(userVote.isPresent(), true);
 
                     if (pollOption.getName().equals(holder.itemView.getContext().getString(R.string.none_of_the_above)) &&
                             holder.cbPollOptionVote.isChecked()) {
@@ -143,6 +146,14 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
                 @Override
                 public void onClick(View view) {
                     if (holder.cbPollOptionVote.isChecked()) {
+                        if (!pollOption.getName().equals(holder.itemView.getContext().getString(R.string.none_of_the_above))) {
+                            listener.deleteNoneOfTheAboveVoteIfNeeded();
+                            holder.cbPollOptionVote.setClickable(true);
+                        }
+
+                        decrementVote(pollOption, holder);
+                        holder.cbPollOptionVote.setChecked(false, true);
+                    } else {
                         if (pollOption.getName().equals(holder.itemView.getContext().getString(R.string.none_of_the_above))) {
                             listener.deleteAllOptionVotes();
                             holder.cbPollOptionVote.setClickable(false);
@@ -152,14 +163,7 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
                         }
 
                         incrementVote(pollOption, holder);
-                    } else {
-                        if (!pollOption.getName().equals(holder.itemView.getContext().getString(R.string.none_of_the_above))) {
-                            listener.deleteNoneOfTheAboveVoteIfNeeded();
-                            holder.cbPollOptionVote.setClickable(true);
-                        }
-
-                        decrementVote(pollOption, holder);
-
+                        holder.cbPollOptionVote.setChecked(true, true);
                     }
                 }
             });
@@ -239,6 +243,10 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
                 });
             }
         });
+    }
+
+    public void setPoll(Poll poll) {
+        mPoll = poll;
     }
 }
 
