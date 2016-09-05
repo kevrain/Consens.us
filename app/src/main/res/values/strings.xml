@@ -26,4 +26,5 @@
     <string name="snackbar_OK_text">You are online, continue....</string>
     <string name="snackbar_NOTOK_text">You are offline, turn WIFI on in </string>
     <string name="poll_option_placeholder">You haven\'t created any locations to vote on yet.</string>
+    <string name="polls_placeholder">You haven\'t created any polls to vote on yet.</string>
 </resources>

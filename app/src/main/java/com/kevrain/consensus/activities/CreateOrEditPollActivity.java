@@ -147,8 +147,8 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
                                     }));
 
                                     pollOptionsAdapter.notifyDataSetChanged();
-                                    progressIndicator.hide();
                                 }
+                                progressIndicator.hide();
                             }
                         });
                 }
