@@ -136,6 +136,7 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
                                     poll.deleteInBackground(new DeleteCallback() {
                                         @Override
                                         public void done(ParseException e) {
+                                            mPolls.remove(poll);
                                             notifyItemRemoved(getAdapterPosition());
                                         }
                                     });
