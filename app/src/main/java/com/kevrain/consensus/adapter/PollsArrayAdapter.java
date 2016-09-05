@@ -1,7 +1,9 @@
 package com.kevrain.consensus.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,13 +23,16 @@ import com.kevrain.consensus.activities.CreateOrEditPollActivity;
 import com.kevrain.consensus.activities.PollsActivity;
 import com.kevrain.consensus.models.Poll;
 import com.kevrain.consensus.models.PollOption;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by shravyagarlapati on 8/19/16.
@@ -85,6 +90,60 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
                         view.getContext().startActivity(i);
                     }
                     return true;
+                }
+            });
+
+            // Edit
+            optionView1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Poll poll = mPolls.get(getAdapterPosition());
+                    Intent i = new Intent(view.getContext(), CreateOrEditPollActivity.class);
+                    i.putExtra("pollID", poll.getObjectId());
+                    i.putExtra("poll_position", getAdapterPosition());
+                    i.putExtra("request_code", PollsActivity.EDIT_POLL_REQUEST_CODE);
+                    ((Activity) view.getContext()).startActivityForResult(i,
+                            PollsActivity.EDIT_POLL_REQUEST_CODE);
+                }
+            });
+
+            //Delete
+            optionView2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final SweetAlertDialog pDialog = new SweetAlertDialog(view.getContext(), SweetAlertDialog.WARNING_TYPE);
+                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                    pDialog.setTitleText("Are you sure you?");
+                    pDialog.setContentText("This poll will be deleted!");
+                    pDialog.setConfirmText("Yes,delete it!");
+                    pDialog.setCancelable(true);
+                    pDialog.setCancelText("No, just kidding!");
+                    pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            pDialog.dismissWithAnimation();
+
+                            final Poll poll = mPolls.get(getAdapterPosition());
+
+                            ParseQuery<PollOption> query = poll.getPollOptionRelation().getQuery();
+                            query.findInBackground(new FindCallback<PollOption>() {
+                                @Override
+                                public void done(List<PollOption> options, ParseException e) {
+                                    for (PollOption option: options) {
+                                        poll.removePollOption(option);
+                                    }
+
+                                    poll.deleteInBackground(new DeleteCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            notifyItemRemoved(getAdapterPosition());
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                    pDialog.show();
                 }
             });
         }
