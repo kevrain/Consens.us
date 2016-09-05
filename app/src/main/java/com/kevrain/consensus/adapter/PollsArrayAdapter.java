@@ -38,6 +38,10 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * Created by shravyagarlapati on 8/19/16.
  */
 public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.ViewHolder> implements SwipeableItemAdapter<PollsArrayAdapter.ViewHolder> {
+    public interface PollsArrayAdapterListener {
+        void renderListPlaceholderIfNeeded();
+    }
+
     interface Swipeable extends SwipeableItemConstants {
     }
 
@@ -45,11 +49,16 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
     static final float REMOVE_ITEM_THRESHOLD = 0.6f;
     public List<Poll> mPolls;
     private boolean isOwner;
+    private PollsArrayAdapterListener listener;
 
     // Pass in the contact array into the constructor
     public PollsArrayAdapter(List<Poll> locations) {
         setHasStableIds(true);
         mPolls = locations;
+    }
+
+    public void setPollsArrayAdapterListener(PollsArrayAdapterListener listener) {
+        this.listener = listener;
     }
 
     public void setIsOwner(boolean isOwner) {
@@ -138,6 +147,7 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
                                         public void done(ParseException e) {
                                             mPolls.remove(poll);
                                             notifyItemRemoved(getAdapterPosition());
+                                            listener.renderListPlaceholderIfNeeded();
                                         }
                                     });
                                 }

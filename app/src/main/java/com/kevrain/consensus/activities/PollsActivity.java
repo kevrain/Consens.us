@@ -33,11 +33,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class PollsActivity extends AppCompatActivity {
+public class PollsActivity extends AppCompatActivity implements PollsArrayAdapter.PollsArrayAdapterListener {
     @BindView(R.id.rvPolls) RecyclerView rvPolls;
     @BindView(R.id.fabCreateEvent) FloatingActionButton fabCreateEvent;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.progressIndicator) AVLoadingIndicatorView progressIndicator;
+    @BindView(R.id.rlPollsPlaceholder) View rlPollsPlaceholder;
 
     PollsArrayAdapter adapter;
     ArrayList<Poll> polls;
@@ -62,6 +63,7 @@ public class PollsActivity extends AppCompatActivity {
 
         polls = new ArrayList<>();
         adapter = new PollsArrayAdapter(polls);
+        adapter.setPollsArrayAdapterListener(this);
         rvPolls.setAdapter(adapter);
 
         RecyclerViewSwipeManager swipeMgr = new RecyclerViewSwipeManager();
@@ -112,6 +114,9 @@ public class PollsActivity extends AppCompatActivity {
                             if (objects != null && objects.size() > 0) {
                                 polls.addAll(objects);
                                 adapter.notifyDataSetChanged();
+                                rvPolls.setVisibility(View.VISIBLE);
+                            } else {
+                                rlPollsPlaceholder.setVisibility(View.VISIBLE);
                             }
                             progressIndicator.hide();
                         }
@@ -146,6 +151,8 @@ public class PollsActivity extends AppCompatActivity {
                     if(isValidPoll) {
                         polls.add(0, poll);
                         adapter.notifyDataSetChanged();
+                        rvPolls.setVisibility(View.VISIBLE);
+                        rlPollsPlaceholder.setVisibility(View.INVISIBLE);
                     }
                     else {
                         Toast.makeText(getApplicationContext(),
@@ -183,9 +190,14 @@ public class PollsActivity extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+
+    @Override
+    public void renderListPlaceholderIfNeeded() {
+        if (polls.size() < 1) {
+            rvPolls.setVisibility(View.GONE);
+            rlPollsPlaceholder.setVisibility(View.VISIBLE);
+        }
+    }
 }
-
-
-
 
 
