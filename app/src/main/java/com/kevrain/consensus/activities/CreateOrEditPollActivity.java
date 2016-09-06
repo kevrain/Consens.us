@@ -11,10 +11,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.github.underscore.$;
 import com.github.underscore.Block;
@@ -74,21 +76,12 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.activity_poll_form);
 
         ButterKnife.bind(this);
 
         rootView = findViewById(android.R.id.content);
 
-        toolbar.setContentInsetsAbsolute(0, 0);
-
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-
-        // Custom toolbar for displaying rounded profile image
-        getSupportActionBar().setCustomView(R.layout.toolbar_new_poll);
 
         pollOptions = new ArrayList<>();
 
@@ -104,6 +97,8 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
             fletEventName.setHint("");
         }
 
+        setUpToolbar();
+
         RecyclerViewSwipeManager swipeMgr = new RecyclerViewSwipeManager();
 
         rvPollOptions.setLayoutManager(new LinearLayoutManager(this));
@@ -117,6 +112,24 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
 
         getIntentData();
         getGroup();
+    }
+
+    private void setUpToolbar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        View actionBarView = LayoutInflater.from(this)
+                                           .inflate(R.layout.toolbar_new_poll, null);
+        TextView tvSaveChanges =
+            ((TextView) actionBarView.findViewById(R.id.tvSavePoll));
+        if (requestCode == PollsActivity.EDIT_POLL_REQUEST_CODE) {
+            tvSaveChanges.setText("SAVE CHANGES");
+        } else if (requestCode == PollsActivity.ADD_POLL_REQUEST_CODE){
+            tvSaveChanges.setText("CREATE POLL");
+        } else {
+            tvSaveChanges.setText("");
+        }
+        // Custom toolbar for displaying rounded profile image
+        getSupportActionBar().setCustomView(actionBarView);
     }
 
     private void getIntentData() {
@@ -193,7 +206,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
 
     // Attach to an onclick handler to show the date picker
     public void closeActivity(View view) {
-        if (view.getId() != R.id.ibSubmit) {
+        if (view.getId() != R.id.tvSavePoll) {
             Intent data = new Intent();
             setResult(RESULT_CANCELED, data);
             finish();
