@@ -13,4 +13,8 @@
     <dimen name="big_group_member_image_height">35dp</dimen>
     <dimen name="group_cardview_margin">5dp</dimen>
     <dimen name="group_image_view_vertical_margin">15dp</dimen>
+    <dimen name="poll_option_list_item_height">75dp</dimen>
+    <dimen name="poll_options_date_horizontal_margin">20dp</dimen>
+    <dimen name="poll_options_date_vertical_margin">10dp</dimen>
+    <dimen name="checkbox_width_height">30dp</dimen>
 </resources>

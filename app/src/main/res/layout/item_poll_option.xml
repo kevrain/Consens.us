@@ -10,7 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="right"
-        android:background="#f66"
+        android:background="@color/delete_red"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground">
         <ImageView
@@ -24,10 +24,10 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipeableContainer"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+        android:paddingTop="@dimen/poll_options_date_vertical_margin"
+        android:paddingBottom="@dimen/poll_options_date_vertical_margin"
+        android:paddingLeft="@dimen/poll_options_date_horizontal_margin"
+        android:paddingRight="@dimen/poll_options_date_horizontal_margin"
         android:layout_width="match_parent"
         android:clickable="true"
         android:background="@android:color/white"
@@ -95,10 +95,10 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            app:color_checked="#00B300"
+            app:color_checked="@color/checked_green"
             android:visibility="gone"
-            android:layout_width="30dp"
-            android:layout_height="30dp" />
+            android:layout_width="@dimen/checkbox_width_height"
+            android:layout_height="@dimen/checkbox_width_height" />
 
     </RelativeLayout>
 

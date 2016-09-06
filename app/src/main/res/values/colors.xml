@@ -9,4 +9,7 @@
     <color name="white_transparent">#80FFFFFF</color>
     <color name="gray_transparent">#FFC0C0C0</color>
     <color name="color_transparent">#00000000</color>
+    <color name="delete_red">#00000000</color>
+    <color name="edit_blue">#33F</color>
+    <color name="checked_green">#00B300</color>
 </resources>
