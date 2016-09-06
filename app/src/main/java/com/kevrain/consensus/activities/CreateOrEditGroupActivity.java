@@ -7,11 +7,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -44,7 +45,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class CreateOrEditGroupActivity extends AppCompatActivity {
@@ -56,7 +56,6 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
 
     ParseUser user;
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.btnSave) Button btnSave;
     @BindView(R.id.etGroupName) EditText etGroupName;
     @BindView(R.id.lvAddFriends) ListView lvAddFriends;
     @BindView(R.id.rlHeader) RelativeLayout rlHeader;
@@ -91,6 +90,28 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        View actionBarView = LayoutInflater.from(this)
+            .inflate(R.layout.toolbar_create_or_edit_group, null);
+        TextView tvSaveChanges =
+            ((TextView) actionBarView.findViewById(R.id.tvSaveChanges));
+        tvSaveChanges.setPadding(0, toolbar.getPaddingTop(), 0, toolbar.getPaddingBottom());
+        if (requestCode == EDIT_GROUP_REQUEST_CODE) {
+            tvSaveChanges.setText("SAVE CHANGES");
+            MarginLayoutParams params = (MarginLayoutParams) tvSaveChanges.getLayoutParams();
+            params.rightMargin = 0;
+            tvSaveChanges.setLayoutParams(params);
+        } else {
+            tvSaveChanges.setText("CREATE GROUP");
+        }
+
+        tvSaveChanges.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveGroup();
+            }
+        });
+        getSupportActionBar().setCustomView(actionBarView);
         toolbar.setNavigationOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,8 +207,7 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
         });
     }
 
-    @OnClick(R.id.btnSave)
-    public void saveGroup(Button button) {
+    private void saveGroup() {
         if (requestCode == ADD_GROUP_REQUEST_CODE) {
             group = new Group();
             group.setOwner(ParseUser.getCurrentUser());
@@ -197,7 +217,7 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
             group.setTitle(groupTitle);
             group.addMembers(friendsArrayAdapter.friendsToAdd);
             if (requestCode == EDIT_GROUP_REQUEST_CODE) {
-               group.removeMember(friendsArrayAdapter.friendsToRemove);
+                group.removeMember(friendsArrayAdapter.friendsToRemove);
             }
             group.saveInBackground(new SaveCallback() {
                 @Override

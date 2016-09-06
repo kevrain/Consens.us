@@ -37,8 +37,8 @@
     <string name="group_delete">Deleted group successfully!!</string>
     <string name="new_user_signup">New user signed up successfully!!</string>
     <string name="poll_name_exists_msg">Poll with this name already exists</string>
-
-
+    <string name="create_group">create group</string>
+    <string name="save_changes">save changes</string>
 
 
 </resources>

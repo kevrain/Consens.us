@@ -11,7 +11,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <include layout="@layout/content_create_new_group" />
 
         <android.support.design.widget.AppBarLayout
@@ -24,10 +23,11 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:background="@android:color/transparent"
-                android:colorControlNormal="@android:color/white"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:theme="@style/ToolbarColoredBackArrow"
                 app:navigationIcon="?attr/homeAsUpIndicator"
+                android:tint="@android:color/white"
                 app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
         </android.support.design.widget.AppBarLayout>
