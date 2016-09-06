@@ -28,6 +28,8 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,14 +61,25 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
         TextView tvGroupName;
         @BindView(R.id.tvGroupMembers)
         TextView tvGroupMembers;
-        @BindView(R.id.imgGroupCollage1)
-        ImageView imgGroupCollage1;
-        @BindView(R.id.imgGroupCollage2)
-        ImageView imgGroupCollage2;
-        @BindView(R.id.imgGroupCollage3)
-        ImageView imgGroupCollage3;
-        @BindView(R.id.imgGroupCollage4)
-        ImageView imgGroupCollage4;
+
+        @BindView(R.id.imgGroupCollageTopLeft)
+        ImageView imgGroupCollageTopLeft;
+        @BindView(R.id.imgGroupCollageTopRight)
+        ImageView imgGroupCollageTopRight;
+        @BindView(R.id.imgGroupCollageBottomRight)
+        ImageView imgGroupCollageBottomRight;
+        @BindView(R.id.imgGroupCollageBottomLeft)
+        ImageView imgGroupCollageBottomLeft;
+
+        @BindView(R.id.imgGroupCollageBigTopLeft)
+        ImageView imgGroupCollageBigTopLeft;
+        @BindView(R.id.imgGroupCollageBigBottomRight)
+        ImageView imgGroupCollageBigBottomRight;
+
+        @BindView(R.id.imgGroupCollageTopMiddle)
+        ImageView imgGroupCollageTopMiddle;
+        @BindView(R.id.imgGroupCollageOnePerson)
+        ImageView imgGroupCollageOnePerson;
         @BindView(R.id.btnMenu)
         ImageButton btnMenu;
 
@@ -210,95 +223,102 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
                  placeholder(R.mipmap.ic_launcher).into(view);
     }
 
+    private void handleOneGroupMember(final ViewHolder holder, ArrayList<ParseFile> profileImages) {
+        profileImages.get(0).getDataInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] data, ParseException e) {
+                populateSingleImage(data, holder, holder.imgGroupCollageOnePerson);
+            }
+        });
+    }
+
+    private void handleTwoGroupMembers(final ViewHolder holder, ArrayList<ParseFile> profileImages) {
+        profileImages.get(0).getDataInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] data, ParseException e) {
+                populateSingleImage(data, holder, holder.imgGroupCollageBigBottomRight);
+            }
+        });
+
+        profileImages.get(1).getDataInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] data, ParseException e) {
+                populateSingleImage(data, holder, holder.imgGroupCollageBigTopLeft);
+            }
+        });
+    }
+
+    private void handleThreeGroupMembers(final ViewHolder holder, ArrayList<ParseFile> profileImages) {
+        profileImages.get(0).getDataInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] data, ParseException e) {
+                populateSingleImage(data, holder, holder.imgGroupCollageTopMiddle);
+            }
+        });
+
+        profileImages.get(1).getDataInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] data, ParseException e) {
+                populateSingleImage(data, holder, holder.imgGroupCollageBottomRight);
+            }
+        });
+
+        profileImages.get(2).getDataInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] data, ParseException e) {
+                populateSingleImage(data, holder, holder.imgGroupCollageBottomLeft);
+            }
+        });
+    }
+
+    private void handleMoreGroupMembers(final ViewHolder holder, ArrayList<ParseFile> profileImages) {
+        profileImages.get(0).getDataInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] data, ParseException e) {
+                populateSingleImage(data, holder, holder.imgGroupCollageTopLeft);
+            }
+        });
+
+        profileImages.get(1).getDataInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] data, ParseException e) {
+                populateSingleImage(data, holder, holder.imgGroupCollageTopRight);
+            }
+        });
+        profileImages.get(2).getDataInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] data, ParseException e) {
+                populateSingleImage(data, holder, holder.imgGroupCollageBottomLeft);
+            }
+        });
+
+        profileImages.get(3).getDataInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] data, ParseException e) {
+                populateSingleImage(data, holder, holder.imgGroupCollageBottomRight);
+            }
+        });
+    }
+
     private void populateImage(final ViewHolder holder, ArrayList<ParseFile> profileImages){
 
-        holder.imgGroupCollage1.setImageResource(0);
-        holder.imgGroupCollage2.setImageResource(0);
-        holder.imgGroupCollage3.setImageResource(0);
-        holder.imgGroupCollage4.setImageResource(0);
+        holder.imgGroupCollageTopLeft.setImageResource(0);
+        holder.imgGroupCollageTopRight.setImageResource(0);
+        holder.imgGroupCollageBottomRight.setImageResource(0);
+        holder.imgGroupCollageBottomLeft.setImageResource(0);
+        holder.imgGroupCollageOnePerson.setImageResource(0);
+        holder.imgGroupCollageTopMiddle.setImageResource(0);
+        holder.imgGroupCollageBigTopLeft.setImageResource(0);
+        holder.imgGroupCollageBigBottomRight.setImageResource(0);
 
-        profileImages.get(0).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    populateSingleImage(data, holder, holder.imgGroupCollage1);
-                }
-            });
-        profileImages.get(0).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    populateSingleImage(data, holder, holder.imgGroupCollage2);
-                }
-            });
-        profileImages.get(0).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    populateSingleImage(data, holder, holder.imgGroupCollage3);
-                }
-            });
-        profileImages.get(0).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    populateSingleImage(data, holder, holder.imgGroupCollage4);
-                }
-            });
-
-        if (profileImages.size()==2) {
-            profileImages.get(1).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    populateSingleImage(data, holder, holder.imgGroupCollage2);
-                }
-            });
-            profileImages.get(1).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    populateSingleImage(data, holder, holder.imgGroupCollage4);
-                }
-            });
-
-        }
-
-        if(profileImages.size()==3) {
-            profileImages.get(1).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    populateSingleImage(data, holder, holder.imgGroupCollage2);
-                }
-            });
-            profileImages.get(2).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    populateSingleImage(data, holder, holder.imgGroupCollage4);
-                }
-            });
-
-        }
-
-        if(profileImages.size()==4) {
-            profileImages.get(0).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    populateSingleImage(data, holder, holder.imgGroupCollage1);
-                }
-            });
-            profileImages.get(1).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    populateSingleImage(data, holder, holder.imgGroupCollage2);
-                }
-            });
-            profileImages.get(2).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    populateSingleImage(data, holder, holder.imgGroupCollage3);
-                }
-            });
-            profileImages.get(3).getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    populateSingleImage(data, holder, holder.imgGroupCollage4);
-                }
-            });
+        if (profileImages.size() == 1) {
+            handleOneGroupMember(holder, profileImages);
+        } else if (profileImages.size() == 2) {
+            handleTwoGroupMembers(holder, profileImages);
+        } else if (profileImages.size() == 3) {
+            handleThreeGroupMembers(holder, profileImages);
+        } else {
+            handleMoreGroupMembers(holder, profileImages);
         }
 
     }

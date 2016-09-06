@@ -9,6 +9,8 @@
     <dimen name="group_divider_top_margin">5dp</dimen>
     <dimen name="group_member_image_width">30dp</dimen>
     <dimen name="group_member_image_height">30dp</dimen>
+    <dimen name="big_group_member_image_width">35dp</dimen>
+    <dimen name="big_group_member_image_height">35dp</dimen>
     <dimen name="group_cardview_margin">5dp</dimen>
     <dimen name="group_image_view_vertical_margin">15dp</dimen>
 </resources>

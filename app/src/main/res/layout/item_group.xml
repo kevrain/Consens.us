@@ -37,37 +37,61 @@
             android:layout_alignParentTop="true">
 
             <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/imgGroupCollageOnePerson"
+                android:layout_alignParentTop="true"/>
+
+            <ImageView
+                android:layout_width="@dimen/big_group_member_image_width"
+                android:layout_height="@dimen/big_group_member_image_height"
+                android:id="@+id/imgGroupCollageBigTopLeft"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"/>
+
+            <ImageView
+                android:layout_width="@dimen/big_group_member_image_width"
+                android:layout_height="@dimen/big_group_member_image_height"
+                android:id="@+id/imgGroupCollageBigBottomRight"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"/>
+
+            <ImageView
                 android:layout_width="@dimen/group_member_image_width"
                 android:layout_height="@dimen/group_member_image_height"
-                android:id="@+id/imgGroupCollage1"
-                android:src="@mipmap/ic_launcher"
+                android:id="@+id/imgGroupCollageTopLeft"
                 android:layout_alignParentTop="true"/>
 
             <ImageView
                 android:layout_width="@dimen/group_member_image_width"
                 android:layout_height="@dimen/group_member_image_height"
-                android:id="@+id/imgGroupCollage2"
-                android:src="@mipmap/ic_launcher"
+                android:id="@+id/imgGroupCollageTopRight"
                 android:layout_gravity="right"
-                android:layout_toRightOf="@id/imgGroupCollage1"/>
+                android:layout_toRightOf="@id/imgGroupCollageTopLeft"/>
 
             <ImageView
                 android:layout_width="@dimen/group_member_image_width"
                 android:layout_height="@dimen/group_member_image_height"
-                android:id="@+id/imgGroupCollage3"
-                android:src="@mipmap/ic_launcher"
-                android:layout_alignRight="@id/imgGroupCollage2"
-                android:layout_below="@id/imgGroupCollage2"/>
+                android:id="@+id/imgGroupCollageTopMiddle"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"/>
 
             <ImageView
                 android:layout_width="@dimen/group_member_image_width"
                 android:layout_height="@dimen/group_member_image_height"
-                android:id="@+id/imgGroupCollage4"
-                android:src="@mipmap/ic_launcher"
-                android:layout_alignBottom="@id/imgGroupCollage3"
-                android:layout_below="@+id/imgGroupCollage1"
-                android:layout_alignLeft="@+id/imgGroupCollage1"
-                android:layout_toLeftOf="@+id/imgGroupCollage3"/>
+                android:id="@+id/imgGroupCollageBottomRight"
+                android:layout_alignRight="@id/imgGroupCollageTopRight"
+                android:layout_below="@id/imgGroupCollageTopRight"/>
+
+            <ImageView
+                android:layout_width="@dimen/group_member_image_width"
+                android:layout_height="@dimen/group_member_image_height"
+                android:id="@+id/imgGroupCollageBottomLeft"
+                android:layout_alignBottom="@id/imgGroupCollageBottomRight"
+                android:layout_below="@+id/imgGroupCollageTopLeft"
+                android:layout_alignLeft="@+id/imgGroupCollageTopLeft"
+                android:layout_toLeftOf="@+id/imgGroupCollageBottomRight"/>
 
         </RelativeLayout>
 
