@@ -42,8 +42,10 @@ public class ConsensusApplication extends Application {
 
         ParseFacebookUtils.initialize(this);
 
-        ParseInstallation.getCurrentInstallation().saveInBackground();
-        
+        ParseInstallation parseInstallation = ParseInstallation.getCurrentInstallation();
+        parseInstallation.put("GCMSenderId","id:919464060527");
+        parseInstallation.saveInBackground();
+
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/Lato-Light.ttf")
                 .setFontAttrId(R.attr.fontPath)
