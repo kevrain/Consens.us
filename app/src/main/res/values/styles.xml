@@ -45,7 +45,7 @@
 
     <style name="DefaultToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:background">@android:color/transparent</item>
+        <item name="android:background">?attr/colorPrimary</item>
     </style>
 
 </resources>
