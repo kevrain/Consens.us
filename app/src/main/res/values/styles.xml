@@ -27,6 +27,11 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="AppTheme.Widget.TextView.Bold.Large" parent="android:Widget.Holo.Light.TextView">
+        <item name="fontPath">fonts/Lato-Medium.ttf</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
     <style name="AppTheme.Widget.TextView.Bold.ExtraLarge" parent="android:Widget.Holo.Light.TextView">
         <item name="fontPath">fonts/Lato-Medium.ttf</item>
         <item name="android:textSize">28sp</item>
