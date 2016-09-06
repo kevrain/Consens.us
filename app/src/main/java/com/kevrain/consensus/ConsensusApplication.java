@@ -10,6 +10,7 @@ import com.kevrain.consensus.models.PollOption;
 import com.kevrain.consensus.models.Vote;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.interceptors.ParseLogInterceptor;
 
@@ -41,6 +42,8 @@ public class ConsensusApplication extends Application {
 
         ParseFacebookUtils.initialize(this);
 
+        ParseInstallation.getCurrentInstallation().saveInBackground();
+        
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/Lato-Light.ttf")
                 .setFontAttrId(R.attr.fontPath)
