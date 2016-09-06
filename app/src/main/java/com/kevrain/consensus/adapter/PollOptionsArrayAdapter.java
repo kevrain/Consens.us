@@ -167,6 +167,23 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
             lp.width = width;
             v.setLayoutParams(lp);
         }
+
+        public void updateValuesWithoutRefresh(boolean isChecked) {
+            PollOption option = mPollOptions.get(getAdapterPosition());
+
+            cbPollOptionVote.setChecked(isChecked, true);
+
+            if (option.getName().equals(itemView.getContext().getResources().getString(R.string.none_of_the_above))) {
+                cbPollOptionVote.setClickable(false);
+            }
+
+            option.getVotesRelation().getQuery().findInBackground(new FindCallback<Vote>() {
+                @Override
+                public void done(List<Vote> votes, ParseException e) {
+                    tvPollOptionVoteCount.setText(votes.size() + " Votes");
+                }
+            });
+        }
     }
 
     @Override

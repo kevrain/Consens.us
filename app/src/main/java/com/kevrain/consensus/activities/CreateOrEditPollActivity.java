@@ -14,7 +14,6 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.github.underscore.$;
 import com.github.underscore.Block;
@@ -48,7 +47,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.refactor.library.SmoothCheckBox;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class CreateOrEditPollActivity extends AppCompatActivity implements
@@ -320,7 +318,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
                             noneOption.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
-                                    checkOption(noneOption);
+                                    updateVoteDisplay(noneOption, true);
                                 }
                             });
                         }
@@ -351,7 +349,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
                             noneOption.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
-                                    checkOption(noneOption);
+                                    updateVoteDisplay(noneOption, true);
                                 }
                             });
                         }
@@ -382,7 +380,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
                                         option.saveInBackground(new SaveCallback() {
                                             @Override
                                             public void done(ParseException e) {
-                                                uncheckOption(option);
+                                                updateVoteDisplay(option, false);
                                             }
                                         });
                                     }
@@ -409,7 +407,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
                                         option.saveInBackground(new SaveCallback() {
                                             @Override
                                             public void done(ParseException e) {
-                                                uncheckOption(option);
+                                                updateVoteDisplay(option, false);
                                             }
                                         });
                                     }
@@ -443,7 +441,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
                                         option.saveInBackground(new SaveCallback() {
                                             @Override
                                             public void done(ParseException e) {
-                                                uncheckOption(option);
+                                                updateVoteDisplay(option, false);
                                             }
                                         });
                                     }
@@ -470,7 +468,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
                                         option.saveInBackground(new SaveCallback() {
                                             @Override
                                             public void done(ParseException e) {
-                                                uncheckOption(option);
+                                                updateVoteDisplay(option, false);
                                             }
                                         });
                                     }
@@ -500,7 +498,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
                 !option.getName().equals(getResources().getString(R.string.none_of_the_above));
     }
 
-    private void uncheckOption(final PollOption option) {
+    private void updateVoteDisplay(final PollOption option, boolean isChecked) {
         PollOption optionInList = $.find(pollOptions, new Predicate<PollOption>() {
             @Override
             public Boolean apply(PollOption currentOption) {
@@ -510,48 +508,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
 
         int itemPosition = pollOptions.indexOf(optionInList);
         PollOptionsArrayAdapter.ViewHolder optionView = (PollOptionsArrayAdapter.ViewHolder) rvPollOptions.findViewHolderForAdapterPosition(itemPosition);
-        SmoothCheckBox cbPollOptionVote = (SmoothCheckBox) optionView.itemView.findViewById(R.id.cbPollOptionVote);
-        final TextView tvPollOptionVoteCount = (TextView) optionView.itemView.findViewById(R.id.tvPollOptionVoteCount);
-        cbPollOptionVote.setChecked(false, true);
-
-        if (optionInList.getName().equals(getString(R.string.none_of_the_above))) {
-            cbPollOptionVote.setClickable(true);
-        }
-
-        option.getVotesRelation().getQuery().findInBackground(new FindCallback<Vote>() {
-            @Override
-            public void done(List<Vote> votes, ParseException e) {
-                tvPollOptionVoteCount.setText(votes.size() + " Votes");
-            }
-        });
-        //adapter.notifyItemChanged(itemPosition);
-    }
-
-    private void checkOption(final PollOption option) {
-        PollOption optionInList = $.find(pollOptions, new Predicate<PollOption>() {
-            @Override
-            public Boolean apply(PollOption currentOption) {
-                return currentOption.getName().equals(option.getName());
-            }
-        }).get();
-
-        int itemPosition = pollOptions.indexOf(optionInList);
-       PollOptionsArrayAdapter.ViewHolder optionView = (PollOptionsArrayAdapter.ViewHolder) rvPollOptions.findViewHolderForAdapterPosition(itemPosition);
-       SmoothCheckBox cbPollOptionVote = (SmoothCheckBox) optionView.itemView.findViewById(R.id.cbPollOptionVote);
-       final TextView tvPollOptionVoteCount = (TextView) optionView.itemView.findViewById(R.id.tvPollOptionVoteCount);
-       cbPollOptionVote.setChecked(true, true);
-
-       if (optionInList.getName().equals(getString(R.string.none_of_the_above))) {
-           cbPollOptionVote.setClickable(false);
-       }
-
-       option.getVotesRelation().getQuery().findInBackground(new FindCallback<Vote>() {
-           @Override
-           public void done(List<Vote> votes, ParseException e) {
-               tvPollOptionVoteCount.setText(votes.size() + " Votes");
-           }
-       });
-        //adapter.notifyItemChanged(itemPosition);
+        optionView.updateValuesWithoutRefresh(isChecked);
     }
 
     @Override
