@@ -8,24 +8,32 @@
     android:fitsSystemWindows="true"
     tools:context="com.kevrain.consensus.activities.CreateOrEditGroupActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:title="@string/edit_group"
-            app:theme="@style/DefaultToolbar"
+        <include layout="@layout/content_create_new_group" />
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_alignParentTop="true"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="?attr/homeAsUpIndicator"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+            android:layout_height="wrap_content"
+            app:elevation="0dp"
+            android:background="@android:color/transparent">
 
-    </android.support.design.widget.AppBarLayout>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:background="@android:color/transparent"
+                android:colorControlNormal="@android:color/white"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:navigationIcon="?attr/homeAsUpIndicator"
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+        </android.support.design.widget.AppBarLayout>
 
 
-    <include layout="@layout/content_create_new_group" />
+    </RelativeLayout>
 
 
 </android.support.design.widget.CoordinatorLayout>

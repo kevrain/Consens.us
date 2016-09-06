@@ -14,6 +14,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -23,6 +25,7 @@ import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.GroupFriendsArrayAdapter;
 import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.support.ColoredSnackBar;
+import com.kevrain.consensus.support.DeviceDimensionsHelper;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -56,6 +59,8 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
     @BindView(R.id.btnSave) Button btnSave;
     @BindView(R.id.etGroupName) EditText etGroupName;
     @BindView(R.id.lvAddFriends) ListView lvAddFriends;
+    @BindView(R.id.rlHeader) RelativeLayout rlHeader;
+    @BindView(R.id.tvAddFriends) TextView tvAddFriends;
     GroupFriendsArrayAdapter friendsArrayAdapter;
     List<ParseUser> existingMembers;
     View rootView;
@@ -67,12 +72,15 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         requestCode = getIntent().getIntExtra("requestCode", -1);
         rootView = findViewById(android.R.id.content);
+        rlHeader.getLayoutParams().height = (int) (DeviceDimensionsHelper.getDisplayHeight(
+            getBaseContext()) * .30);
 
         Snackbar snackbar = Snackbar.make(rootView, R.string.request_code + Integer.toString(requestCode), Snackbar.LENGTH_LONG);
         ColoredSnackBar.warning(snackbar).show();
 
         user = ParseUser.getCurrentUser();
         if (requestCode == EDIT_GROUP_REQUEST_CODE) {
+            tvAddFriends.setText("Edit members");
             getExistingGroupData();
         } else {
             getUserFriendsFromFB();
@@ -82,11 +90,7 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
-        if (requestCode == EDIT_GROUP_REQUEST_CODE) {
-            getSupportActionBar().setTitle("Edit Group");
-        } else if (requestCode == ADD_GROUP_REQUEST_CODE) {
-            getSupportActionBar().setTitle("Create New Group");
-        }
+        getSupportActionBar().setTitle("");
         toolbar.setNavigationOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {

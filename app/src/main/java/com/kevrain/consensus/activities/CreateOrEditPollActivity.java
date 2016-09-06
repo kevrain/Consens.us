@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
@@ -73,7 +74,9 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.activity_poll_form);
+
         ButterKnife.bind(this);
 
         rootView = findViewById(android.R.id.content);
@@ -89,7 +92,8 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
 
         pollOptions = new ArrayList<>();
 
-        rlHeader.getLayoutParams().height = (int) (DeviceDimensionsHelper.getDisplayHeight(getBaseContext()) * .25);
+        rlHeader.getLayoutParams().height = (int)
+            (DeviceDimensionsHelper.getDisplayHeight(getBaseContext()) * .25);
 
         requestCode = getIntent().getIntExtra("request_code", -1);
         pollOptionsAdapter = new PollOptionsArrayAdapter(pollOptions, requestCode);
