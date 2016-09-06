@@ -208,9 +208,17 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
         holder.tvPollOptionListName.setText(pollOption.getName());
 
         if (!pollOption.getName().equals(holder.itemView.getContext().getString(R.string.none_of_the_above))) {
+            holder.tvPollOptionListDayOfWeek.setVisibility(View.VISIBLE);
+            holder.tvPollOptionListDate.setVisibility(View.VISIBLE);
+            holder.tvPollOptionListMonth.setVisibility(View.VISIBLE);
+
             holder.tvPollOptionListDayOfWeek.setText(DateUtil.toString(pollOption.getDate(), "EEE"));
             holder.tvPollOptionListDate.setText(DateUtil.toString(pollOption.getDate(), "dd"));
             holder.tvPollOptionListMonth.setText(DateUtil.toString(pollOption.getDate(), "MMM"));
+        } else {
+            holder.tvPollOptionListDayOfWeek.setVisibility(View.INVISIBLE);
+            holder.tvPollOptionListDate.setVisibility(View.INVISIBLE);
+            holder.tvPollOptionListMonth.setVisibility(View.INVISIBLE);
         }
 
         if (mRequestCode == PollsActivity.SHOW_POLL_REQUEST_CODE) {
@@ -278,7 +286,7 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
 
     public void addPollOption(PollOption option) {
         pollOptionsToAdd.add(option);
-        mPollOptions.add(option);
+        mPollOptions.add(0, option);
         notifyDataSetChanged();
     }
 
