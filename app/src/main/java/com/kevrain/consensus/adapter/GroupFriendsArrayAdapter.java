@@ -1,6 +1,7 @@
 package com.kevrain.consensus.adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -72,6 +73,8 @@ public class GroupFriendsArrayAdapter extends ArrayAdapter<ParseUser> {
                      .into(holder.ivProfile);
             }
         });
+        Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/Lato-Light.ttf");
+        holder.tvFriendName.setTypeface(font);
         holder.tvFriendName.setText(user.getUsername());
         setUpCheckbox(holder, user);
         return view;
