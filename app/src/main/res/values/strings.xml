@@ -27,4 +27,18 @@
     <string name="snackbar_NOTOK_text">You are offline, turn WIFI on in </string>
     <string name="poll_option_placeholder">You haven\'t created any locations to vote on yet.</string>
     <string name="polls_placeholder">You haven\'t created any polls to vote on yet.</string>
+    <string name="request_code">Request code.</string>
+    <string name="group_name_error_msg">Please provide a group name</string>
+    <string name="group_add_friends_error_msg">Group must have at least 2 friends</string>
+    <string name="poll_name_error_msg">Please provide a poll name</string>
+    <string name="poll_add_option_error_msg">Poll should have at least 2 options</string>
+    <string name="group_signup">New group created successfully!!</string>
+    <string name="group_edit">Edited group successfully!!</string>
+    <string name="group_delete">Deleted group successfully!!</string>
+    <string name="new_user_signup">New user signed up successfully!!</string>
+    <string name="poll_name_exists_msg">Poll with this name already exists</string>
+
+
+
+
 </resources>

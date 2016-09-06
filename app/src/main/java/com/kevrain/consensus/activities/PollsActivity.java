@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.h6ah4i.android.widget.advrecyclerview.animator.SwipeDismissItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
@@ -18,6 +18,7 @@ import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.PollsArrayAdapter;
 import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.models.Poll;
+import com.kevrain.consensus.support.ColoredSnackBar;
 import com.kevrain.consensus.support.DividerItemDecoration;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -47,6 +48,7 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
     public static final int EDIT_POLL_REQUEST_CODE = 30;
     public static final int SHOW_POLL_REQUEST_CODE = 40;
     boolean isValidPoll = true;
+    View rootView;
 
     //###### Network call to the Event Client to get Data
 
@@ -65,6 +67,7 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
         adapter = new PollsArrayAdapter(polls);
         adapter.setPollsArrayAdapterListener(this);
         rvPolls.setAdapter(adapter);
+        rootView = findViewById(android.R.id.content);
 
         RecyclerViewSwipeManager swipeMgr = new RecyclerViewSwipeManager();
 
@@ -155,8 +158,8 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
                         rlPollsPlaceholder.setVisibility(View.INVISIBLE);
                     }
                     else {
-                        Toast.makeText(getApplicationContext(),
-                            "Poll with this name already exists", Toast.LENGTH_LONG).show();
+                        Snackbar snackbar = Snackbar.make(rootView, R.string.poll_name_exists_msg, Snackbar.LENGTH_LONG);
+                        ColoredSnackBar.warning(snackbar).show();
                     }
                 }
             }
@@ -178,8 +181,8 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
                         adapter.notifyDataSetChanged();
                     }
                     else {
-                        Toast.makeText(getApplicationContext(),
-                            "Poll with this name already exists", Toast.LENGTH_LONG).show();
+                        Snackbar snackbar = Snackbar.make(rootView, R.string.poll_name_exists_msg, Snackbar.LENGTH_LONG);
+                        ColoredSnackBar.warning(snackbar).show();
                     }
                 }
             }

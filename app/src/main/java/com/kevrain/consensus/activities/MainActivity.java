@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -20,6 +20,7 @@ import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.Profile;
 import com.kevrain.consensus.R;
+import com.kevrain.consensus.support.ColoredSnackBar;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
@@ -135,9 +136,9 @@ public class MainActivity extends AppCompatActivity {
                             parseUser.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
-                                    Toast.makeText(MainActivity.this,
-                                        "New user:" + name + " Signed up", Toast.LENGTH_SHORT)
-                                         .show();
+                                    Snackbar snackbar = Snackbar.make(MainActivity.this.getWindow().getDecorView(), R.string.new_user_signup + name, Snackbar.LENGTH_LONG);
+                                    ColoredSnackBar.confirm(snackbar).show();
+
                                     goToNewGroups();
                                 }
                             });

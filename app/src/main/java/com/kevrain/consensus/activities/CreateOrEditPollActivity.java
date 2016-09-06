@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +15,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.underscore.$;
 import com.github.underscore.Block;
@@ -27,6 +27,7 @@ import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.models.Poll;
 import com.kevrain.consensus.models.PollOption;
 import com.kevrain.consensus.models.Vote;
+import com.kevrain.consensus.support.ColoredSnackBar;
 import com.kevrain.consensus.support.DateUtil;
 import com.kevrain.consensus.support.DeviceDimensionsHelper;
 import com.kevrain.consensus.support.DividerItemDecoration;
@@ -67,12 +68,15 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
     String groupID;
     int pollPosition;
     Poll originalPoll;
+    View rootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poll_form);
         ButterKnife.bind(this);
+
+        rootView = findViewById(android.R.id.content);
 
         toolbar.setContentInsetsAbsolute(0, 0);
 
@@ -174,12 +178,14 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
     private boolean validateData() {
         String pollName = etEventName.getText().toString();
         if (pollName.length() < 1 || pollName == null) {
-            Toast.makeText(this, "Please provide a poll name", Toast.LENGTH_LONG).show();
+            Snackbar snackbar = Snackbar.make(rootView, R.string.poll_name_error_msg, Snackbar.LENGTH_LONG);
+            ColoredSnackBar.warning(snackbar).show();
             return false;
         }
 
         if (pollOptions.size() < 2) {
-            Toast.makeText(this, "Poll should have at least 2 locations", Toast.LENGTH_LONG).show();
+            Snackbar snackbar = Snackbar.make(rootView, R.string.poll_add_option_error_msg, Snackbar.LENGTH_LONG);
+            ColoredSnackBar.warning(snackbar).show();
             return false;
         }
         return true;

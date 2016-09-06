@@ -3,6 +3,7 @@ package com.kevrain.consensus.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,7 +14,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -22,6 +22,7 @@ import com.facebook.HttpMethod;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.GroupFriendsArrayAdapter;
 import com.kevrain.consensus.models.Group;
+import com.kevrain.consensus.support.ColoredSnackBar;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -57,6 +58,7 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
     @BindView(R.id.lvAddFriends) ListView lvAddFriends;
     GroupFriendsArrayAdapter friendsArrayAdapter;
     List<ParseUser> existingMembers;
+    View rootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +66,11 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_new_group);
         ButterKnife.bind(this);
         requestCode = getIntent().getIntExtra("requestCode", -1);
-        Toast.makeText(getApplicationContext(), "request code " + Integer.toString(requestCode),
-            Toast.LENGTH_SHORT).show();
+        rootView = findViewById(android.R.id.content);
+
+        Snackbar snackbar = Snackbar.make(rootView, R.string.request_code + Integer.toString(requestCode), Snackbar.LENGTH_LONG);
+        ColoredSnackBar.warning(snackbar).show();
+
         user = ParseUser.getCurrentUser();
         if (requestCode == EDIT_GROUP_REQUEST_CODE) {
             getExistingGroupData();
@@ -207,13 +212,16 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
     }
 
     private boolean isValidGroup(String groupTitle) {
+
         if (groupTitle == null || groupTitle.length() < 1) {
-            Toast.makeText(this, "Please provide a group name", Toast.LENGTH_LONG).show();
+            Snackbar snackbar = Snackbar.make(rootView, R.string.group_name_error_msg, Snackbar.LENGTH_LONG);
+            ColoredSnackBar.warning(snackbar).show();
             return false;
         }
         if (requestCode == ADD_GROUP_REQUEST_CODE &&
             friendsArrayAdapter.friendsToAdd.size() < 1) {
-            Toast.makeText(this, "Group should have at least 2 friends", Toast.LENGTH_LONG).show();
+            Snackbar snackbar = Snackbar.make(rootView, R.string.group_add_friends_error_msg, Snackbar.LENGTH_LONG);
+            ColoredSnackBar.warning(snackbar).show();
             return false;
         }
 

@@ -8,13 +8,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.kevrain.consensus.R;
@@ -24,7 +22,6 @@ import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.network.AppNetworkCheck;
 import com.kevrain.consensus.support.ColoredSnackBar;
 import com.kevrain.consensus.support.ItemClickSupport;
-import com.kevrain.consensus.support.ItemClickSupport.OnItemLongClickListener;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -49,6 +46,7 @@ public class GroupsActivity extends AppCompatActivity implements OnSelectMenuIte
 
     ArrayList<Group> groups;
     GroupsArrayAdapter adapter;
+    View rootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +60,7 @@ public class GroupsActivity extends AppCompatActivity implements OnSelectMenuIte
         groups = new ArrayList<>();
         adapter = new GroupsArrayAdapter(groups);
         rvGroups.setAdapter(adapter);
+        rootView = findViewById(android.R.id.content);
 
         final GridLayoutManager layout = new GridLayoutManager(GroupsActivity.this, 2);
         rvGroups.setLayoutManager(layout);
@@ -139,18 +138,24 @@ public class GroupsActivity extends AppCompatActivity implements OnSelectMenuIte
         if (requestCode == CreateOrEditGroupActivity.ADD_GROUP_REQUEST_CODE
             && resultCode == RESULT_OK) {
             updateGroups(data);
-            Toast.makeText(this, "New group: signed up", Toast.LENGTH_SHORT).show();
+
+            Snackbar snackbar = Snackbar.make(rootView, R.string.group_signup, Snackbar.LENGTH_LONG);
+            ColoredSnackBar.confirm(snackbar).show();
         }
         if (requestCode == CreateOrEditGroupActivity.EDIT_GROUP_REQUEST_CODE
             && resultCode == RESULT_OK) {
             groups.remove(data.getExtras().getInt("group_position"));
             updateGroups(data);
-            Toast.makeText(this, "Edited group", Toast.LENGTH_SHORT).show();
+
+            Snackbar snackbar = Snackbar.make(rootView, R.string.group_edit, Snackbar.LENGTH_LONG);
+            ColoredSnackBar.confirm(snackbar).show();
         }
         if (resultCode == CreateOrEditGroupActivity.RESULT_DELETE) {
             groups.remove(data.getExtras().getInt("group_position"));
             adapter.notifyDataSetChanged();
-            Toast.makeText(this, "Edited group", Toast.LENGTH_SHORT).show();
+
+            Snackbar snackbar = Snackbar.make(rootView, R.string.group_delete, Snackbar.LENGTH_LONG);
+            ColoredSnackBar.confirm(snackbar).show();
         }
     }
 
