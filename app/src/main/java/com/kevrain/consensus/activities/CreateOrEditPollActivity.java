@@ -20,6 +20,8 @@ import com.github.underscore.$;
 import com.github.underscore.Block;
 import com.github.underscore.Function1;
 import com.github.underscore.Predicate;
+import com.h6ah4i.android.widget.advrecyclerview.animator.SwipeDismissItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.PollOptionsArrayAdapter;
 import com.kevrain.consensus.fragments.NewPollOptionFragment;
@@ -100,27 +102,48 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
             fletEventName.setHint("");
         }
 
-        rvPollOptions.setAdapter(pollOptionsAdapter);
+        RecyclerViewSwipeManager swipeMgr = new RecyclerViewSwipeManager();
+
         rvPollOptions.setLayoutManager(new LinearLayoutManager(this));
-        rvPollOptions.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+        rvPollOptions.setAdapter(swipeMgr.createWrappedAdapter(pollOptionsAdapter));
+        rvPollOptions.setItemAnimator(new SwipeDismissItemAnimator());
         rvPollOptions.getLayoutParams().height = DeviceDimensionsHelper.getDisplayHeight(this) - rlHeader.getLayoutParams().height;
 
+        swipeMgr.attachRecyclerView(rvPollOptions);
+
+        rvPollOptions.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+
         getIntentData();
+        getGroup();
     }
 
     private void getIntentData() {
         groupID = getIntent().getStringExtra("groupID");
         pollID = getIntent().getStringExtra("pollID");
 
+        pollOptionsAdapter.setPollOptionSelectionListener(this);
+
         if (pollID != null) {
             populatePollAndPollOptions();
-            pollOptionsAdapter.setPollOptionSelectionListener(this);
 
             if (requestCode == PollsActivity.EDIT_POLL_REQUEST_CODE) {
                 pollPosition = getIntent().getIntExtra("poll_position", -1);
                 toolbar.setTitle("Edit Poll");
             }
+        } else {
+            rlPollOptionPlaceholder.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void getGroup() {
+        ParseQuery<Group> query = ParseQuery.getQuery(Group.class);
+        query.getInBackground(groupID, new GetCallback<Group>() {
+            public void done(Group groupItem, ParseException e) {
+                if (e == null) {
+                    group = groupItem;
+                }
+            }
+        });
     }
 
     private void populatePollAndPollOptions() {
@@ -134,14 +157,12 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
                     etEventName.setText(originalPoll.getPollName());
                     etEventName.setSelection(etEventName.getText().length());
 
-                    progressIndicator.show();
                     originalPoll.getPollOptionRelation().getQuery().findInBackground(
                         new FindCallback<PollOption>() {
                             @Override
                             public void done(List<PollOption> objects, ParseException e) {
                                 if (objects != null && objects.size() > 0) {
                                     rvPollOptions.setVisibility(View.VISIBLE);
-                                    rlPollOptionPlaceholder.setVisibility(View.GONE);
 
                                     pollOptions.addAll($.sortBy(objects, new Function1<PollOption, Integer>() {
                                         @Override
@@ -151,6 +172,8 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
                                     }));
 
                                     pollOptionsAdapter.notifyDataSetChanged();
+                                } else {
+                                    rlPollOptionPlaceholder.setVisibility(View.GONE);
                                 }
                                 progressIndicator.hide();
                             }
@@ -199,17 +222,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
     public void savePoll(View view) {
         if (validateData()) {
             if (pollID == null) {
-                ParseQuery<Group> query = ParseQuery.getQuery(Group.class);
-                query.include("polls");
-                query.getInBackground(groupID, new GetCallback<Group>() {
-                    public void done(Group groupItem, ParseException e) {
-                        if (e == null) {
-
-                            group = groupItem;
-                            saveNewPoll(group);
-                        }
-                    }
-                });
+                saveNewPoll(group);
             } else {
                 saveEditPoll();
             }
@@ -468,6 +481,23 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
                 }
             }
         });
+    }
+
+    @Override
+    public void renderListPlaceholderIfNeeded() {
+        if (pollOptions.size() < 1) {
+            rvPollOptions.setVisibility(View.GONE);
+            rlPollOptionPlaceholder.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public boolean canEditOrDelete(PollOption option) {
+        return group != null &&
+                group.getOwner().getObjectId().equals(ParseUser.getCurrentUser().getObjectId()) &&
+                requestCode == PollsActivity.ADD_POLL_REQUEST_CODE ||
+                (requestCode == PollsActivity.EDIT_POLL_REQUEST_CODE && pollOptions.size() > 2) &&
+                !option.getName().equals(getResources().getString(R.string.none_of_the_above));
     }
 
     private void uncheckOption(final PollOption option) {

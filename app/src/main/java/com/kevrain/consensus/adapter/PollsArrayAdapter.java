@@ -40,6 +40,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.ViewHolder> implements SwipeableItemAdapter<PollsArrayAdapter.ViewHolder> {
     public interface PollsArrayAdapterListener {
         void renderListPlaceholderIfNeeded();
+        boolean canEditOrDelete();
     }
 
     interface Swipeable extends SwipeableItemConstants {
@@ -48,7 +49,6 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
     static final float OPTIONS_AREA_PROPORTION = 0.3f;
     static final float REMOVE_ITEM_THRESHOLD = 0.6f;
     public List<Poll> mPolls;
-    private boolean isOwner;
     private PollsArrayAdapterListener listener;
 
     // Pass in the contact array into the constructor
@@ -59,10 +59,6 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
 
     public void setPollsArrayAdapterListener(PollsArrayAdapterListener listener) {
         this.listener = listener;
-    }
-
-    public void setIsOwner(boolean isOwner) {
-        this.isOwner = isOwner;
     }
 
     @Override
@@ -109,6 +105,7 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
                     Poll poll = mPolls.get(getAdapterPosition());
                     Intent i = new Intent(view.getContext(), CreateOrEditPollActivity.class);
                     i.putExtra("pollID", poll.getObjectId());
+                    i.putExtra("groupID", poll.getGroup().getObjectId());
                     i.putExtra("poll_position", getAdapterPosition());
                     i.putExtra("request_code", PollsActivity.EDIT_POLL_REQUEST_CODE);
                     ((Activity) view.getContext()).startActivityForResult(i,
@@ -246,13 +243,13 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
 
     @Override
     public int onGetSwipeReactionType(ViewHolder holder, int position, int x, int y) {
-        return isOwner ? Swipeable.REACTION_CAN_SWIPE_LEFT : Swipeable.REACTION_CAN_NOT_SWIPE_LEFT;
+        return listener.canEditOrDelete() ? Swipeable.REACTION_CAN_SWIPE_LEFT : Swipeable.REACTION_CAN_NOT_SWIPE_LEFT;
     }
 
     @Override
     public void onSetSwipeBackground(ViewHolder holder, int position, int type) {
         if (type == Swipeable.DRAWABLE_SWIPE_LEFT_BACKGROUND) {
-            holder.itemView.setBackgroundColor(0xffff6666);
+            holder.itemView.setBackgroundColor(holder.itemView.getResources().getColor(android.R.color.white));
         }
     }
 

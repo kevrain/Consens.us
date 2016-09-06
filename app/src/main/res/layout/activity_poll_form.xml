@@ -63,6 +63,7 @@
 
         <RelativeLayout
             android:id="@+id/rlPollOptionPlaceholder"
+            android:visibility="gone"
             android:layout_below="@+id/rlHeader"
             android:layout_above="@+id/btnAdd"
             android:layout_width="match_parent"

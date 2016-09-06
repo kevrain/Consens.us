@@ -35,11 +35,16 @@ import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class PollsActivity extends AppCompatActivity implements PollsArrayAdapter.PollsArrayAdapterListener {
-    @BindView(R.id.rvPolls) RecyclerView rvPolls;
-    @BindView(R.id.fabCreateEvent) FloatingActionButton fabCreateEvent;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.progressIndicator) AVLoadingIndicatorView progressIndicator;
-    @BindView(R.id.rlPollsPlaceholder) View rlPollsPlaceholder;
+    @BindView(R.id.rvPolls)
+    RecyclerView rvPolls;
+    @BindView(R.id.fabCreateEvent)
+    FloatingActionButton fabCreateEvent;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.progressIndicator)
+    AVLoadingIndicatorView progressIndicator;
+    @BindView(R.id.rlPollsPlaceholder)
+    View rlPollsPlaceholder;
 
     PollsArrayAdapter adapter;
     ArrayList<Poll> polls;
@@ -108,8 +113,6 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
                 if (e == null) {
                     group = groupItem;
 
-                    adapter.setIsOwner(group.getOwner().getObjectId().equals(ParseUser.getCurrentUser().getObjectId()));
-
                     progressIndicator.show();
                     group.getPollsRelation().getQuery().findInBackground(new FindCallback<Poll>() {
                         @Override
@@ -151,13 +154,12 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
             public void done(Poll poll, ParseException e) {
                 if (e == null) {
                     // item was found
-                    if(isValidPoll) {
+                    if (isValidPoll) {
                         polls.add(0, poll);
                         adapter.notifyDataSetChanged();
                         rvPolls.setVisibility(View.VISIBLE);
                         rlPollsPlaceholder.setVisibility(View.INVISIBLE);
-                    }
-                    else {
+                    } else {
                         Snackbar snackbar = Snackbar.make(rootView, R.string.poll_name_exists_msg, Snackbar.LENGTH_LONG);
                         ColoredSnackBar.warning(snackbar).show();
                     }
@@ -179,8 +181,7 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
                     if (isValidPoll) {
                         polls.add(0, poll);
                         adapter.notifyDataSetChanged();
-                    }
-                    else {
+                    } else {
                         Snackbar snackbar = Snackbar.make(rootView, R.string.poll_name_exists_msg, Snackbar.LENGTH_LONG);
                         ColoredSnackBar.warning(snackbar).show();
                     }
@@ -200,6 +201,11 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
             rvPolls.setVisibility(View.GONE);
             rlPollsPlaceholder.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public boolean canEditOrDelete() {
+        return group != null && group.getOwner().getObjectId().equals(ParseUser.getCurrentUser().getObjectId());
     }
 }
 

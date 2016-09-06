@@ -313,6 +313,16 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
         });
     }
 
+    @Override
+    public void renderListPlaceholderIfNeeded() {
+
+    }
+
+    @Override
+    public boolean canEditOrDelete(PollOption option) {
+        return false;
+    }
+
     private void uncheckOption(final PollOption option) {
         PollOption optionInList = $.find(pollOptions, new Predicate<PollOption>() {
             @Override

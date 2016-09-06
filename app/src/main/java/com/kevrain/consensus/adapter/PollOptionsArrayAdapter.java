@@ -1,6 +1,7 @@
 package com.kevrain.consensus.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,13 @@ import com.github.underscore.$;
 import com.github.underscore.Block;
 import com.github.underscore.Optional;
 import com.github.underscore.Predicate;
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemAdapter;
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemConstants;
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAction;
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionDefault;
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionMoveToSwipedDirection;
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionRemoveItem;
+import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemViewHolder;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.activities.PollsActivity;
 import com.kevrain.consensus.models.Poll;
@@ -31,18 +39,25 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import cn.refactor.library.SmoothCheckBox;
 
 /**
  * Created by kfarst on 8/22/16.
  */
-public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArrayAdapter.ViewHolder> {
+public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArrayAdapter.ViewHolder> implements SwipeableItemAdapter<PollOptionsArrayAdapter.ViewHolder> {
     public interface PollOptionSelectionListener {
         void createNoneOfTheAboveVoteIfNeeded();
         void deleteNoneOfTheAboveVoteIfNeeded();
         void deleteAllOptionVotes();
+        void renderListPlaceholderIfNeeded();
+        boolean canEditOrDelete(PollOption option);
     }
 
+    interface Swipeable extends SwipeableItemConstants {
+    }
+
+    static final float OPTIONS_AREA_PROPORTION = 0.2f;
     public List<PollOption> mPollOptions;
     public Set<PollOption> pollOptionsToDelete;
     public Set<PollOption> pollOptionsToAdd;
@@ -56,8 +71,15 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
         this.listener = listener;
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
     // Pass in the contact array into the constructor
     public PollOptionsArrayAdapter(List<PollOption> pollOptions, int requestCode) {
+        setHasStableIds(true);
+
         mPollOptions = pollOptions;
         mVotes = new ArrayList<>();
         pollOptionsToDelete = new HashSet<PollOption>();
@@ -68,13 +90,17 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends AbstractSwipeableItemViewHolder {
         @BindView(R.id.tvPollOptionListName) TextView tvPollOptionListName;
         @BindView(R.id.tvPollOptionListDayOfWeek) TextView tvPollOptionListDayOfWeek;
         @BindView(R.id.tvPollOptionListDate) TextView tvPollOptionListDate;
         @BindView(R.id.tvPollOptionListMonth) TextView tvPollOptionListMonth;
         @BindView(R.id.tvPollOptionVoteCount) TextView tvPollOptionVoteCount;
         @BindView(R.id.cbPollOptionVote) SmoothCheckBox cbPollOptionVote;
+        @BindView(R.id.swipeableContainer) View swipeableContainer;
+        @BindView(R.id.option_view_1) View optionView1;
+
+        float lastSwipeAmount;
 
         public ViewHolder(View itemView) {
             // Stores the itemView in a public final member variable that can be used
@@ -82,6 +108,64 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
             super(itemView);
 
             ButterKnife.bind(this, itemView);
+
+            //Delete
+            optionView1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final SweetAlertDialog pDialog = new SweetAlertDialog(view.getContext(), SweetAlertDialog.WARNING_TYPE);
+                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                    pDialog.setTitleText("Are you sure you?");
+                    pDialog.setContentText("This location and its votes will be deleted!");
+                    pDialog.setConfirmText("Yes,delete it!");
+                    pDialog.setCancelable(true);
+                    pDialog.setCancelText("No, just kidding!");
+                    pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            pDialog.dismissWithAnimation();
+
+                            final PollOption pollOption = mPollOptions.get(getAdapterPosition());
+
+                            pollOptionsToAdd.remove(pollOption);
+                            pollOptionsToDelete.add(pollOption);
+                            mPollOptions.remove(pollOption);
+                            notifyDataSetChanged();
+                        }
+                    });
+                    pDialog.show();
+                }
+            });
+        }
+
+        @Override
+        public View getSwipeableContainerView() {
+            return swipeableContainer;
+        }
+
+        @Override
+        public void onSlideAmountUpdated(float horizontalAmount, float verticalAmount, boolean isSwiping) {
+            int itemWidth = itemView.getWidth();
+            float optionItemWidth = itemWidth * OPTIONS_AREA_PROPORTION;
+            int offset = (int) (optionItemWidth + 0.5f);
+            float p = Math.max(0, Math.min(OPTIONS_AREA_PROPORTION, -horizontalAmount)) / OPTIONS_AREA_PROPORTION;
+
+            if (optionView1.getWidth() == 0) {
+                setLayoutWidth(optionView1, (int) (optionItemWidth + 0.5f));
+            }
+
+            optionView1.setTranslationX(-(int) (p * optionItemWidth + 0.5f) + offset);
+
+            swipeableContainer.setVisibility(View.VISIBLE);
+            optionView1.setVisibility(View.VISIBLE);
+
+            lastSwipeAmount = horizontalAmount;
+        }
+
+        private void setLayoutWidth(View v, int width) {
+            ViewGroup.LayoutParams lp = v.getLayoutParams();
+            lp.width = width;
+            v.setLayoutParams(lp);
         }
     }
 
@@ -169,18 +253,10 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
             });
         }
 
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");h
-
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                pollOptionsToAdd.remove(pollOption);
-                pollOptionsToDelete.add(pollOption);
-                mPollOptions.remove(pollOption);
-                notifyDataSetChanged();
-                return false;
-            }
-        });
+        // set swiping properties
+        holder.setMaxLeftSwipeAmount(-OPTIONS_AREA_PROPORTION);
+        holder.setMaxRightSwipeAmount(0);
+        holder.setSwipeItemHorizontalSlideAmount(pollOption.pinned ? -OPTIONS_AREA_PROPORTION : 0);
     }
 
     public void addPollOption(PollOption option) {
@@ -247,6 +323,76 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
 
     public void setPoll(Poll poll) {
         mPoll = poll;
+    }
+
+    @Override
+    public SwipeResultAction onSwipeItem(ViewHolder holder, int position, int result) {
+        if (result == Swipeable.RESULT_SWIPED_LEFT) {
+            return new SwipeLeftPinningAction(this, position);
+        } else {
+            return new SwipeCancelAction(this, position);
+        }
+    }
+
+    @Override
+    public int onGetSwipeReactionType(ViewHolder holder, int position, int x, int y) {
+        return listener.canEditOrDelete(mPollOptions.get(position)) ? Swipeable.REACTION_CAN_SWIPE_LEFT : Swipeable.REACTION_CAN_NOT_SWIPE_LEFT;
+    }
+
+    @Override
+    public void onSetSwipeBackground(ViewHolder holder, int position, int type) {
+        if (type == Swipeable.DRAWABLE_SWIPE_LEFT_BACKGROUND) {
+            holder.itemView.setBackgroundColor(holder.itemView.getResources().getColor(android.R.color.white));
+        }
+    }
+
+    static class SwipeLeftRemoveAction extends SwipeResultActionRemoveItem {
+        PollOptionsArrayAdapter adapter;
+        int position;
+
+        public SwipeLeftRemoveAction(PollOptionsArrayAdapter adapter, int position) {
+            this.adapter = adapter;
+            this.position = position;
+        }
+
+        @Override
+        protected void onPerformAction() {
+            adapter.mPollOptions.remove(position);
+            adapter.notifyItemRemoved(position);
+        }
+    }
+
+    static class SwipeLeftPinningAction extends SwipeResultActionMoveToSwipedDirection {
+        PollOptionsArrayAdapter adapter;
+        int position;
+
+        public SwipeLeftPinningAction(PollOptionsArrayAdapter adapter, int position) {
+            this.adapter = adapter;
+            this.position = position;
+        }
+
+        @Override
+        protected void onPerformAction() {
+            adapter.mPollOptions.get(position).pinned = true;
+            adapter.notifyItemChanged(position);
+        }
+    }
+
+
+    static class SwipeCancelAction extends SwipeResultActionDefault {
+        PollOptionsArrayAdapter adapter;
+        int position;
+
+        public SwipeCancelAction(PollOptionsArrayAdapter adapter, int position) {
+            this.adapter = adapter;
+            this.position = position;
+        }
+
+        @Override
+        protected void onPerformAction() {
+            adapter.mPollOptions.get(position).pinned = false;
+            adapter.notifyItemChanged(position);
+        }
     }
 }
 

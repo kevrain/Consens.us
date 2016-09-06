@@ -9,6 +9,8 @@ import com.parse.ParseRelation;
  */
 @ParseClassName("PollOption")
 public class PollOption extends ParseObject {
+    public boolean pinned;
+
     public PollOption() {}
 
     public PollOption(String name, long date) {
