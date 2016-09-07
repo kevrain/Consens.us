@@ -144,7 +144,7 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
                                         @Override
                                         public void done(ParseException e) {
                                             mPolls.remove(poll);
-                                            notifyItemRemoved(getAdapterPosition());
+                                            notifyDataSetChanged();
                                             listener.renderListPlaceholderIfNeeded();
                                         }
                                     });

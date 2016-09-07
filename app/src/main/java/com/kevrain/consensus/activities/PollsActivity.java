@@ -168,7 +168,7 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
                     // item was found
                     if (isValidPoll) {
                         polls.add(0, poll);
-                        adapter.notifyItemInserted(0);
+                        adapter.notifyDataSetChanged();
                         rvPolls.setVisibility(View.VISIBLE);
                         rlPollsPlaceholder.setVisibility(View.INVISIBLE);
                     } else {
@@ -192,7 +192,7 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
                     // item was found
                     if (isValidPoll) {
                         polls.add(0, poll);
-                        adapter.notifyItemInserted(0);
+                        adapter.notifyDataSetChanged();
                     } else {
                         Snackbar snackbar = Snackbar.make(rootView, R.string.poll_name_exists_msg, Snackbar.LENGTH_LONG);
                         ColoredSnackBar.warning(snackbar).show();
