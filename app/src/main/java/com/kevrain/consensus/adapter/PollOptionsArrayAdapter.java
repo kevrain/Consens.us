@@ -55,6 +55,7 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
         void renderListPlaceholderIfNeeded();
         boolean validateAllMembersVoted(boolean performCheck);
         boolean canEditOrDelete(PollOption option);
+        void setSelectedPollOption();
     }
 
     interface Swipeable extends SwipeableItemConstants {
@@ -224,6 +225,77 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
                     tvPollOptionVoteCount.setText(votes.size() + " Votes");
                 }
             });
+        }
+
+        public void updateViewForSelectedLocation() {
+            PollOption option = mPollOptions.get(getAdapterPosition());
+
+            if (mPoll.hasLocationSelected()) {
+                cbPollOptionVote.setClickable(false);
+            }
+
+            if (!option.isSelected()) {
+                itemView.animate().alpha(0.3f).setDuration(1000).start();
+                cbPollOptionVote.animate().alpha(0.0f).setDuration(1000).start();
+            } else {
+                cbPollOptionVote.setChecked(true, true);
+            }
+        }
+
+        public void setLocationSelectionListener() {
+            final Handler handler = new Handler();
+            final Runnable mLongPressed = new Runnable() {
+                public void run() {
+                    if (!mPoll.hasLocationSelected()) {
+                        final SweetAlertDialog pDialog = new SweetAlertDialog(itemView.getContext(), SweetAlertDialog.SUCCESS_TYPE);
+                        pDialog.getProgressHelper().setBarColor(R.color.success_green);
+                        pDialog.setTitleText("Choose as event location?");
+                        pDialog.setContentText("Selecting the event location will end voting!");
+                        pDialog.setConfirmText("Yes, select it!");
+                        pDialog.setCancelable(true);
+                        pDialog.setCancelText("No, just kidding!");
+                        pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                pDialog.dismissWithAnimation();
+
+                                final PollOption pollOption = mPollOptions.get(getAdapterPosition());
+
+                                pollOption.setSelected(true);
+                                pollOption.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        mPoll.setLocationSelected(true);
+                                        mPoll.saveInBackground(new SaveCallback() {
+                                            @Override
+                                            public void done(ParseException e) {
+                                                listener.setSelectedPollOption();
+                                                swipeableContainer.setOnTouchListener(null);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                        pDialog.show();
+                    }
+                }
+            };
+
+            swipeableContainer.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN)
+                        handler.postDelayed(mLongPressed, 1000);
+                    if ((motionEvent.getAction() == MotionEvent.ACTION_MOVE) || (motionEvent.getAction() == MotionEvent.ACTION_UP))
+                        handler.removeCallbacks(mLongPressed);
+                    return true;
+                }
+            });
+        }
+
+        public void setClickable(boolean isClickable) {
+            cbPollOptionVote.setClickable(isClickable);
         }
     }
 

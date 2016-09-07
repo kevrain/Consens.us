@@ -74,6 +74,7 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
         @BindView(R.id.swipeableContainer) View swipeableContainer;
         @BindView(R.id.option_view_1) View optionView1;
         @BindView(R.id.option_view_2) View optionView2;
+        @BindView(R.id.rlEventScheduled) View rlEventScheduled;
 
         float lastSwipeAmount;
 
@@ -225,6 +226,15 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
         holder.setMaxLeftSwipeAmount(-OPTIONS_AREA_PROPORTION);
         holder.setMaxRightSwipeAmount(0);
         holder.setSwipeItemHorizontalSlideAmount(poll.pinned ? -OPTIONS_AREA_PROPORTION : 0);
+
+
+        if (mPolls.get(position).hasLocationSelected()) {
+            holder.rlEventScheduled.setAlpha(0.0f);
+            holder.rlEventScheduled.setVisibility(View.VISIBLE);
+            holder.rlEventScheduled.animate().alpha(1.0f).setDuration(1000).start();
+        } else {
+            holder.rlEventScheduled.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -243,7 +253,7 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
 
     @Override
     public int onGetSwipeReactionType(ViewHolder holder, int position, int x, int y) {
-        return listener.canEditOrDelete() ? Swipeable.REACTION_CAN_SWIPE_LEFT : Swipeable.REACTION_CAN_NOT_SWIPE_LEFT;
+        return listener.canEditOrDelete() && !mPolls.get(position).hasLocationSelected() ? Swipeable.REACTION_CAN_SWIPE_LEFT : Swipeable.REACTION_CAN_NOT_SWIPE_LEFT;
     }
 
     @Override

@@ -65,6 +65,8 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
     @BindView(R.id.progressIndicator) AVLoadingIndicatorView progressIndicator;
     @BindView(R.id.ivAllMembersVoted) ImageView ivAllMembersVoted;
     @BindView(R.id.tvAllMembersVoted) TextView tvAllMembersVoted;
+    @BindView(R.id.ivEventScheduled) ImageView ivEventScheduled;
+    @BindView(R.id.tvEventScheduled) TextView tvEventScheduled;
 
     ArrayList<PollOption> pollOptions;
     PollOptionsArrayAdapter pollOptionsAdapter;
@@ -155,6 +157,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
             }
         } else {
             rlPollOptionPlaceholder.setVisibility(View.VISIBLE);
+            getGroup();
         }
     }
 
@@ -164,10 +167,26 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
             public void done(Group groupItem, ParseException e) {
                 if (e == null) {
                     group = groupItem;
-                    validateAllMembersVoted(true);
+
+                    if (originalPoll != null) {
+                        if (!originalPoll.hasLocationSelected()) {
+                            if (validateAllMembersVoted(true)) {
+                                setLocationSelectionListener();
+                            }
+                        } else {
+                            setSelectedPollOption();
+                        }
+                    }
                 }
             }
         });
+    }
+
+    private void setLocationSelectionListener() {
+        for (int i = 0; i < pollOptions.size(); i++) {
+            PollOptionsArrayAdapter.ViewHolder optionView = (PollOptionsArrayAdapter.ViewHolder) rvPollOptions.findViewHolderForAdapterPosition(i);
+            optionView.setLocationSelectionListener();
+        }
     }
 
     @Override
@@ -176,32 +195,35 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
             ParseQuery<Vote>  voteQuery = ParseQuery.getQuery(Vote.class);
             voteQuery.include("user");
             voteQuery.whereEqualTo("poll", originalPoll);
-            voteQuery.findInBackground(new FindCallback<Vote>() {
-                @Override
-                public void done(List<Vote> votes, ParseException e) {
-                    final List<String> uniqVoters = $.chain(votes).
-                    map(new Function1<Vote, String>() {
-                        @Override
-                        public String apply(Vote vote) {
-                        return vote.getParseUser("user").getEmail();
-                        }
-                    }).
-                    uniq().
-                    value();
+            List<Vote> votes = null;
+            try {
+                votes = voteQuery.find();
 
-                    group.getMembersRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
-                        @Override
-                        public void done(List<ParseUser> members, ParseException e) {
-                            // +1 since owner is not a member of the group
-                            if (uniqVoters.size() == (members.size() + 1)) {
-                                ivAllMembersVoted.setVisibility(View.VISIBLE);
-                                tvAllMembersVoted.setVisibility(View.VISIBLE);
-                                setAllMembersVoted(true);
+                final List<String> uniqVoters = $.chain(votes).
+                        map(new Function1<Vote, String>() {
+                            @Override
+                            public String apply(Vote vote) {
+                                return vote.getParseUser("user").getEmail();
                             }
-                        }
-                    });
+                        }).
+                        uniq().
+                        value();
+
+                List<ParseUser> members = group.getMembersRelation().getQuery().find();
+
+                        // +1 since owner is not a member of the group
+                if (uniqVoters.size() == (members.size() + 1)) {
+                    ivAllMembersVoted.setAlpha(0.0f);
+                    tvAllMembersVoted.setAlpha(0.0f);
+                    ivAllMembersVoted.setVisibility(View.VISIBLE);
+                    tvAllMembersVoted.setVisibility(View.VISIBLE);
+                    ivAllMembersVoted.animate().alpha(1.0f).setDuration(1000).start();
+                    tvAllMembersVoted.animate().alpha(1.0f).setDuration(1000).start();
+                    setAllMembersVoted(true);
                 }
-            });
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         return allMembersVoted;
     }
@@ -213,7 +235,6 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
             public void done(Poll pollItem, ParseException e) {
                 if (e == null) {
                     originalPoll = pollItem;
-                    getGroup();
                     pollOptionsAdapter.setPoll(originalPoll);
                     etEventName.setText(originalPoll.getPollName());
                     etEventName.setSelection(etEventName.getText().length());
@@ -236,6 +257,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
                                 } else {
                                     rlPollOptionPlaceholder.setVisibility(View.GONE);
                                 }
+                                getGroup();
                                 progressIndicator.hide();
                             }
                         });
@@ -283,7 +305,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
     public void savePoll(View view) {
         if (validateData()) {
             if (pollID == null) {
-                saveNewPoll(group);
+                saveNewPoll();
             } else {
                 saveEditPoll();
             }
@@ -323,7 +345,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
         }
     }
 
-    private void saveNewPoll(final Group group) {
+    private void saveNewPoll() {
         final Poll newPoll = new Poll();
         newPoll.setPollName(etEventName.getText().toString());
         newPoll.setGroup(group);
@@ -428,9 +450,9 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
         query.include("pollOption");
         query.whereEqualTo("poll", originalPoll);
         query.whereEqualTo("user", ParseUser.getCurrentUser());
-        query.findInBackground(new FindCallback() {
+        query.findInBackground(new FindCallback<Vote>() {
             @Override
-            public void done(List votes, ParseException e) {
+            public void done(List<Vote> votes, ParseException e) {
                 if (!votes.isEmpty()) {
                     $.each(votes, new Block<Vote>() {
                         public void apply(final Vote vote) {
@@ -444,33 +466,9 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
                                             @Override
                                             public void done(ParseException e) {
                                                 updateVoteDisplay(option, false);
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        }
-                    });
-                }
-            }
 
-            @Override
-            public void done(Object vote, Throwable throwable) {
-                ArrayList<Vote> votes = (ArrayList<Vote>) vote;
-
-                if (!votes.isEmpty()) {
-                    $.each(votes, new Block<Vote>() {
-                        public void apply(final Vote vote) {
-                            final PollOption option = (PollOption) vote.get("pollOption");
-                            if (option.getName().equals(getString(R.string.none_of_the_above))) {
-                                vote.deleteInBackground(new DeleteCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        option.getVotesRelation().remove(vote);
-                                        option.saveInBackground(new SaveCallback() {
-                                            @Override
-                                            public void done(ParseException e) {
-                                                updateVoteDisplay(option, false);
+                                                PollOptionsArrayAdapter.ViewHolder optionView = (PollOptionsArrayAdapter.ViewHolder) rvPollOptions.findViewHolderForAdapterPosition(pollOptions.size() - 1);
+                                                optionView.setClickable(true);
                                             }
                                         });
                                     }
@@ -559,6 +557,21 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
                 requestCode == PollsActivity.ADD_POLL_REQUEST_CODE ||
                 (requestCode == PollsActivity.EDIT_POLL_REQUEST_CODE && pollOptions.size() > 2) &&
                 !option.getName().equals(getResources().getString(R.string.none_of_the_above));
+    }
+
+    @Override
+    public void setSelectedPollOption() {
+        ivEventScheduled.setAlpha(0.0f);
+        tvEventScheduled.setAlpha(0.0f);
+        ivEventScheduled.setVisibility(View.VISIBLE);
+        tvEventScheduled.setVisibility(View.VISIBLE);
+        ivEventScheduled.animate().alpha(1.0f).setDuration(1000).start();
+        tvEventScheduled.animate().alpha(1.0f).setDuration(1000).start();
+
+        for (int i = 0; i < pollOptions.size(); i++) {
+            PollOptionsArrayAdapter.ViewHolder optionView = (PollOptionsArrayAdapter.ViewHolder) rvPollOptions.findViewHolderForAdapterPosition(i);
+            optionView.updateViewForSelectedLocation();
+        }
     }
 
     private void updateVoteDisplay(final PollOption option, boolean isChecked) {

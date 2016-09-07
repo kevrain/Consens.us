@@ -328,6 +328,11 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
         return false;
     }
 
+    @Override
+    public void setSelectedPollOption() {
+
+    }
+
     private void uncheckOption(final PollOption option) {
         PollOption optionInList = $.find(pollOptions, new Predicate<PollOption>() {
             @Override

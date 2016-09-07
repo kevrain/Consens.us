@@ -52,4 +52,12 @@ public class Poll extends ParseObject {
     public void setPollName(String name) { put("name", name); }
 
     public String getPollName() { return (String) get("name"); }
+
+    public void setLocationSelected(Boolean locationSelected) {
+        put("locationSelected", locationSelected);
+    }
+
+    public boolean hasLocationSelected() {
+        return get("locationSelected") != null && (boolean) get("locationSelected");
+    }
 }
