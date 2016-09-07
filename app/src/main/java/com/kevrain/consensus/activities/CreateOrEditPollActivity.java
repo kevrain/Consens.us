@@ -236,7 +236,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
         ParseQuery<Poll> query = ParseQuery.getQuery(Poll.class);
         query.include("pollOptions");
         query.getInBackground(pollID, new GetCallback<Poll>() {
-            public void done(Poll pollItem, ParseException e) {
+            public void done(final Poll pollItem, ParseException e) {
                 if (e == null) {
                     originalPoll = pollItem;
                     pollOptionsAdapter.setPoll(originalPoll);
@@ -591,6 +591,10 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
 
     @Override
     public void setSelectedPollOption() {
+        ivAllMembersVoted.animate().alpha(0.0f).setDuration(1000).start();
+        tvAllMembersVoted.animate().alpha(0.0f).setDuration(1000).start();
+        ivAllMembersVoted.setVisibility(View.INVISIBLE);
+        tvAllMembersVoted.setVisibility(View.INVISIBLE);
         ivEventScheduled.setAlpha(0.0f);
         tvEventScheduled.setAlpha(0.0f);
         ivEventScheduled.setVisibility(View.VISIBLE);

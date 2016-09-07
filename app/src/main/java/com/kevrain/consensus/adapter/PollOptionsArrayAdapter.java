@@ -155,13 +155,7 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                             pDialog.dismissWithAnimation();
-
-                            final PollOption pollOption = mPollOptions.get(getAdapterPosition());
-
-                            pollOptionsToAdd.remove(pollOption);
-                            pollOptionsToDelete.add(pollOption);
-                            mPollOptions.remove(pollOption);
-                            notifyDataSetChanged();
+                            listener.setSelectedPollOption();
                         }
                     });
                     pDialog.show();
