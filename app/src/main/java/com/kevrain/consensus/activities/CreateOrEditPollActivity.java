@@ -280,8 +280,15 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
     // Attach to an onclick handler to show the date picker
     public void closeActivity(View view) {
         if (view.getId() != R.id.tvSavePoll) {
-            Intent data = new Intent();
-            setResult(RESULT_CANCELED, data);
+
+            if (originalPoll.hasLocationSelected()) {
+                Intent i = new Intent(view.getContext(), PollsActivity.class);
+                i.putExtra("pollID", pollID);
+                setResult(PollsActivity.POLL_LOCATION_SET_REQUEST_CODE, i);
+            } else {
+                Intent data = new Intent();
+                setResult(RESULT_CANCELED, data);
+            }
             finish();
         }
     }

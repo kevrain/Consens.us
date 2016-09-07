@@ -93,7 +93,7 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
                         i.putExtra("pollID", mPolls.get(getAdapterPosition()).getObjectId());
                         i.putExtra("request_code", PollsActivity.SHOW_POLL_REQUEST_CODE);
                         i.putExtra("groupID", mPolls.get(getAdapterPosition()).getGroup().getObjectId());
-                        view.getContext().startActivity(i);
+                        ((Activity) view.getContext()).startActivityForResult(i, PollsActivity.SHOW_POLL_REQUEST_CODE);
                     }
                     return true;
                 }

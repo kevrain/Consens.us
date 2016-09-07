@@ -52,6 +52,7 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
     public static final int ADD_POLL_REQUEST_CODE = 20;
     public static final int EDIT_POLL_REQUEST_CODE = 30;
     public static final int SHOW_POLL_REQUEST_CODE = 40;
+    public static final int POLL_LOCATION_SET_REQUEST_CODE = 50;
     boolean isValidPoll = true;
     View rootView;
 
@@ -144,6 +145,17 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
         if (resultCode == RESULT_OK && requestCode == EDIT_POLL_REQUEST_CODE) {
             handleEditPollResult(data);
         }
+
+        if (resultCode == POLL_LOCATION_SET_REQUEST_CODE && requestCode == SHOW_POLL_REQUEST_CODE) {
+            String pollID = data.getStringExtra("pollID");
+
+            for (int i = 0; i < polls.size(); i++) {
+               if (polls.get(i).getObjectId().equals(pollID)) {
+                   polls.get(i).setLocationSelected(true);
+                   adapter.notifyItemChanged(i);
+               }
+            }
+        }
     }
 
     private void handleAddPollResult(Intent data) {
@@ -156,7 +168,7 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
                     // item was found
                     if (isValidPoll) {
                         polls.add(0, poll);
-                        adapter.notifyDataSetChanged();
+                        adapter.notifyItemInserted(0);
                         rvPolls.setVisibility(View.VISIBLE);
                         rlPollsPlaceholder.setVisibility(View.INVISIBLE);
                     } else {
@@ -180,7 +192,7 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
                     // item was found
                     if (isValidPoll) {
                         polls.add(0, poll);
-                        adapter.notifyDataSetChanged();
+                        adapter.notifyItemInserted(0);
                     } else {
                         Snackbar snackbar = Snackbar.make(rootView, R.string.poll_name_exists_msg, Snackbar.LENGTH_LONG);
                         ColoredSnackBar.warning(snackbar).show();
