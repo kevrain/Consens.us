@@ -2,6 +2,7 @@ package com.kevrain.consensus.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -25,6 +27,7 @@ import com.facebook.HttpMethod;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.GroupFriendsArrayAdapter;
 import com.kevrain.consensus.models.Group;
+import com.kevrain.consensus.models.PollOption;
 import com.kevrain.consensus.support.ColoredSnackBar;
 import com.kevrain.consensus.support.DeviceDimensionsHelper;
 import com.parse.FindCallback;
@@ -48,6 +51,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class CreateOrEditGroupActivity extends AppCompatActivity {
@@ -281,17 +285,32 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
     }
 
     private void deleteGroup() {
-        group.removeMember(new HashSet<ParseUser>(existingMembers));
-        group.saveInBackground(new SaveCallback() {
+        final SweetAlertDialog pDialog = new SweetAlertDialog(CreateOrEditGroupActivity.this,
+            SweetAlertDialog.WARNING_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Are you sure?");
+        pDialog.setContentText("This group and its polls will be deleted!");
+        pDialog.setConfirmText("Yes,delete it!");
+        pDialog.setCancelable(true);
+        pDialog.setCancelText("Never mind!");
+        pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
             @Override
-            public void done(ParseException e) {
-                group.deleteInBackground();
-                Intent data = new Intent();
-                data.putExtra("group_position", getIntent().getIntExtra("group_position", -1));
-                setResult(RESULT_DELETE, data);
-                finish();
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                group.removeMember(new HashSet<ParseUser>(existingMembers));
+                group.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        group.deleteInBackground();
+                        Intent data = new Intent();
+                        data.putExtra("group_position", getIntent().getIntExtra("group_position",
+                            -1));
+                        setResult(RESULT_DELETE, data);
+                        finish();
+                    }
+                });
             }
         });
+        pDialog.show();
     }
 
     @Override
