@@ -224,6 +224,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
                     ivAllMembersVoted.animate().alpha(1.0f).setDuration(1000).start();
                     tvAllMembersVoted.animate().alpha(1.0f).setDuration(1000).start();
                     setAllMembersVoted(true);
+                    setLocationSelectionListener();
                 }
             } catch (ParseException e) {
                 e.printStackTrace();

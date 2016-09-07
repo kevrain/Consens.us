@@ -140,38 +140,6 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
                     pDialog.show();
                 }
             });
-
-            final Handler handler = new Handler();
-            final Runnable mLongPressed = new Runnable() {
-                public void run() {
-                    final SweetAlertDialog pDialog = new SweetAlertDialog(itemView.getContext(), SweetAlertDialog.SUCCESS_TYPE);
-                    pDialog.getProgressHelper().setBarColor(R.color.success_green);
-                    pDialog.setTitleText("Choose as event location?");
-                    pDialog.setContentText("Selecting the event location will end voting!");
-                    pDialog.setConfirmText("Yes, select it!");
-                    pDialog.setCancelable(true);
-                    pDialog.setCancelText("No, just kidding!");
-                    pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            pDialog.dismissWithAnimation();
-                            listener.setSelectedPollOption();
-                        }
-                    });
-                    pDialog.show();
-                }
-            };
-
-            swipeableContainer.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    if(motionEvent.getAction() == MotionEvent.ACTION_DOWN)
-                        handler.postDelayed(mLongPressed, 1000);
-                    if((motionEvent.getAction() == MotionEvent.ACTION_MOVE)||(motionEvent.getAction() == MotionEvent.ACTION_UP))
-                        handler.removeCallbacks(mLongPressed);
-                    return true;
-                }
-            });
         }
 
         @Override
