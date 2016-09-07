@@ -10,7 +10,7 @@
 
     <style name="ToolbarColoredBackArrow" parent="AppTheme">
         <item name="android:textColorSecondary">@android:color/white</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="actionMenuTextColor">@android:color/black</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.ActionBar" />
@@ -54,7 +54,6 @@
     </style>
 
     <style name="DefaultToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:textColor">@android:color/white</item>
         <item name="android:background">?attr/colorPrimary</item>
     </style>
 

@@ -27,7 +27,6 @@
                 android:layout_height="?attr/actionBarSize"
                 app:theme="@style/ToolbarColoredBackArrow"
                 app:navigationIcon="?attr/homeAsUpIndicator"
-                android:tint="@android:color/white"
                 app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
         </android.support.design.widget.AppBarLayout>
