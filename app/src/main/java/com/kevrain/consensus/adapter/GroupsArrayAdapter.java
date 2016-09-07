@@ -115,7 +115,7 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
     }
 
     @Override
-    public void onBindViewHolder(final GroupsArrayAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final GroupsArrayAdapter.ViewHolder holder, final int position) {
 
         final Group group = mGroups.get(position);
 
@@ -124,10 +124,10 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
             @Override
             public void done(ParseObject object, ParseException e) {
                 getGroupMembers(group, holder, (ParseUser) object);
+                setUpMenu(holder, position, group.getOwner().getObjectId());
             }
         });
 
-        setUpMenu(holder, position);
     }
 
     private void getGroupMembers(Group group, final GroupsArrayAdapter.ViewHolder holder,
@@ -166,28 +166,33 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
         });
     }
 
-    private void setUpMenu(GroupsArrayAdapter.ViewHolder holder, final int position) {
-        holder.btnMenu.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu popup = new PopupMenu(view.getContext(), view);
-                MenuInflater inflater = popup.getMenuInflater();
-                inflater.inflate(R.menu.menu_group_card_view, popup.getMenu());
-                popup.show();
-                popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.miEditGroup:
-                                listener.showEditGroup(mGroups.get(position), position);
-                                return true;
-                            default:
-                                return true;
+    private void setUpMenu(GroupsArrayAdapter.ViewHolder holder, final int position,
+        String groupOwnerId) {
+        if (groupOwnerId != ParseUser.getCurrentUser().getObjectId()) {
+            holder.btnMenu.setVisibility(View.INVISIBLE);
+        } else {
+            holder.btnMenu.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PopupMenu popup = new PopupMenu(view.getContext(), view);
+                    MenuInflater inflater = popup.getMenuInflater();
+                    inflater.inflate(R.menu.menu_group_card_view, popup.getMenu());
+                    popup.show();
+                    popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.miEditGroup:
+                                    listener.showEditGroup(mGroups.get(position), position);
+                                    return true;
+                                default:
+                                    return true;
+                            }
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+        }
     }
 
     @Override
