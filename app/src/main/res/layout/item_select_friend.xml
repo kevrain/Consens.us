@@ -35,6 +35,6 @@
         android:layout_centerVertical="true"
         android:layout_alignTop="@id/tvFriendName"
         android:clickable="true"
-        app:color_checked="@color/checked_green"/>
+        app:color_checked="@color/success_green"/>
 
 </RelativeLayout>

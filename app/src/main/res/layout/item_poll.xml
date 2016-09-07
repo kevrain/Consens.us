@@ -61,5 +61,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+        <RelativeLayout
+            android:id="@+id/rlEventScheduled"
+            android:visibility="gone"
+            android:layout_gravity="right|center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/ivEventScheduled"
+                android:background="@android:color/transparent"
+                android:tint="@color/success_green"
+                android:src="@drawable/ic_alarm_scheduled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:textAppearance="@style/AppTheme.Widget.TextView.Bold"
+                android:text="@string/event_scheduled"
+                android:layout_toRightOf="@+id/ivEventScheduled"
+                android:layout_alignTop="@+id/ivEventScheduled"
+                android:id="@+id/tvEventScheduled"
+                android:textColor="@color/success_green"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
     </FrameLayout>
 </FrameLayout>

@@ -40,6 +40,8 @@
     <string name="create_group">create group</string>
     <string name="save_changes">save changes</string>
     <string name="view_members">View Members</string>
+    <string name="all_members_voted">All Members Voted</string>
+    <string name="event_scheduled">Event Scheduled</string>
 
 
 </resources>

@@ -2,8 +2,10 @@ package com.kevrain.consensus.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -51,7 +53,9 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
         void deleteNoneOfTheAboveVoteIfNeeded();
         void deleteAllOptionVotes();
         void renderListPlaceholderIfNeeded();
+        boolean validateAllMembersVoted(boolean performCheck);
         boolean canEditOrDelete(PollOption option);
+        void setSelectedPollOption();
     }
 
     interface Swipeable extends SwipeableItemConstants {
@@ -102,7 +106,7 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
 
         float lastSwipeAmount;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView) {
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
@@ -134,6 +138,44 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
                         }
                     });
                     pDialog.show();
+                }
+            });
+
+            final Handler handler = new Handler();
+            final Runnable mLongPressed = new Runnable() {
+                public void run() {
+                    final SweetAlertDialog pDialog = new SweetAlertDialog(itemView.getContext(), SweetAlertDialog.SUCCESS_TYPE);
+                    pDialog.getProgressHelper().setBarColor(R.color.success_green);
+                    pDialog.setTitleText("Choose as event location?");
+                    pDialog.setContentText("Selecting the event location will end voting!");
+                    pDialog.setConfirmText("Yes, select it!");
+                    pDialog.setCancelable(true);
+                    pDialog.setCancelText("No, just kidding!");
+                    pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            pDialog.dismissWithAnimation();
+
+                            final PollOption pollOption = mPollOptions.get(getAdapterPosition());
+
+                            pollOptionsToAdd.remove(pollOption);
+                            pollOptionsToDelete.add(pollOption);
+                            mPollOptions.remove(pollOption);
+                            notifyDataSetChanged();
+                        }
+                    });
+                    pDialog.show();
+                }
+            };
+
+            swipeableContainer.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    if(motionEvent.getAction() == MotionEvent.ACTION_DOWN)
+                        handler.postDelayed(mLongPressed, 1000);
+                    if((motionEvent.getAction() == MotionEvent.ACTION_MOVE)||(motionEvent.getAction() == MotionEvent.ACTION_UP))
+                        handler.removeCallbacks(mLongPressed);
+                    return true;
                 }
             });
         }
@@ -183,6 +225,77 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
                     tvPollOptionVoteCount.setText(votes.size() + " Votes");
                 }
             });
+        }
+
+        public void updateViewForSelectedLocation() {
+            PollOption option = mPollOptions.get(getAdapterPosition());
+
+            if (mPoll.hasLocationSelected()) {
+                cbPollOptionVote.setClickable(false);
+            }
+
+            if (!option.isSelected()) {
+                itemView.animate().alpha(0.3f).setDuration(1000).start();
+                cbPollOptionVote.animate().alpha(0.0f).setDuration(1000).start();
+            } else {
+                cbPollOptionVote.setChecked(true, true);
+            }
+        }
+
+        public void setLocationSelectionListener() {
+            final Handler handler = new Handler();
+            final Runnable mLongPressed = new Runnable() {
+                public void run() {
+                    if (!mPoll.hasLocationSelected()) {
+                        final SweetAlertDialog pDialog = new SweetAlertDialog(itemView.getContext(), SweetAlertDialog.SUCCESS_TYPE);
+                        pDialog.getProgressHelper().setBarColor(R.color.success_green);
+                        pDialog.setTitleText("Choose as event location?");
+                        pDialog.setContentText("Selecting the event location will end voting!");
+                        pDialog.setConfirmText("Yes, select it!");
+                        pDialog.setCancelable(true);
+                        pDialog.setCancelText("No, just kidding!");
+                        pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                pDialog.dismissWithAnimation();
+
+                                final PollOption pollOption = mPollOptions.get(getAdapterPosition());
+
+                                pollOption.setSelected(true);
+                                pollOption.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        mPoll.setLocationSelected(true);
+                                        mPoll.saveInBackground(new SaveCallback() {
+                                            @Override
+                                            public void done(ParseException e) {
+                                                listener.setSelectedPollOption();
+                                                swipeableContainer.setOnTouchListener(null);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                        pDialog.show();
+                    }
+                }
+            };
+
+            swipeableContainer.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN)
+                        handler.postDelayed(mLongPressed, 1000);
+                    if ((motionEvent.getAction() == MotionEvent.ACTION_MOVE) || (motionEvent.getAction() == MotionEvent.ACTION_UP))
+                        handler.removeCallbacks(mLongPressed);
+                    return true;
+                }
+            });
+        }
+
+        public void setClickable(boolean isClickable) {
+            cbPollOptionVote.setClickable(isClickable);
         }
     }
 
@@ -314,6 +427,8 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
                 if (!pollOption.getName().equals(holder.itemView.getContext().getString(R.string.none_of_the_above))) {
                     listener.deleteNoneOfTheAboveVoteIfNeeded();
                 }
+
+                listener.validateAllMembersVoted(true);
             }
         });
     }

@@ -319,8 +319,18 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
     }
 
     @Override
+    public boolean validateAllMembersVoted(boolean performCheck) {
+        return false;
+    }
+
+    @Override
     public boolean canEditOrDelete(PollOption option) {
         return false;
+    }
+
+    @Override
+    public void setSelectedPollOption() {
+
     }
 
     private void uncheckOption(final PollOption option) {

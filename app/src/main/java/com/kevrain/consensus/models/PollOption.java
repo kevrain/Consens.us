@@ -55,4 +55,12 @@ public class PollOption extends ParseObject {
     public long getDate() {
         return getLong("date");
     }
+
+    public void setSelected(boolean isSelected) {
+        put("selected", isSelected);
+    }
+
+    public boolean isSelected() {
+        return get("selected") != null && (boolean) get("selected");
+    }
 }
