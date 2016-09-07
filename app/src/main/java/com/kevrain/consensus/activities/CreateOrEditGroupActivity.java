@@ -81,9 +81,6 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
         rlHeader.getLayoutParams().height = (int) (DeviceDimensionsHelper.getDisplayHeight(
             getBaseContext()) * .30);
 
-        Snackbar snackbar = Snackbar.make(rootView, R.string.request_code + Integer.toString(requestCode), Snackbar.LENGTH_LONG);
-        ColoredSnackBar.warning(snackbar).show();
-
         user = ParseUser.getCurrentUser();
         if (requestCode == EDIT_GROUP_REQUEST_CODE) {
             tvAddFriends.setText("Edit members");
