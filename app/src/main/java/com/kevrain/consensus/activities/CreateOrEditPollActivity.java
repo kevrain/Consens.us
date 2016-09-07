@@ -13,8 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -62,6 +63,8 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
     @BindView(R.id.rlHeader) RelativeLayout rlHeader;
     @BindView(R.id.rlPollOptionPlaceholder) RelativeLayout rlPollOptionPlaceholder;
     @BindView(R.id.progressIndicator) AVLoadingIndicatorView progressIndicator;
+    @BindView(R.id.ivAllMembersVoted) ImageView ivAllMembersVoted;
+    @BindView(R.id.tvAllMembersVoted) TextView tvAllMembersVoted;
 
     ArrayList<PollOption> pollOptions;
     PollOptionsArrayAdapter pollOptionsAdapter;
@@ -72,6 +75,11 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
     int pollPosition;
     Poll originalPoll;
     View rootView;
+    boolean allMembersVoted = false;
+
+    public void setAllMembersVoted(boolean allMembersVoted) {
+        this.allMembersVoted = allMembersVoted;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +89,6 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
 
         rootView = findViewById(android.R.id.content);
-
 
         pollOptions = new ArrayList<>();
 
@@ -111,7 +118,6 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
         rvPollOptions.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
 
         getIntentData();
-        getGroup();
     }
 
     private void setUpToolbar() {
@@ -126,6 +132,8 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
         } else if (requestCode == PollsActivity.ADD_POLL_REQUEST_CODE){
             tvSaveChanges.setText("CREATE POLL");
         } else {
+            ImageButton ibClose = (ImageButton) actionBarView.findViewById(R.id.ibClose);
+            ibClose.setImageDrawable(getResources().getDrawable(R.drawable.ic_back));
             tvSaveChanges.setText("");
         }
         // Custom toolbar for displaying rounded profile image
@@ -156,9 +164,46 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
             public void done(Group groupItem, ParseException e) {
                 if (e == null) {
                     group = groupItem;
+                    validateAllMembersVoted(true);
                 }
             }
         });
+    }
+
+    @Override
+    public boolean validateAllMembersVoted(boolean performCheck) {
+        if (performCheck && requestCode == PollsActivity.SHOW_POLL_REQUEST_CODE && group.getOwner().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+            ParseQuery<Vote>  voteQuery = ParseQuery.getQuery(Vote.class);
+            voteQuery.include("user");
+            voteQuery.whereEqualTo("poll", originalPoll);
+            voteQuery.findInBackground(new FindCallback<Vote>() {
+                @Override
+                public void done(List<Vote> votes, ParseException e) {
+                    final List<String> uniqVoters = $.chain(votes).
+                    map(new Function1<Vote, String>() {
+                        @Override
+                        public String apply(Vote vote) {
+                        return vote.getParseUser("user").getEmail();
+                        }
+                    }).
+                    uniq().
+                    value();
+
+                    group.getMembersRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
+                        @Override
+                        public void done(List<ParseUser> members, ParseException e) {
+                            // +1 since owner is not a member of the group
+                            if (uniqVoters.size() == (members.size() + 1)) {
+                                ivAllMembersVoted.setVisibility(View.VISIBLE);
+                                tvAllMembersVoted.setVisibility(View.VISIBLE);
+                                setAllMembersVoted(true);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        return allMembersVoted;
     }
 
     private void populatePollAndPollOptions() {
@@ -168,6 +213,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
             public void done(Poll pollItem, ParseException e) {
                 if (e == null) {
                     originalPoll = pollItem;
+                    getGroup();
                     pollOptionsAdapter.setPoll(originalPoll);
                     etEventName.setText(originalPoll.getPollName());
                     etEventName.setSelection(etEventName.getText().length());

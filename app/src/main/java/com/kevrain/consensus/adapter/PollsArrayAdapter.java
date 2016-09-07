@@ -216,7 +216,7 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
             @Override
             public void done(List<PollOption> pollOptions, ParseException e) {
                 if (e == null) {
-                    holder.tvPollOptionCount.setText("" + pollOptions.size() + " Locations");
+                    holder.tvPollOptionCount.setText("" + (pollOptions.size() - 1) + " Locations");
                 }
             }
         });

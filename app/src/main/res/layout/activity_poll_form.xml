@@ -18,6 +18,30 @@
             android:background="@drawable/background_gradient"
             android:id="@+id/rlHeader">
 
+            <ImageView
+                android:id="@+id/ivAllMembersVoted"
+                android:background="@android:color/transparent"
+                android:tint="@android:color/white"
+                android:layout_toLeftOf="@+id/tvAllMembersVoted"
+                android:layout_alignTop="@+id/tvAllMembersVoted"
+                android:src="@drawable/ic_done_all"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:textAppearance="@style/AppTheme.Widget.TextView.Bold"
+                android:text="All Members Voted"
+                android:id="@+id/tvAllMembersVoted"
+                android:textColor="@android:color/white"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:id="@+id/fletEventName"
                 android:layout_gravity="right"
