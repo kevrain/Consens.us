@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -37,7 +38,9 @@ import com.kevrain.consensus.support.DeviceDimensionsHelper;
 import com.kevrain.consensus.support.DividerItemDecoration;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
+import com.parse.FunctionCallback;
 import com.parse.GetCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -46,6 +49,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 import com.wrapp.floatlabelededittext.FloatLabeledEditText;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -277,10 +281,36 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
         }
     }
 
+    private void sendPushNotification(final String pollName) {
+        group.getMembersRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> objects, ParseException e) {
+                HashMap<String, Object> payload = new HashMap<>();
+                ArrayList<String> membersObjIds = new ArrayList<>();
+                for (ParseUser user: objects) {
+                    membersObjIds.add(user.getObjectId());
+                }
+                payload.put("members", membersObjIds);
+                payload.put("name", "New Group" );
+                payload.put("alert",  ParseUser.getCurrentUser().getUsername() +
+                    " has added a new poll, " + pollName + " to the group " +
+                    group.getTitle() + "." );
+                ParseCloud.callFunctionInBackground("pushNotifyGroup", payload,
+                    new FunctionCallback<Object>() {
+                        @Override
+                        public void done(Object object, ParseException e) {
+                            Log.d("finished", "hi");
+                        }
+                    });
+            }
+        });
+    }
+
     private void saveNewPoll(final Group group) {
         final Poll newPoll = new Poll();
         newPoll.setPollName(etEventName.getText().toString());
         newPoll.setGroup(group);
+        sendPushNotification(etEventName.getText().toString());
         newPoll.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
