@@ -24,6 +24,7 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.refactor.library.SmoothCheckBox;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
@@ -89,8 +90,13 @@ public class GroupFriendsArrayAdapter extends ArrayAdapter<ParseUser> {
         holder.checkBox.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                CheckBox checkBox = (CheckBox) view;
+                SmoothCheckBox checkBox = (SmoothCheckBox) view;
                 ParseUser friend = (ParseUser) view.getTag();
+                if (checkBox.isChecked()) {
+                    checkBox.setChecked(false, true);
+                } else {
+                    checkBox.setChecked(true, true);
+                }
                 if (checkBox.isChecked() && ! alreadyAddedFriends.contains(friend.getObjectId())) {
                     friendsToAdd.add(friend);
                     friendsToRemove.remove(friend);
@@ -106,7 +112,7 @@ public class GroupFriendsArrayAdapter extends ArrayAdapter<ParseUser> {
 
     static class ViewHolder {
         @BindView(R.id.tvFriendName) TextView tvFriendName;
-        @BindView(R.id.checkBox) CheckBox checkBox;
+        @BindView(R.id.checkBox) SmoothCheckBox checkBox;
         @BindView(R.id.ivProfile) ImageView ivProfile;
 
         public ViewHolder(View view) {
