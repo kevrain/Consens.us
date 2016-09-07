@@ -28,7 +28,9 @@ import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.support.ColoredSnackBar;
 import com.kevrain.consensus.support.DeviceDimensionsHelper;
 import com.parse.FindCallback;
+import com.parse.FunctionCallback;
 import com.parse.GetCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
@@ -40,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -207,6 +210,29 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
         });
     }
 
+    private void notifyNewMembers() {
+        HashMap<String, Object> payload = new HashMap<>();
+        ArrayList<String> membersObjIds = new ArrayList<>();
+        for (ParseUser user: friendsArrayAdapter.friendsToAdd) {
+           membersObjIds.add(user.getObjectId());
+        }
+        try {
+            payload.put("members", membersObjIds);
+            payload.put("name", "New Group" );
+            payload.put("alert",  ParseUser.getCurrentUser().getUsername() +
+                " has added you to a new group, " + etGroupName.getText().toString() + "." );
+            ParseCloud.callFunctionInBackground("pushNotifyGroup", payload,
+                new FunctionCallback<Object>() {
+                    @Override
+                    public void done(Object object, ParseException e) {
+                       Log.d("finished", "hi");
+                    }
+                });
+        } catch (Exception e) {
+            Log.d("json failed", e.toString());
+        }
+    }
+
     private void saveGroup() {
         if (requestCode == ADD_GROUP_REQUEST_CODE) {
             group = new Group();
@@ -218,7 +244,9 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
             group.addMembers(friendsArrayAdapter.friendsToAdd);
             if (requestCode == EDIT_GROUP_REQUEST_CODE) {
                 group.removeMember(friendsArrayAdapter.friendsToRemove);
+
             }
+            notifyNewMembers();
             group.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {

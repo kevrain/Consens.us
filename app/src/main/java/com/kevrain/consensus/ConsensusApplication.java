@@ -35,10 +35,12 @@ public class ConsensusApplication extends Application {
         ParseObject.registerSubclass(Vote.class);
 
         Parse.initialize(new Parse.Configuration.Builder(this)
-                .applicationId(BuildConfig.PARSE_APPLICATION_ID) // should correspond to APP_ID env variable
-                .clientKey(BuildConfig.PARSE_CLIENT_KEY)  // set explicitly unless clientKey is explicitly configured on Parse server
-                .addNetworkInterceptor(new ParseLogInterceptor())
-                .server(BuildConfig.PARSE_SERVER_URL).build());
+            .applicationId(
+                BuildConfig.PARSE_APPLICATION_ID) // should correspond to APP_ID env variable
+            .clientKey(
+                BuildConfig.PARSE_CLIENT_KEY)  // set explicitly unless clientKey is explicitly configured on Parse server
+            .addNetworkInterceptor(new ParseLogInterceptor())
+            .server(BuildConfig.PARSE_SERVER_URL).build());
 
         ParseFacebookUtils.initialize(this);
 
