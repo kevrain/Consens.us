@@ -297,7 +297,9 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
         }
 
         if (mRequestCode == PollsActivity.SHOW_POLL_REQUEST_CODE) {
-            holder.cbPollOptionVote.setVisibility(View.VISIBLE);
+            if (!mPoll.hasLocationSelected() || pollOption.isSelected()) {
+                holder.cbPollOptionVote.setVisibility(View.VISIBLE);
+            }
 
             holder.tvPollOptionVoteCount.setVisibility(View.VISIBLE);
 
@@ -317,7 +319,9 @@ public class PollOptionsArrayAdapter extends RecyclerView.Adapter<PollOptionsArr
                         }
                     });
 
-                    holder.cbPollOptionVote.setChecked(userVote.isPresent(), true);
+                    if (!mPoll.hasLocationSelected()) {
+                        holder.cbPollOptionVote.setChecked(userVote.isPresent(), true);
+                    }
 
                     if (pollOption.getName().equals(holder.itemView.getContext().getString(R.string.none_of_the_above)) &&
                             holder.cbPollOptionVote.isChecked()) {
