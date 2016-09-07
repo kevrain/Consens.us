@@ -1,5 +1,6 @@
 package com.kevrain.consensus.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -44,6 +47,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -57,6 +62,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class CreateOrEditGroupActivity extends AppCompatActivity {
     public static int ADD_GROUP_REQUEST_CODE = 0;
     public static int EDIT_GROUP_REQUEST_CODE = 1;
+    public static int SHOW_GROUP_REQUEST_CODE = 2;
     public static int RESULT_DELETE = 100;
     private int requestCode;
     private Group group;
@@ -82,6 +88,11 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
             getBaseContext()) * .30);
 
         user = ParseUser.getCurrentUser();
+        if (requestCode == SHOW_GROUP_REQUEST_CODE) {
+            tvAddFriends.setText("Members");
+            getExistingGroupData();
+            getExistingGroupData();
+        }
         if (requestCode == EDIT_GROUP_REQUEST_CODE) {
             tvAddFriends.setText("Edit members");
             getExistingGroupData();
@@ -95,27 +106,30 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayShowCustomEnabled(true);
-        View actionBarView = LayoutInflater.from(this)
-            .inflate(R.layout.toolbar_create_or_edit_group, null);
-        TextView tvSaveChanges =
-            ((TextView) actionBarView.findViewById(R.id.tvSaveChanges));
-        tvSaveChanges.setPadding(0, toolbar.getPaddingTop(), 0, toolbar.getPaddingBottom());
-        if (requestCode == EDIT_GROUP_REQUEST_CODE) {
-            tvSaveChanges.setText("SAVE CHANGES");
-            MarginLayoutParams params = (MarginLayoutParams) tvSaveChanges.getLayoutParams();
-            params.rightMargin = 0;
-            tvSaveChanges.setLayoutParams(params);
-        } else {
-            tvSaveChanges.setText("CREATE GROUP");
-        }
-
-        tvSaveChanges.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveGroup();
+        if (requestCode != SHOW_GROUP_REQUEST_CODE) {
+            View actionBarView = LayoutInflater.from(this)
+                                               .inflate(R.layout.toolbar_create_or_edit_group,
+                                                   null);
+            TextView tvSaveChanges =
+                ((TextView) actionBarView.findViewById(R.id.tvSaveChanges));
+            tvSaveChanges.setPadding(0, toolbar.getPaddingTop(), 0, toolbar.getPaddingBottom());
+            if (requestCode == EDIT_GROUP_REQUEST_CODE) {
+                tvSaveChanges.setText("SAVE CHANGES");
+                MarginLayoutParams params = (MarginLayoutParams) tvSaveChanges.getLayoutParams();
+                params.rightMargin = 0;
+                tvSaveChanges.setLayoutParams(params);
+            } else if (requestCode == ADD_GROUP_REQUEST_CODE) {
+                tvSaveChanges.setText("CREATE GROUP");
             }
-        });
-        getSupportActionBar().setCustomView(actionBarView);
+
+            tvSaveChanges.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    saveGroup();
+                }
+            });
+            getSupportActionBar().setCustomView(actionBarView);
+        }
         toolbar.setNavigationOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,7 +182,7 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
                     getExistingGroupMembers(results);
                 } else {
                     friendsArrayAdapter = new GroupFriendsArrayAdapter(getApplicationContext(),
-                        new ArrayList<ParseUser>(results));
+                        new ArrayList<ParseUser>(results), requestCode);
                     lvAddFriends.setAdapter(friendsArrayAdapter);
                 }
             }
@@ -185,11 +199,31 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
                 if (e == null) {
                     group = currGroup;
                     etGroupName.setText(group.getTitle());
-                    etGroupName.setSelection(etGroupName.getText().length());
-                    getUserFriendsFromFB();
+                    if (requestCode == EDIT_GROUP_REQUEST_CODE) {
+                        etGroupName.setSelection(etGroupName.getText().length());
+                        getUserFriendsFromFB();
+                    } else {
+                        etGroupName.setInputType(InputType.TYPE_NULL);
+                        populateGroupMembers();
+                    }
                 }
             }
         });
+    }
+
+    private void populateGroupMembers() {
+        ParseRelation<ParseUser> relation = group.getRelation("members");
+        relation.getQuery().findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> users, ParseException e) {
+                if (e == null) {
+                    friendsArrayAdapter = new GroupFriendsArrayAdapter(getApplicationContext(),
+                        new ArrayList<ParseUser>(users), requestCode);
+                    lvAddFriends.setAdapter(friendsArrayAdapter);
+                }
+            }
+        });
+
     }
 
     private void getExistingGroupMembers(final List<ParseUser> friends) {
@@ -204,7 +238,7 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
                         userIds.add(user.getObjectId());
                     }
                     friendsArrayAdapter = new GroupFriendsArrayAdapter(getApplicationContext(),
-                        new ArrayList<ParseUser>(friends), userIds);
+                        new ArrayList<ParseUser>(friends), userIds, requestCode);
                     lvAddFriends.setAdapter(friendsArrayAdapter);
                 }
             }

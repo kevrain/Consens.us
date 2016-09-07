@@ -121,6 +121,15 @@ public class GroupsActivity extends AppCompatActivity implements OnSelectMenuIte
         });
     }
 
+    @Override
+    public void showViewGroup(Group group, int position) {
+        Intent i = new Intent(getApplicationContext(), CreateOrEditGroupActivity.class);
+        i.putExtra("groupID", group.getObjectId());
+        i.putExtra("group_position", position);
+        i.putExtra("requestCode",
+            CreateOrEditGroupActivity.SHOW_GROUP_REQUEST_CODE);
+        startActivity(i);
+    }
 
     @Override
     public void showEditGroup(Group group, int position) {

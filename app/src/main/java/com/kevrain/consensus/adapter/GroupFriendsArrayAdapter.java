@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.kevrain.consensus.R;
+import com.kevrain.consensus.activities.CreateOrEditGroupActivity;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -35,20 +36,23 @@ public class GroupFriendsArrayAdapter extends ArrayAdapter<ParseUser> {
     public Set<ParseUser> friendsToAdd;
     public Set<String> alreadyAddedFriends;
     public Set<ParseUser> friendsToRemove;
+    private int requestCode;
 
-    public GroupFriendsArrayAdapter(Context context, ArrayList<ParseUser> users) {
+    public GroupFriendsArrayAdapter(Context context, ArrayList<ParseUser> users, int requestCode) {
         super(context, 0, users);
         friendsToAdd = new HashSet<>();
         friendsToRemove = new HashSet<>();
         alreadyAddedFriends = new HashSet<>();
+        this.requestCode = requestCode;
     }
 
     public GroupFriendsArrayAdapter(Context context, ArrayList<ParseUser> users,
-        HashSet<String> currMembers) {
+        HashSet<String> currMembers, int requestCode) {
         super(context, 0, users);
         friendsToAdd = new HashSet<>();
         friendsToRemove = new HashSet<>();
         alreadyAddedFriends = currMembers;
+        this.requestCode = requestCode;
     }
 
     @Override public View getView(int position, View view, ViewGroup parent) {
@@ -77,7 +81,11 @@ public class GroupFriendsArrayAdapter extends ArrayAdapter<ParseUser> {
         Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/Lato-Light.ttf");
         holder.tvFriendName.setTypeface(font);
         holder.tvFriendName.setText(user.getUsername());
-        setUpCheckbox(holder, user);
+        if (requestCode == CreateOrEditGroupActivity.SHOW_GROUP_REQUEST_CODE) {
+            holder.checkBox.setVisibility(View.INVISIBLE);
+        } else {
+            setUpCheckbox(holder, user);
+        }
         return view;
     }
 

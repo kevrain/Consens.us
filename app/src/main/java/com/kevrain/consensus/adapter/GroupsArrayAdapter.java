@@ -32,6 +32,7 @@ import com.parse.ParseUser;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +53,7 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
 
     public interface OnSelectMenuItemListener {
         void showEditGroup(Group group, int position);
+        void showViewGroup(Group group, int position);
     }
 
     // Provide a direct reference to each of the views within a data item
@@ -124,7 +126,7 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
             @Override
             public void done(ParseObject object, ParseException e) {
                 getGroupMembers(group, holder, (ParseUser) object);
-                setUpMenu(holder, position, group.getOwner().getObjectId());
+                setUpMenu(holder, position, object.getObjectId());
             }
         });
 
@@ -168,8 +170,29 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
 
     private void setUpMenu(GroupsArrayAdapter.ViewHolder holder, final int position,
         String groupOwnerId) {
-        if (groupOwnerId != ParseUser.getCurrentUser().getObjectId()) {
-            holder.btnMenu.setVisibility(View.INVISIBLE);
+        String currUserId = ParseUser.getCurrentUser().getObjectId();
+        if (! groupOwnerId.equals(currUserId)) {
+            holder.btnMenu.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PopupMenu popup = new PopupMenu(view.getContext(), view);
+                    MenuInflater inflater = popup.getMenuInflater();
+                    inflater.inflate(R.menu.menu_group_view_members, popup.getMenu());
+                    popup.show();
+                    popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.miViewGroup:
+                                    listener.showViewGroup(mGroups.get(position), position);
+                                    return true;
+                                default:
+                                    return true;
+                            }
+                        }
+                    });
+                }
+            });
         } else {
             holder.btnMenu.setOnClickListener(new OnClickListener() {
                 @Override

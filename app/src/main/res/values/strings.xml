@@ -39,6 +39,7 @@
     <string name="poll_name_exists_msg">Poll with this name already exists</string>
     <string name="create_group">create group</string>
     <string name="save_changes">save changes</string>
+    <string name="view_members">View Members</string>
 
 
 </resources>
