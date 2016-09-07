@@ -9,13 +9,30 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activities.MainActivity">
 
+    <ImageView
+        android:layout_width="200dp"
+        android:id="@+id/ivLogo"
+        android:src="@mipmap/ic_logo"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="95dp"/>
+
+    <TextView
+        android:id="@+id/tvAppName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/AppTheme.Widget.TextView.Bold.ExtraLarge"
+        android:text="Consens.us"
+        android:layout_below="@+id/ivLogo"
+        android:layout_centerHorizontal="true"/>
+
     <Button
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login to Facebook"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp" />
+        android:textAppearance="@style/AppTheme.Widget.TextView.Normal"
+        android:text="Login with Facebook"
+        android:layout_below="@+id/tvAppName"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>
