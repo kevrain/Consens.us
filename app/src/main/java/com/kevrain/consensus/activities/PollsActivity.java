@@ -104,7 +104,7 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
 
                 ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         PollsActivity.this, view , "view");
-                startActivity(i, activityOptionsCompat.toBundle());
+                startActivityForResult(i, ADD_POLL_REQUEST_CODE, activityOptionsCompat.toBundle());
             }
         });
     }
