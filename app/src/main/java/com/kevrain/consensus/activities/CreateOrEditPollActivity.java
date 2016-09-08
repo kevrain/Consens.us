@@ -429,7 +429,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
                     final PollOption noneOption = $.find(pollOptions, new Predicate<PollOption>() {
                         @Override
                         public Boolean apply(PollOption option) {
-                            return option.getName() == getString(R.string.none_of_the_above);
+                            return option.getName().equals(getString(R.string.none_of_the_above));
                         }
                     }).get();
 
