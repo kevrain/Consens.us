@@ -284,7 +284,7 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
     public void closeActivity(View view) {
         if (view.getId() != R.id.tvSavePoll) {
 
-            if (originalPoll.hasLocationSelected()) {
+            if (originalPoll != null && originalPoll.hasLocationSelected()) {
                 Intent i = new Intent(view.getContext(), PollsActivity.class);
                 i.putExtra("pollID", pollID);
                 setResult(PollsActivity.POLL_LOCATION_SET_REQUEST_CODE, i);
