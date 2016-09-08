@@ -1,6 +1,5 @@
 package com.kevrain.consensus.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,8 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.MarginLayoutParams;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -30,7 +27,7 @@ import com.facebook.HttpMethod;
 import com.kevrain.consensus.R;
 import com.kevrain.consensus.adapter.GroupFriendsArrayAdapter;
 import com.kevrain.consensus.models.Group;
-import com.kevrain.consensus.models.PollOption;
+import com.kevrain.consensus.support.BackgroundGradientUntil;
 import com.kevrain.consensus.support.ColoredSnackBar;
 import com.kevrain.consensus.support.DeviceDimensionsHelper;
 import com.parse.FindCallback;
@@ -47,8 +44,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -86,6 +81,8 @@ public class CreateOrEditGroupActivity extends AppCompatActivity {
         rootView = findViewById(android.R.id.content);
         rlHeader.getLayoutParams().height = (int) (DeviceDimensionsHelper.getDisplayHeight(
             getBaseContext()) * .30);
+
+        rlHeader.setBackground(getResources().getDrawable(BackgroundGradientUntil.randomGradient()));
 
         user = ParseUser.getCurrentUser();
         if (requestCode == SHOW_GROUP_REQUEST_CODE) {

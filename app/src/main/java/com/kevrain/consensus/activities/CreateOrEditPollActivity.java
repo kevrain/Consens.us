@@ -33,6 +33,7 @@ import com.kevrain.consensus.models.Group;
 import com.kevrain.consensus.models.Poll;
 import com.kevrain.consensus.models.PollOption;
 import com.kevrain.consensus.models.Vote;
+import com.kevrain.consensus.support.BackgroundGradientUntil;
 import com.kevrain.consensus.support.ColoredSnackBar;
 import com.kevrain.consensus.support.DateUtil;
 import com.kevrain.consensus.support.DeviceDimensionsHelper;
@@ -122,6 +123,8 @@ public class CreateOrEditPollActivity extends AppCompatActivity implements
         swipeMgr.attachRecyclerView(rvPollOptions);
 
         rvPollOptions.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+
+        rlHeader.setBackground(getResources().getDrawable(BackgroundGradientUntil.randomGradient()));
 
         getIntentData();
     }
