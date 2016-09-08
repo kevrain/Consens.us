@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -87,7 +88,6 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
         String pollID = getIntent().getStringExtra("pollID");
 
         ParseQuery<Poll> query = ParseQuery.getQuery(Poll.class);
-
         query.include("pollOptions");
 
         query.getInBackground(pollID, new GetCallback<Poll>() {
@@ -415,5 +415,15 @@ public class PollDetailsActivity extends AppCompatActivity implements PollOption
                     e.printStackTrace();
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finishAfterTransition();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

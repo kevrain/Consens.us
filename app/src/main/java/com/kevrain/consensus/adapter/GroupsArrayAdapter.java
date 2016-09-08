@@ -28,8 +28,6 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -106,6 +104,7 @@ public class GroupsArrayAdapter extends RecyclerView.Adapter<GroupsArrayAdapter.
 
         // Inflate the custom layout
         View listItemView = inflater.inflate(R.layout.item_group, parent, false);
+
 
         listener = (OnSelectMenuItemListener) context;
 

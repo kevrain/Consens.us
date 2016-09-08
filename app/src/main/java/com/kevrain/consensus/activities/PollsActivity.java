@@ -5,11 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Slide;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.h6ah4i.android.widget.advrecyclerview.animator.SwipeDismissItemAnimator;
@@ -62,6 +66,7 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_polls);
+        setupWindowAnimations();
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
@@ -95,7 +100,11 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
                 Intent i = new Intent(PollsActivity.this, CreateOrEditPollActivity.class);
                 i.putExtra("groupID", group.getObjectId());
                 i.putExtra("request_code", ADD_POLL_REQUEST_CODE);
-                startActivityForResult(i, ADD_POLL_REQUEST_CODE);
+                //startActivityForResult(i, ADD_POLL_REQUEST_CODE);
+
+                ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        PollsActivity.this, view , "view");
+                startActivity(i, activityOptionsCompat.toBundle());
             }
         });
     }
@@ -218,6 +227,26 @@ public class PollsActivity extends AppCompatActivity implements PollsArrayAdapte
     @Override
     public boolean canEditOrDelete() {
         return group != null && group.getOwner().getObjectId().equals(ParseUser.getCurrentUser().getObjectId());
+    }
+
+    private void setupWindowAnimations() {
+        Log.d("Animations", "ARE YOU HERE ??");
+        Slide slideTransition = new Slide();
+        slideTransition.setSlideEdge(Gravity.LEFT);
+        slideTransition.setDuration(100);
+        getWindow().setReenterTransition(slideTransition);
+        getWindow().setEnterTransition(slideTransition);
+        getWindow().setExitTransition(slideTransition);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finishAfterTransition();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 

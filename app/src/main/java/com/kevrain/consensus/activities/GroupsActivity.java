@@ -6,10 +6,14 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Slide;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,6 +56,7 @@ public class GroupsActivity extends AppCompatActivity implements OnSelectMenuIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups);
+        setupWindowAnimations();
 
         ButterKnife.bind(this);
 
@@ -72,6 +77,11 @@ public class GroupsActivity extends AppCompatActivity implements OnSelectMenuIte
                 i.putExtra("requestCode", CreateOrEditGroupActivity.ADD_GROUP_REQUEST_CODE);
                 startActivityForResult(i,
                     CreateOrEditGroupActivity.ADD_GROUP_REQUEST_CODE);
+
+                //ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                //        GroupsActivity.this, view , "view");
+                //startActivityForResult(i, CreateOrEditGroupActivity.ADD_GROUP_REQUEST_CODE, activityOptionsCompat.toBundle());
+
             }
         });
     }
@@ -103,7 +113,11 @@ public class GroupsActivity extends AppCompatActivity implements OnSelectMenuIte
                 public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                     Intent i = new Intent(v.getContext(), PollsActivity.class);
                     i.putExtra("groupID", groups.get(position).getObjectId());
-                    startActivity(i);
+                    //startActivity(i);
+
+                    ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            GroupsActivity.this, v , "view");
+                    startActivity(i, activityOptionsCompat.toBundle());
                 }
             });
         
@@ -137,8 +151,11 @@ public class GroupsActivity extends AppCompatActivity implements OnSelectMenuIte
         i.putExtra("groupID", group.getObjectId());
         i.putExtra("group_position", position);
         i.putExtra("requestCode",
-            CreateOrEditGroupActivity.EDIT_GROUP_REQUEST_CODE);
+                CreateOrEditGroupActivity.EDIT_GROUP_REQUEST_CODE);
+
         startActivityForResult(i, CreateOrEditGroupActivity.EDIT_GROUP_REQUEST_CODE);
+
+
     }
 
     @Override
@@ -209,4 +226,17 @@ public class GroupsActivity extends AppCompatActivity implements OnSelectMenuIte
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+
+    private void setupWindowAnimations() {
+        Log.d("Animations", "ARE YOU HERE ??");
+        Slide slideTransition = new Slide();
+        slideTransition.setSlideEdge(Gravity.LEFT);
+        slideTransition.setDuration(500);
+        getWindow().setReenterTransition(slideTransition);
+
+        //Slide slide = (Slide) TransitionInflater.from(this).inflateTransition(R.transition.activity_slide);
+        getWindow().setEnterTransition(slideTransition);
+        getWindow().setExitTransition(slideTransition);
+    }
+
 }

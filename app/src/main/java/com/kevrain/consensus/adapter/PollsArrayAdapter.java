@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -109,8 +110,12 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
                     i.putExtra("groupID", poll.getGroup().getObjectId());
                     i.putExtra("poll_position", getAdapterPosition());
                     i.putExtra("request_code", PollsActivity.EDIT_POLL_REQUEST_CODE);
-                    ((Activity) view.getContext()).startActivityForResult(i,
-                            PollsActivity.EDIT_POLL_REQUEST_CODE);
+                    //((Activity) view.getContext()).startActivityForResult(i,
+                    //        PollsActivity.EDIT_POLL_REQUEST_CODE);
+
+                    ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            (Activity) view.getContext(), view , "view");
+                    ((Activity) view.getContext()).startActivityForResult(i, PollsActivity.EDIT_POLL_REQUEST_CODE, activityOptionsCompat.toBundle());
                 }
             });
 
@@ -311,4 +316,6 @@ public class PollsArrayAdapter extends RecyclerView.Adapter<PollsArrayAdapter.Vi
             adapter.notifyItemChanged(position);
         }
     }
+
+
 }
