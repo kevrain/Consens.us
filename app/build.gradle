@@ -9,13 +9,13 @@ def PARSE_CLIENT_KEY = '"' + ParseClientKey + '"' ?: '"Define Parse client key"'
 def FACEBOOK_APPLICATION_ID = '"' + FacebookApplicationID + '"' ?: '"Define Facebook application ID"';
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId "com.kevrain.consensus"
         minSdkVersion 21
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
     }
@@ -37,15 +37,15 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.1.1'
+    compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.parse:parse-android:1.13.1'
     compile 'com.parse:parseinterceptors:0.0.2' // for logging API calls to LogCat
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.facebook.android:facebook-android-sdk:4.+'
     compile 'com.parse:parsefacebookutils-v4-android:1.10.4@aar'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.android.support:support-v4:24.1.1'
-    compile 'com.android.support:design:24.1.1'
+    compile 'com.android.support:support-v4:25.0.0'
+    compile 'com.android.support:design:25.0.0'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
     compile ('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.8.6@aar'){
         transitive=true
@@ -56,7 +56,7 @@ dependencies {
     compile 'com.wang.avi:library:2.1.3'
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     compile 'com.wrapp.floatlabelededittext:library:0.0.6'
-    compile 'com.android.support:cardview-v7:24.1.1'
+    compile 'com.android.support:cardview-v7:25.0.0'
     compile 'com.github.andyxialm:SmoothCheckBox:master'
     compile 'cn.pedant.sweetalert:library:1.3'
 }
