@@ -13,3 +13,5 @@ broken down into preferred dates or times.
 - As a group creator, I want to be able to add or remove people from the event group
 - As a group creator, I want to set a date and time limit for voting on a proposed event location and date/time
 - As a group creator, when the date and time limit is reached, I want to be able to make the final decision on the location, date, and time
+
+<img src="http://imgur.com/3AiMRFN.gif" width="50%">
