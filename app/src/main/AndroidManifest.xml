@@ -25,6 +25,7 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
+            tools:replace="android:theme"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.facebook.CustomTabActivity"
@@ -107,6 +108,8 @@
         <meta-data
             android:name="com.parse.push.gcm_sender_id"
             android:value="id:919464060527"/>
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/fb_login_protocol_scheme"/>
     </application>
 
 </manifest>
